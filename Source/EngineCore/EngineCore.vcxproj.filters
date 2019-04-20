@@ -13,20 +13,50 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="App">
+      <UniqueIdentifier>{c7e1e7e8-5419-4015-9ad3-883f65c0f6d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{79666787-dcad-474e-9dc8-e85d5fd5a741}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Deprecated">
+      <UniqueIdentifier>{40a16d7a-fd93-4222-b430-c0746c8ec9f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Initialization">
+      <UniqueIdentifier>{07a2f600-ce1b-4e38-831e-34a2ae85f98a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BaseWindow.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Deprecated\BaseWindow.h">
+      <Filter>Deprecated</Filter>
     </ClInclude>
-    <ClInclude Include="MainWindow.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Deprecated\MainWindow.h">
+      <Filter>Deprecated</Filter>
     </ClInclude>
-    <ClInclude Include="CommonStd.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Common\CommonStd.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="App\App.h">
+      <Filter>App</Filter>
+    </ClInclude>
+    <ClInclude Include="Initialization\Initialization.h">
+      <Filter>Initialization</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="EngineCore.cpp">
+    <ClCompile Include="Common\CommonStd.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="App\AppInst.cpp">
+      <Filter>App</Filter>
+    </ClCompile>
+    <ClCompile Include="Deprecated\EngineCore.cpp">
+      <Filter>Deprecated</Filter>
+    </ClCompile>
+    <ClCompile Include="App\App.cpp">
+      <Filter>App</Filter>
+    </ClCompile>
+    <ClCompile Include="Initialization\Initialization.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

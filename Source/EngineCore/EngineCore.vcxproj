@@ -27,12 +27,18 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BaseWindow.h" />
-    <ClInclude Include="CommonStd.h" />
-    <ClInclude Include="MainWindow.h" />
+    <ClInclude Include="App\App.h" />
+    <ClInclude Include="Common\CommonStd.h" />
+    <ClInclude Include="Deprecated\BaseWindow.h" />
+    <ClInclude Include="Deprecated\MainWindow.h" />
+    <ClInclude Include="Initialization\Initialization.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="EngineCore.cpp" />
+    <ClCompile Include="App\App.cpp" />
+    <ClCompile Include="App\AppInst.cpp" />
+    <ClCompile Include="Common\CommonStd.cpp" />
+    <ClCompile Include="Deprecated\EngineCore.cpp" />
+    <ClCompile Include="Initialization\Initialization.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -109,36 +115,42 @@
     <OutDir>$(SolutionDir)..\Binaries\EngineCore_Lib\$(PlatformName)_$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\Temp\$(ProjectName)_$(PlatformName)_$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(PlatformName)_$(Configuration)</TargetName>
+    <IncludePath>$(ProjectDir);$(ProjectDir)\ThirdParty\DXUT11\Optional;$(ProjectDir)\ThirdParty\DXUT11\Effects11\Inc;$(ProjectDir)\ThirdParty\DXUT11\Core;$(ProjectDir)\ThirdParty\tinyxml_2_6_2;$(DXSDK_DIR)\Include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)..\Binaries\EngineCore_Lib\$(PlatformName)_$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\Temp\$(ProjectName)_$(PlatformName)_$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(PlatformName)_$(Configuration)</TargetName>
+    <IncludePath>$(ProjectDir);$(ProjectDir)\ThirdParty\DXUT11\Optional;$(ProjectDir)\ThirdParty\DXUT11\Effects11\Inc;$(ProjectDir)\ThirdParty\DXUT11\Core;$(ProjectDir)\ThirdParty\tinyxml_2_6_2;$(DXSDK_DIR)\Include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)..\Binaries\EngineCore_Lib\$(PlatformName)_$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\Temp\$(ProjectName)_$(PlatformName)_$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(PlatformName)_$(Configuration)</TargetName>
+    <IncludePath>$(ProjectDir);$(ProjectDir)\ThirdParty\DXUT11\Optional;$(ProjectDir)\ThirdParty\DXUT11\Effects11\Inc;$(ProjectDir)\ThirdParty\DXUT11\Core;$(ProjectDir)\ThirdParty\tinyxml_2_6_2;$(DXSDK_DIR)\Include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)..\Binaries\EngineCore_Lib\$(PlatformName)_$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\Temp\$(ProjectName)_$(PlatformName)_$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(PlatformName)_$(Configuration)</TargetName>
+    <IncludePath>$(ProjectDir);$(ProjectDir)\ThirdParty\DXUT11\Optional;$(ProjectDir)\ThirdParty\DXUT11\Effects11\Inc;$(ProjectDir)\ThirdParty\DXUT11\Core;$(ProjectDir)\ThirdParty\tinyxml_2_6_2;$(DXSDK_DIR)\Include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)..\Binaries\EngineCore_Lib\$(PlatformName)_$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\Temp\$(ProjectName)_$(PlatformName)_$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(PlatformName)_$(Configuration)</TargetName>
+    <IncludePath>$(ProjectDir);$(ProjectDir)\ThirdParty\DXUT11\Optional;$(ProjectDir)\ThirdParty\DXUT11\Effects11\Inc;$(ProjectDir)\ThirdParty\DXUT11\Core;$(ProjectDir)\ThirdParty\tinyxml_2_6_2;$(DXSDK_DIR)\Include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)..\Binaries\EngineCore_Lib\$(PlatformName)_$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\Temp\$(ProjectName)_$(PlatformName)_$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(PlatformName)_$(Configuration)</TargetName>
+    <IncludePath>$(ProjectDir);$(ProjectDir)\ThirdParty\DXUT11\Optional;$(ProjectDir)\ThirdParty\DXUT11\Effects11\Inc;$(ProjectDir)\ThirdParty\DXUT11\Core;$(ProjectDir)\ThirdParty\tinyxml_2_6_2;$(DXSDK_DIR)\Include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -154,6 +166,9 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalLibraryDirectories>$(SolutionDir)\ThirdParty_Lib\$(PlatformName)_$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">
     <ClCompile>
@@ -170,6 +185,9 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalLibraryDirectories>$(SolutionDir)\ThirdParty_Lib\$(PlatformName)_$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -185,6 +203,9 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalLibraryDirectories>$(SolutionDir)\ThirdParty_Lib\$(PlatformName)_$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">
     <ClCompile>
@@ -201,6 +222,9 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalLibraryDirectories>$(SolutionDir)\ThirdParty_Lib\$(PlatformName)_$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -220,6 +244,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalLibraryDirectories>$(SolutionDir)\ThirdParty_Lib\$(PlatformName)_$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -239,6 +266,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalLibraryDirectories>$(SolutionDir)\ThirdParty_Lib\$(PlatformName)_$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
