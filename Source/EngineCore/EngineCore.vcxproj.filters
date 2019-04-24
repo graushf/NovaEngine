@@ -25,6 +25,15 @@
     <Filter Include="Initialization">
       <UniqueIdentifier>{07a2f600-ce1b-4e38-831e-34a2ae85f98a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Actors">
+      <UniqueIdentifier>{11a1c575-8508-4adf-9b4e-388dd331e838}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics3D">
+      <UniqueIdentifier>{613e4c2e-0f10-458a-b2ee-748c3033a87b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ResourceCache">
+      <UniqueIdentifier>{d645f900-4704-4dc9-b53f-3658213907e0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Deprecated\BaseWindow.h">
@@ -42,6 +51,33 @@
     <ClInclude Include="Initialization\Initialization.h">
       <Filter>Initialization</Filter>
     </ClInclude>
+    <ClInclude Include="Actors\ActorFactory.h">
+      <Filter>Actors</Filter>
+    </ClInclude>
+    <ClInclude Include="Actors\ActorComponent.h">
+      <Filter>Actors</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics3D\Geometry.h">
+      <Filter>Graphics3D</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceCache\XmlResource.h">
+      <Filter>ResourceCache</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceCache\ResCache.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\interfaces.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\templates.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Actors\Actor.h">
+      <Filter>Actors</Filter>
+    </ClInclude>
+    <ClInclude Include="Actors\TransformComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Common\CommonStd.cpp">
@@ -56,7 +92,13 @@
     <ClCompile Include="App\App.cpp">
       <Filter>App</Filter>
     </ClCompile>
+    <ClCompile Include="Actors\ActorFactory.cpp">
+      <Filter>Actors</Filter>
+    </ClCompile>
     <ClCompile Include="Initialization\Initialization.cpp">
+      <Filter>Initialization</Filter>
+    </ClCompile>
+    <ClCompile Include="Actors\Actor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

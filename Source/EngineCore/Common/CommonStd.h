@@ -55,6 +55,13 @@ using std::tr1::dynamic_pointer_cast;
 
 #include <tinyxml.h>
 
+
+// App #includes
+#include "Common/templates.h"
+#include "Graphics3D/Geometry.h"
+
+#include "Common/interfaces.h"
+
 extern const int MEGABYTE;
 
 extern const int SCREEN_WIDTH;
