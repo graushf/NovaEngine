@@ -3,8 +3,10 @@
 // =======================================================================
 
 #include "Common/CommonStd.h"
-#include "Actors/Actor.h"
+#include "Actor.h"
 #include "ActorComponent.h"
+#include "../Utilities/String.h"
+
 
 
 Actor::Actor(ActorId id)

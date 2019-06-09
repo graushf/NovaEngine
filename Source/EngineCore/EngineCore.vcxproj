@@ -41,6 +41,7 @@
     <ClInclude Include="Initialization\Initialization.h" />
     <ClInclude Include="ResourceCache\ResCache.h" />
     <ClInclude Include="ResourceCache\XmlResource.h" />
+    <ClInclude Include="Utilities\String.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Actors\Actor.cpp" />

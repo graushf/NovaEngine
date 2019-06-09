@@ -8,6 +8,7 @@
 #include "Actors/Actor.h"
 #include "Actors/ActorComponent.h"
 #include "Actors/TransformComponent.h"
+#include "../Utilities/String.h"
 
 
 //========================================================================

@@ -5,6 +5,7 @@
 //========================================================================
 
 #include "Common/CommonStd.h"
+#include "../Utilities/String.h"
 
 class TiXmlElement;
 

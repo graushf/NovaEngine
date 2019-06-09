@@ -6,7 +6,7 @@ App *g_App = nullptr;
 
 App::App()
 {
-
+	g_pApp = this;
 }
 
 HWND App::GetHwnd()

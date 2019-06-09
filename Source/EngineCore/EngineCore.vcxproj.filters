@@ -34,6 +34,9 @@
     <Filter Include="ResourceCache">
       <UniqueIdentifier>{d645f900-4704-4dc9-b53f-3658213907e0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utilities">
+      <UniqueIdentifier>{81ab5ea7-f4e4-4bf9-a858-48e9eac9d06f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Deprecated\BaseWindow.h">
@@ -78,6 +81,9 @@
     <ClInclude Include="Actors\TransformComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Utilities\String.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Common\CommonStd.cpp">
@@ -99,7 +105,7 @@
       <Filter>Initialization</Filter>
     </ClCompile>
     <ClCompile Include="Actors\Actor.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Actors</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

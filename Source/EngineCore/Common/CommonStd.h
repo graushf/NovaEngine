@@ -49,6 +49,7 @@ using std::tr1::dynamic_pointer_cast;
 
 // DirectX Includes
 #include <dxut.h>
+//#include "../ThirdParty/DXUT11/Core/DXUT.h"
 #include <d3dx9tex.h>
 #include <dxut.h>
 #include <SDKmisc.h>
