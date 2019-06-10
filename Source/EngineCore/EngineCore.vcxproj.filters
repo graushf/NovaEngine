@@ -37,6 +37,9 @@
     <Filter Include="Utilities">
       <UniqueIdentifier>{81ab5ea7-f4e4-4bf9-a858-48e9eac9d06f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MainLoop">
+      <UniqueIdentifier>{d7703c03-660c-4b17-a577-668c39aff2f2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Deprecated\BaseWindow.h">
@@ -81,8 +84,20 @@
     <ClInclude Include="Actors\TransformComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MainLoop\Process.h">
+      <Filter>MainLoop</Filter>
+    </ClInclude>
+    <ClInclude Include="App\BaseAppLogic.h">
+      <Filter>App</Filter>
+    </ClInclude>
     <ClInclude Include="Utilities\String.h">
-      <Filter>Header Files</Filter>
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="MainLoop\ProcessManager.h">
+      <Filter>MainLoop</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\Math.h">
+      <Filter>Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -106,6 +121,21 @@
     </ClCompile>
     <ClCompile Include="Actors\Actor.cpp">
       <Filter>Actors</Filter>
+    </ClCompile>
+    <ClCompile Include="MainLoop\Process.cpp">
+      <Filter>MainLoop</Filter>
+    </ClCompile>
+    <ClCompile Include="MainLoop\ProcessManager.cpp">
+      <Filter>MainLoop</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities\Math.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities\MathRandom.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="App\BaseAppLogic.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

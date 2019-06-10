@@ -61,6 +61,16 @@ using std::tr1::dynamic_pointer_cast;
 #include "Common/templates.h"
 #include "Graphics3D/Geometry.h"
 
+
+// AppMsg					- Chapter 9, page 248
+struct AppMsg
+{
+	HWND m_hWnd;
+	UINT m_uMsg;
+	WPARAM m_wParam;
+	LPARAM m_lParam;
+};
+
 #include "Common/interfaces.h"
 
 extern const int MEGABYTE;

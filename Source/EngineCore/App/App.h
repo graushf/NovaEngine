@@ -2,6 +2,7 @@
 
 #include "Common/CommonStd.h"
 #include "Initialization/Initialization.h"
+#include "BaseAppLogic.h"
 
 // ================================================================
 // App.h : Defines the entry point for the application.
@@ -22,6 +23,7 @@ public:
 protected:
 	std::map<std::wstring, std::wstring> m_textResource;
 
+	int m_HasModalDialog;					// determines if a modal dialog is up
 	void FlashWhileMinimized();
 
 public:
@@ -40,6 +42,7 @@ public:
 	virtual bool InitInstance(HINSTANCE hInstance, LPWSTR lpCmdLine, HWND hWnd = NULL, int screenWidth = SCREEN_WIDTH, int screenHeight = SCREEN_HEIGHT);
 
 	static LRESULT CALLBACK MsgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool* pbNoFurtherProcessing, void *pUserContext);
+	bool HasModalDialog() { return m_HasModalDialog != 0; }
 
 	LRESULT OnDisplayChange(int colorDepth, int width, int height);
 	LRESULT OnPowerBroadcast(int event);
@@ -73,6 +76,7 @@ public:
 
 	// App Specific Stuff
 
+	BaseAppLogic *m_pGame;
 	struct GameOptions m_Options;
 
 protected:

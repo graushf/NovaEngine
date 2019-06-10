@@ -1,6 +1,7 @@
 #include "Common/CommonStd.h"
 
 #include "Initialization/Initialization.h"
+#include "App/BaseAppLogic.h"
 
 App *g_App = nullptr;
 
@@ -602,7 +603,6 @@ bool CALLBACK App::ModifyDeviceSettings(DXUTDeviceSettings* pDeviceSettings, voi
 // -----------------------------------------------------------------------------------------
 void CALLBACK App::OnUpdateGame(double fTime, float fElapsedTime, void *pUserContext)
 {
-	/*
 	if (g_pApp->HasModalDialog())
 	{
 		// don't update the game if a modal is dialog is up.
@@ -616,16 +616,18 @@ void CALLBACK App::OnUpdateGame(double fTime, float fElapsedTime, void *pUserCon
 
 	if (g_pApp->m_pGame)
 	{
+		/*
 		IEventManager::Get()->VUpdate(20);	// allow event queue to process for up to 20 ms
 
 		if (g_pApp->m_pBaseSocketManager)
 		{
 			g_pApp->m_pBaseSocketManager->DoSelect(0);	// pause 0 microseconds
 		}
+		*/
 		
 		g_pApp->m_pGame->VOnUpdate(float(fTime), fElapsedTime);
 	}
-	*/
+	
 }
 
 App::Renderer App::GetRendererImpl()
@@ -707,17 +709,24 @@ void CALLBACK App::OnD3D11DestroyDevice(void* pUserContext)
 
 // -----------------------------------------------------------------------------------------
 // Render the scene using the D3D11 device
+// This callback function will be called at the end of every frame to perform all the
+// rendering calls for the scene, and it will also be called if the window needs to be
+// repainted. After this function has returned, the sample framework will call
+// IDirect3DDevice9::Present to display the contents of the next buffer to the swap chain
+//
+// Game Coding Complete - 3rd Edition - Chapter 6 - page 154
 // -----------------------------------------------------------------------------------------
 void CALLBACK App::OnD3D11FrameRender(ID3D11Device* pd3dDevice, ID3D11DeviceContext* pd3dImmediateContext, double fTime, float fElapsedTime, void* pUserContext)
 {
-	/*
-	BaseGameLogic *pGame = g_pApp->m_pGame;
+	
+	BaseAppLogic *pGame = g_pApp->m_pGame;
 
+	
 	for (GameViewList::iterator i = pGame->m_gameViews.begin(), end = pGame->m_gameViews.end(); i != end; ++i)
 	{
 		(*i)->VOnRender(fTime, fElapsedTime);
 	}
 
 	g_pApp->m_pGame->VRenderDiagnostics();
-	*/
+	
 }

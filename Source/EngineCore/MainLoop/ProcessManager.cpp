@@ -22,7 +22,7 @@ unsigned int ProcessManager::UpdateProcesses(unsigned long deltaMs)
 {
 	unsigned short int successCount = 0;
 	unsigned short int failCount = 0;
-
+	
 	ProcessList::iterator it = m_processList.begin();
 	while (it != m_processList.end())
 	{
@@ -56,7 +56,7 @@ unsigned int ProcessManager::UpdateProcesses(unsigned long deltaMs)
 					pCurrProcess->VOnSuccess();
 					StrongProcessPtr pChild = pCurrProcess->RemoveChild();
 					if (pChild) {
-						AttachProcess(pChild);
+						//AttachProcess(pChild);
 					}
 					else {
 						++successCount; // only counts if the whole chain completed
@@ -87,6 +87,7 @@ unsigned int ProcessManager::UpdateProcesses(unsigned long deltaMs)
 // ---------------------------------------------------------------------------------------------------
 // Attaches the process to the process list so it can be run on the next update.
 // ---------------------------------------------------------------------------------------------------
+
 WeakProcessPtr ProcessManager::AttachProcess(StrongProcessPtr pProcess)
 {
 	m_processList.push_front(pProcess);

@@ -1,10 +1,11 @@
 #pragma once
 
-#include "Common/CommonStd.h"
+//#include "Common/CommonStd.h"
 
 // ==============================================================
 // Process.h : defines common game events
 // ==============================================================
+#include <memory>
 
 class Process;
 typedef std::shared_ptr<Process> StrongProcessPtr;

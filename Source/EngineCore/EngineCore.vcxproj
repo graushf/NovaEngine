@@ -32,6 +32,7 @@
     <ClInclude Include="Actors\ActorFactory.h" />
     <ClInclude Include="Actors\TransformComponent.h" />
     <ClInclude Include="App\App.h" />
+    <ClInclude Include="App\BaseAppLogic.h" />
     <ClInclude Include="Common\CommonStd.h" />
     <ClInclude Include="Common\interfaces.h" />
     <ClInclude Include="Common\templates.h" />
@@ -39,8 +40,11 @@
     <ClInclude Include="Deprecated\MainWindow.h" />
     <ClInclude Include="Graphics3D\Geometry.h" />
     <ClInclude Include="Initialization\Initialization.h" />
+    <ClInclude Include="MainLoop\Process.h" />
+    <ClInclude Include="MainLoop\ProcessManager.h" />
     <ClInclude Include="ResourceCache\ResCache.h" />
     <ClInclude Include="ResourceCache\XmlResource.h" />
+    <ClInclude Include="Utilities\Math.h" />
     <ClInclude Include="Utilities\String.h" />
   </ItemGroup>
   <ItemGroup>
@@ -48,9 +52,14 @@
     <ClCompile Include="Actors\ActorFactory.cpp" />
     <ClCompile Include="App\App.cpp" />
     <ClCompile Include="App\AppInst.cpp" />
+    <ClCompile Include="App\BaseAppLogic.cpp" />
     <ClCompile Include="Common\CommonStd.cpp" />
     <ClCompile Include="Deprecated\EngineCore.cpp" />
     <ClCompile Include="Initialization\Initialization.cpp" />
+    <ClCompile Include="MainLoop\Process.cpp" />
+    <ClCompile Include="MainLoop\ProcessManager.cpp" />
+    <ClCompile Include="Utilities\Math.cpp" />
+    <ClCompile Include="Utilities\MathRandom.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
