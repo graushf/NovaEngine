@@ -1,0 +1,36 @@
+﻿  Microsoft (R) Macro Assembler Version 14.00.24210.0
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  
+   Assembling: match686.asm
+  Microsoft (R) Macro Assembler Version 14.00.24210.0
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  
+   Assembling: inffas32.asm
+  adler32.c
+  compress.c
+  crc32.c
+  deflate.c
+  Assembler code may have bugs -- use at your own risk
+  gzclose.c
+  gzlib.c
+  gzread.c
+  gzwrite.c
+  infback.c
+  inffast.c
+  Assembler code may have bugs -- use at your own risk
+  inflate.c
+  inftrees.c
+  ioapi.c
+  iowin32.c
+..\..\minizip\iowin32.c(31): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  trees.c
+  uncompr.c
+  zutil.c
+  unzip.c
+  zip.c
+     Creating library x86\ZlibDllRelease\zlibwapi.lib and object x86\ZlibDllRelease\zlibwapi.exp
+  Generating code
+  All 263 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  zlibvc.vcxproj -> D:\Usuarios\Gustavo\Descargas\zlib-1.2.11\zlib-1.2.11\contrib\vstudio\vc14\x86\ZlibDllRelease\zlibwapi.dll
+  zlibvc.vcxproj -> x86\ZlibDllRelease\zlibwapi.pdb (Full PDB)

@@ -1,0 +1,2 @@
+﻿  miniunz.c
+LINK : fatal error LNK1104: cannot open file 'x64\ZlibDllDebug\zlibwapi.lib'

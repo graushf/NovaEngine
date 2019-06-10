@@ -99,6 +99,9 @@
     <ClInclude Include="Utilities\Math.h">
       <Filter>Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="ResourceCache\ZipFile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Common\CommonStd.cpp">
@@ -135,6 +138,9 @@
       <Filter>Utilities</Filter>
     </ClCompile>
     <ClCompile Include="App\BaseAppLogic.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceCache\ZipFile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

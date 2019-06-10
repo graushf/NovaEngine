@@ -44,6 +44,7 @@
     <ClInclude Include="MainLoop\ProcessManager.h" />
     <ClInclude Include="ResourceCache\ResCache.h" />
     <ClInclude Include="ResourceCache\XmlResource.h" />
+    <ClInclude Include="ResourceCache\ZipFile.h" />
     <ClInclude Include="Utilities\Math.h" />
     <ClInclude Include="Utilities\String.h" />
   </ItemGroup>
@@ -58,6 +59,7 @@
     <ClCompile Include="Initialization\Initialization.cpp" />
     <ClCompile Include="MainLoop\Process.cpp" />
     <ClCompile Include="MainLoop\ProcessManager.cpp" />
+    <ClCompile Include="ResourceCache\ZipFile.cpp" />
     <ClCompile Include="Utilities\Math.cpp" />
     <ClCompile Include="Utilities\MathRandom.cpp" />
   </ItemGroup>
@@ -136,14 +138,14 @@
     <OutDir>$(SolutionDir)..\Binaries\EngineCore_Lib\$(PlatformName)_$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\Temp\$(ProjectName)_$(PlatformName)_$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(PlatformName)_$(Configuration)</TargetName>
-    <IncludePath>$(ProjectDir);$(ProjectDir)\ThirdParty\DXUT11\Optional;$(ProjectDir)\ThirdParty\DXUT11\Effects11\Inc;$(ProjectDir)\ThirdParty\DXUT11\Core;$(ProjectDir)\ThirdParty\tinyxml_2_6_2;$(DXSDK_DIR)\Include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir);$(ProjectDir)\ThirdParty\DXUT11\Optional;$(ProjectDir)\ThirdParty\DXUT11\Effects11\Inc;$(ProjectDir)\ThirdParty\DXUT11\Core;$(ProjectDir)\ThirdParty\tinyxml_2_6_2;$(ProjectDir)\ThirdParty\zlib-1.2.11;$(DXSDK_DIR)\Include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)..\Binaries\EngineCore_Lib\$(PlatformName)_$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\Temp\$(ProjectName)_$(PlatformName)_$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(PlatformName)_$(Configuration)</TargetName>
-    <IncludePath>$(ProjectDir);$(ProjectDir)\ThirdParty\DXUT11\Optional;$(ProjectDir)\ThirdParty\DXUT11\Effects11\Inc;$(ProjectDir)\ThirdParty\DXUT11\Core;$(ProjectDir)\ThirdParty\tinyxml_2_6_2;$(DXSDK_DIR)\Include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir);$(ProjectDir)\ThirdParty\DXUT11\Optional;$(ProjectDir)\ThirdParty\DXUT11\Effects11\Inc;$(ProjectDir)\ThirdParty\DXUT11\Core;$(ProjectDir)\ThirdParty\tinyxml_2_6_2;$(ProjectDir)\ThirdParty\zlib-1.2.11;$(DXSDK_DIR)\Include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -171,7 +173,7 @@
     <OutDir>$(SolutionDir)..\Binaries\EngineCore_Lib\$(PlatformName)_$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\Temp\$(ProjectName)_$(PlatformName)_$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(PlatformName)_$(Configuration)</TargetName>
-    <IncludePath>$(ProjectDir);$(ProjectDir)\ThirdParty\DXUT11\Optional;$(ProjectDir)\ThirdParty\DXUT11\Effects11\Inc;$(ProjectDir)\ThirdParty\DXUT11\Core;$(ProjectDir)\ThirdParty\tinyxml_2_6_2;$(DXSDK_DIR)\Include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir);$(ProjectDir)\ThirdParty\DXUT11\Optional;$(ProjectDir)\ThirdParty\DXUT11\Effects11\Inc;$(ProjectDir)\ThirdParty\DXUT11\Core;$(ProjectDir)\ThirdParty\tinyxml_2_6_2;$(ProjectDir)\ThirdParty\zlib-1.2.11;$(DXSDK_DIR)\Include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

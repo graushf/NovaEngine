@@ -1,0 +1,17 @@
+﻿  adler32.c
+  compress.c
+  crc32.c
+  deflate.c
+  Assembler code may have bugs -- use at your own risk
+  infback.c
+  inffas8664.c
+  inffast.c
+  Assembler code may have bugs -- use at your own risk
+  inflate.c
+  inftrees.c
+  testzlib.c
+  trees.c
+  uncompr.c
+  zutil.c
+  Generating Code...
+LINK : fatal error LNK1104: cannot open file '..\..\masmx64\gvmat64.obj'
