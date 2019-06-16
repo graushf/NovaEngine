@@ -69,9 +69,6 @@
     <ClInclude Include="ResourceCache\XmlResource.h">
       <Filter>ResourceCache</Filter>
     </ClInclude>
-    <ClInclude Include="ResourceCache\ResCache.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Common\interfaces.h">
       <Filter>Common</Filter>
     </ClInclude>
@@ -80,9 +77,6 @@
     </ClInclude>
     <ClInclude Include="Actors\Actor.h">
       <Filter>Actors</Filter>
-    </ClInclude>
-    <ClInclude Include="Actors\TransformComponent.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MainLoop\Process.h">
       <Filter>MainLoop</Filter>
@@ -99,8 +93,14 @@
     <ClInclude Include="Utilities\Math.h">
       <Filter>Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="ResourceCache\ResCache.h">
+      <Filter>ResourceCache</Filter>
+    </ClInclude>
     <ClInclude Include="ResourceCache\ZipFile.h">
-      <Filter>Header Files</Filter>
+      <Filter>ResourceCache</Filter>
+    </ClInclude>
+    <ClInclude Include="Actors\TransformComponent.h">
+      <Filter>Actors</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -137,10 +137,16 @@
     <ClCompile Include="Utilities\MathRandom.cpp">
       <Filter>Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="ResourceCache\ZipFile.cpp">
+      <Filter>ResourceCache</Filter>
+    </ClCompile>
     <ClCompile Include="App\BaseAppLogic.cpp">
+      <Filter>App</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceCache\ResCache.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ResourceCache\ZipFile.cpp">
+    <ClCompile Include="Utilities\String.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

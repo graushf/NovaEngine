@@ -79,6 +79,9 @@ public:
 	BaseAppLogic *m_pGame;
 	struct GameOptions m_Options;
 
+
+	class ResCache* m_ResCache;
+
 protected:
 
 public:

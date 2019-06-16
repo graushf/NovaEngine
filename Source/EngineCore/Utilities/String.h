@@ -5,6 +5,13 @@
 // =====================================================================
 
 #include <string>
+#include "Common/CommonStd.h"
+
+// Does a classic * & ? pattern match on a file name - this is case sensitive!
+extern BOOL WildcardMatch(const char* pat, const char* str);
+
+
+extern std::string ws2s(const std::wstring& s);
 
 // A hashed string. It retains the initial (ANSI) string in addition to the hash value for easy reference.
 class HashedString
