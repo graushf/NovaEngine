@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include "types.h"
 
 //========================================================================
 // ActorFactory.h - Defines interface classes defined throughout the book
@@ -104,6 +105,57 @@ public:
 
 	virtual ~IGamePhysics() { };
 };
+
+// -----------------------------------------------------------------------------
+// 
+// IKeyboardHandler - Description: Chapter 9, page 242
+// IPointerHandler - Description: Chapter 9, page 242
+// IJoystickHandler - Description: Chapter 9, page 242
+// IGamepadHandler - Description: Chapter 9, page 242
+//
+// These are the public APIs for any object that implements reactions to events
+// sent by the hardware user interface devices.
+//
+// Note: IJoystickHandler and IGamepadHandler are not currently
+//		 implemented anywhere in the codebase. They are here
+//		 as examples, and could require modification to actually work
+//		 properly
+//
+// -----------------------------------------------------------------------------
+class IKeyboardHandler
+{
+public:
+	virtual bool VOnKeyDown(const BYTE c) = 0;
+	virtual bool VOnKeyUp(const BYTE c) = 0;
+};
+
+class IPointerHandler
+{
+public:
+	virtual bool VOnPointerMove(const Point &pos, const int radius) = 0;
+	virtual bool VOnPointerButtonDown(const Point &pos, const int radius, const std::string &buttonName) = 0;
+	virtual bool VOnPointerButtonUp(const Point &pos, const int radius, const std::string &buttonName) = 0;
+};
+
+class IJoystickHandler
+{
+	virtual bool VOnButtonDown(const std::string &buttonName, int const pressure) = 0;
+	virtual bool VOnButtonUp(const std::string &buttonName) = 0;
+	virtual bool VOnJoystick(float const x, float const y) = 0;
+};
+
+class IGamepadHandler
+{
+	virtual bool VOnTrigger(const std::string &triggerName, float const pressure) = 0;
+	virtual bool VOnButtonDown(const std::string &buttonName, int const pressure) = 0;
+	virtual bool VOnButtonUp(const std::string &buttonName) = 0;
+	virtual bool VOnDirectionalPad(const std::string &direction) = 0;
+	virtual bool VOnThumbstick(const std::string &stickName, float const x, float const y) = 0;
+};
+
+
+
+
 
 
 // -----------------------------------------------------------------------------
