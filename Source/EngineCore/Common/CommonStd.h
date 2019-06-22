@@ -62,6 +62,31 @@ using std::tr1::dynamic_pointer_cast;
 #include "Graphics3D/Geometry.h"
 
 
+
+
+typedef D3DXCOLOR Color;
+
+extern Color g_White;
+extern Color g_Black;
+extern Color g_Cyan;
+extern Color g_Red;
+extern Color g_Green;
+extern Color g_Blue;
+extern Color g_Yellow;
+extern Color g_Gray40;
+extern Color g_Gray25;
+extern Color g_Gray65;
+extern Color g_Transparent;
+
+extern Vec3 g_Up;
+extern Vec3 g_Right;
+extern Vec3 g_Forward;
+
+extern Vec4 g_Up4;
+extern Vec4 g_Right4;
+extern Vec4 g_Forward4;
+
+
 // AppMsg					- Chapter 9, page 248
 struct AppMsg
 {
@@ -73,7 +98,15 @@ struct AppMsg
 
 #include "Common/interfaces.h"
 
+// Useful #defines
+
+extern const float fOPAQUE;
+extern const int iOPAQUE;
+extern const float fTRANSPARENT;
+extern const int iTRANSPARENT;
+
 extern const int MEGABYTE;
+extern const float SIXTY_HERTZ;
 
 extern const int SCREEN_WIDTH;
 extern const int SCREEN_HEIGHT;

@@ -36,8 +36,10 @@
     <ClInclude Include="Common\CommonStd.h" />
     <ClInclude Include="Common\interfaces.h" />
     <ClInclude Include="Common\templates.h" />
+    <ClInclude Include="Common\types.h" />
     <ClInclude Include="Deprecated\BaseWindow.h" />
     <ClInclude Include="Deprecated\MainWindow.h" />
+    <ClInclude Include="Graphics3D\D3DRenderer.h" />
     <ClInclude Include="Graphics3D\Geometry.h" />
     <ClInclude Include="Initialization\Initialization.h" />
     <ClInclude Include="MainLoop\Process.h" />
@@ -56,6 +58,7 @@
     <ClCompile Include="App\BaseAppLogic.cpp" />
     <ClCompile Include="Common\CommonStd.cpp" />
     <ClCompile Include="Deprecated\EngineCore.cpp" />
+    <ClCompile Include="Graphics3D\D3DRenderer.cpp" />
     <ClCompile Include="Initialization\Initialization.cpp" />
     <ClCompile Include="MainLoop\Process.cpp" />
     <ClCompile Include="MainLoop\ProcessManager.cpp" />

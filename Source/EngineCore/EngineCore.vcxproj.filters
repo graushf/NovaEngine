@@ -102,6 +102,12 @@
     <ClInclude Include="Actors\TransformComponent.h">
       <Filter>Actors</Filter>
     </ClInclude>
+    <ClInclude Include="Common\types.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics3D\D3DRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Common\CommonStd.cpp">
@@ -147,6 +153,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Utilities\String.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics3D\D3DRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
