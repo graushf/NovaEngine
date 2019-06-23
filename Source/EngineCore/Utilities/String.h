@@ -11,6 +11,9 @@
 extern BOOL WildcardMatch(const char* pat, const char* str);
 
 
+extern HRESULT AnsiToWideCch(WCHAR* dest, const CHAR* src, int charCount);
+
+
 extern std::string ws2s(const std::wstring& s);
 
 // A hashed string. It retains the initial (ANSI) string in addition to the hash value for easy reference.

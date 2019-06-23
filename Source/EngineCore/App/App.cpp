@@ -178,8 +178,7 @@ bool App::InitInstance(HINSTANCE hInstance, LPWSTR lpCmdLine, HWND hWnd, int scr
 	//_tcscpy_s(m_saveGameDirectory, GetSaveGameDirectory(GetHwnd(), VGetGameAppDirectory()));
 
 	// DXUTCreateDevice - Chapter 5, page 139
-	m_screenSize_x = screenWidth;
-	m_screenSize_y = screenHeight;
+	m_screenSize = Point(screenWidth, screenHeight);
 
 	DXUTCreateDevice(D3D_FEATURE_LEVEL_11_0, true, screenWidth, screenHeight);
 

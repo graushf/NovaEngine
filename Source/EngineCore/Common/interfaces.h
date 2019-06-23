@@ -19,6 +19,16 @@ const ComponentId INVALID_COMPONENT_ID = 0;
 typedef std::shared_ptr<Actor> StrongActorPtr;
 typedef std::weak_ptr<Actor> WeakActorPtr;
 typedef std::shared_ptr<ActorComponent> StrongActorComponentPtr;
+typedef std::weak_ptr<ActorComponent> WeakActorComponentPtr;
+
+template<class T>
+struct SortBy_SharedPtr_Content
+{
+	bool operator()(const std::shared_ptr<T> &lhs, const std::shared_ptr<T>& rhs) const
+	{
+		return *lhs < *rhs;
+	}
+};
 
 // 
 // class IScreenElement				- Chapter 10, page 285
@@ -36,7 +46,7 @@ public:
 	virtual bool VIsVisible() const = 0;
 	virtual void VSetVisible(bool visible) = 0;
 
-	virtual HRESULT CALLBACK VOnMsgProc(AppMsg msg) = 0;
+	virtual LRESULT CALLBACK VOnMsgProc(AppMsg msg) = 0;
 
 	virtual ~IScreenElement() { };
 	virtual bool const operator<(IScreenElement const &other) { return VGetZOrder() < other.VGetZOrder(); }
@@ -191,6 +201,22 @@ public:
 	virtual ~IResourceFile() { }
 };
 
+// -----------------------------------------------------------------------------
+// enum RenderPass									- Chapter 16, page 529
+// 
+// 3D scenes are drawn in passes - this enum defines the render passes supported
+// bu the 3D scene graph created by class Scene.
+//
+// -----------------------------------------------------------------------------
+enum RenderPass
+{
+	RenderPass_0,
+	RenderPass_Static = RenderPass_0,
+	RenderPass_Actor,
+	RenderPass_Sky,
+	RenderPass_NotRendered,
+	RenderPass_Last
+};
 
 class Scene;
 class SceneNodeProperties;
@@ -229,4 +255,34 @@ public:
 	virtual std::shared_ptr<IRenderState> VPrepareAlphaPass() = 0;
 	virtual std::shared_ptr<IRenderState> VPrepareSkyBoxPass() = 0;
 	virtual void VDrawLine(const Vec3& from, const Vec3& to, const Color& color) = 0;
+};
+
+//
+// class ISceneNode				- Chapter 16, page 524
+//
+//		Thisis the public interface for nodes in a 3D scene graph.
+//
+class ISceneNode
+{
+public:
+	virtual const SceneNodeProperties* const VGet() const = 0;
+
+	virtual void VSetTransform(const Mat4x4* toWorld, const Mat4x4* fromWorld = nullptr) = 0;
+
+	virtual HRESULT VOnUpdate(Scene* pScene, DWORD const elapsedMs) = 0;
+	virtual HRESULT VOnRestore(Scene* pScene) = 0;
+
+	virtual HRESULT VPreRender(Scene* pScene) = 0;
+	virtual bool VIsVisible(Scene* pScene) const = 0;
+	virtual HRESULT VRender(Scene* pScene) = 0;
+	virtual HRESULT VRenderChildren(Scene* pScene) = 0;
+	virtual HRESULT VPostRender(Scene* pScene) = 0;
+
+	virtual bool VAddChild(std::shared_ptr<ISceneNode> kid) = 0;
+	virtual bool VRemoveChild(ActorId id) = 0;
+	virtual HRESULT VOnLostDevice(Scene *pScene) = 0;
+	virtual HRESULT VPick(Scene *pScene, RayCast* pRayCast) = 0;
+
+
+	virtual ~ISceneNode() { };
 };

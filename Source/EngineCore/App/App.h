@@ -3,6 +3,8 @@
 #include "Common/CommonStd.h"
 #include "Initialization/Initialization.h"
 #include "BaseAppLogic.h"
+#include "Graphics3D/SceneNodes.h"
+#include "UserInterface/UserInterface.h"
 
 // ================================================================
 // App.h : Defines the entry point for the application.
@@ -15,10 +17,12 @@ protected:
 	bool m_bWindowedMode;			// true if the app is windowed, false if fullscreen
 	bool m_bQuitting;				// true if the app is running the exit sequence.
 	bool m_bIsRunning;				// true if everything is initialized and the game is in the main loop
-	float m_screenSize_x;
-	float m_screenSize_y;
+	//float m_screenSize_x;
+	//float m_screenSize_y;
+	Point m_screenSize;				// game screen size
 
 public:
+	const Point& GetScreenSize() { return m_screenSize; }
 
 protected:
 	std::map<std::wstring, std::wstring> m_textResource;
@@ -59,6 +63,8 @@ public:
 		Renderer_Unknown,
 		Renderer_D3D11
 	};
+
+	std::shared_ptr<IRenderer> m_Renderer;
 
 	static Renderer GetRendererImpl();
 

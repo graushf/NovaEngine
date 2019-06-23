@@ -108,6 +108,18 @@
     <ClInclude Include="Graphics3D\D3DRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="UserInterface\HumanView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\UserInterface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics3D\Scene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics3D\SceneNodes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Common\CommonStd.cpp">
@@ -156,6 +168,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Graphics3D\D3DRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\HumanView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

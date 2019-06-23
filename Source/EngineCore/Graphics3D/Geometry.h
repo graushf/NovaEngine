@@ -2,6 +2,28 @@
 
 #include "Common/CommonStd.h"
 
+
+// ------------------------------------------------------------------
+//	Content References in Game Coding Complete 3rd Edition
+//
+//  class Vec3				- Chapter 14, page 456
+//  class Vec4				- Chapter 14, page 457
+//  class Mat4x4			- Chapter 14, page 466
+//  class Quaternion		- Chapter 14, page 471
+//  class Plane				- Chapter 14, page 473
+//  class Frustum			- Chapter 14, page 474
+//
+
+const float Nv_PI = 3.14159265358979f;
+const float Nv_2PI = 2 * Nv_PI;
+
+//
+// Utility classes for vectors and matrices
+//
+typedef D3DXVECTOR2 Vec2;
+
+
+
 class Vec3 : public D3DXVECTOR3
 {
 public:
@@ -61,4 +83,67 @@ public:
 	Mat4x4() : D3DXMATRIX() { }
 
 	static const Mat4x4 g_Identity;
+};
+
+//
+// Plane Definition
+//
+
+class Plane : public D3DXPLANE
+{
+public:
+	inline void Normalize();
+
+	// normal faces away from you if you send in verts in counter clockwise order...
+	inline void Init(const Vec3& p0, const Vec3& p1, const Vec3& p2);
+	bool Inside(const Vec3& point, const float radius) const;
+	bool Inside(const Vec3& point) const;
+};
+
+inline void Plane::Normalize()
+{
+	float mag;
+	mag = sqrt(a * a + b * b + c * c);
+	a = a / mag;
+	b = b / mag;
+	c = c / mag;
+	d = d / mag;
+}
+
+inline void Plane::Init(const Vec3& p0, const Vec3& p1, const Vec3& p2)
+{
+	D3DXPlaneFromPoints(this, &p0, &p1, &p2);
+	Normalize();
+}
+
+//
+// Frustum definition
+//
+class Frustum
+{
+public:
+	enum Side { Near, Far, Top, Right, Bottom, Left, NumPlanes };
+
+	Plane m_Planes[NumPlanes];
+	Vec3 m_NearClip[4];
+	Vec3 m_FarClip[4];
+
+	float m_Fov;
+	float m_Aspect;
+	float m_Near;
+	float m_Far;
+
+public:
+	Frustum();
+
+	bool Inside(const Vec3& point) const;
+	bool Inside(const Vec3& point, const float radius) const;
+	const Plane &Get(Side side) { return m_Planes[side]; }
+	void SetFOV(float fov) { m_Fov = fov; Init(m_Fov, m_Aspect, m_Near, m_Far); }
+	void SetAspect(float aspect) { m_Aspect = aspect; Init(m_Fov, m_Aspect, m_Near, m_Far); }
+	void SetNear(float nearClip) { m_Near = nearClip; Init(m_Fov, m_Aspect, m_Near, m_Far); }
+	void SetFar(float farClip) { m_Far = farClip; Init(m_Fov, m_Aspect, m_Near, m_Far); }
+	void Init(const float fov, const float aspect, const float near, const float far);
+
+	void Render();
 };

@@ -49,3 +49,20 @@ std::string ws2s(const std::wstring& s)
 	WideCharToMultiByte(CP_ACP, 0, s.c_str(), slength, &r[0], len, 0, 0);
 	return r;
 }
+
+
+HRESULT AnsiToWideCch(WCHAR* wstrDestination, const CHAR* strSource, int cchDestChar)
+{
+	if (wstrDestination == nullptr || strSource == nullptr || cchDestChar < 1)
+		return E_INVALIDARG;
+
+	int nResult = MultiByteToWideChar(CP_ACP, 0, strSource, -1,
+		wstrDestination, cchDestChar);
+
+	wstrDestination[cchDestChar - 1] = 0;
+
+	if (nResult == 0)
+		return E_FAIL;
+
+	return S_OK;
+}
