@@ -139,11 +139,19 @@ int MessageBox::Ask(MessageBox_Questions question)
 	{
 		case QUESTION_WHERES_THE_CD:
 		{
-
+			msg = g_pApp->GetString(_T("IDS_QUESTION_WHERES_THE_CD"));
+			title = g_pApp->GetString(_T("IDS_ALERT"));
+			buttonFlags = MB_RETRYCANCEL | MB_ICONEXCLAMATION;
+			defaultAnswer = IDCANCEL;
+			break;
 		}
 		case QUESTION_QUIT_GAME:
 		{
-
+			msg = g_pApp->GetString(_T("IDS_QUESTION_QUIT_GAME"));
+			title = g_pApp->GetString(_T("IDS_QUESTION"));
+			buttonFlags = MB_YESNO | MB_ICONQUESTION;
+			defaultAnswer = IDNO;
+			break;
 		}
 		default:
 			//Nv_ASSERT(0 && _T("Undefined question in Game::Ask"));
