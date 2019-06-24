@@ -49,9 +49,15 @@ public:
 	void				Randomize(void);
 };
 
+/*
+struct Point
+{ 
+	int x, y;
+	Point() { x = y = 0; }
+	Point(int _x, int _y) { x = _x; y = _y; }
+*/
 
-
-
+typedef std::vector<Point> Poly;
 
 class Math
 {
@@ -64,6 +70,6 @@ public:
 	// FUNCTIONS
 public:
 
-
-
+	static bool PointInPoly(Point const& test, const Poly& polygon);
+	static bool PointInPoly(int const x, int const y, int const * const vertex, int const nvertex);
 };
