@@ -37,6 +37,9 @@ class SceneNodeProperties
 protected:
 
 public:
+	SceneNodeProperties(void);
+	
+	void Transform(Mat4x4* toWorld, Mat4x4* fromWorld) const;
 
 };
 
