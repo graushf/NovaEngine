@@ -2,6 +2,7 @@
 
 #include "Initialization/Initialization.h"
 #include "App/BaseAppLogic.h"
+#include "UserInterface/HumanView.h"
 
 App *g_App = nullptr;
 
@@ -571,6 +572,147 @@ LRESULT App::OnClose()
 
 	return 0;
 }
+
+int App::PumpUntilMessage(UINT msgEnd, WPARAM* pWParam, LPARAM* pLParam)
+{
+	int currentTime = timeGetTime();
+	MSG msg;
+	for ( ;; )
+	{
+		if (PeekMessage(&msg, nullptr, 0, 0, PM_NOREMOVE))
+		{
+			if (msg.message == WM_CLOSE)
+			{
+				m_bQuitting = true;
+				GetMessage(&msg, nullptr, 0, 0);
+				break;
+			}
+			else
+			{
+				// Default processing
+				if (GetMessage(&msg, NULL, NULL, NULL))
+				{
+					TranslateMessage(&msg);
+					DispatchMessage(&msg);
+				}
+
+				// Are we done?
+				if (msg.message == msgEnd)
+					break;
+			}
+		}
+		else
+		{
+			// Update the game views, but nothing else!
+			// Remember this is a modal screen.
+			if (m_pGame)
+			{
+				int timeNow = timeGetTime();
+				int deltaMilliseconds = timeNow - currentTime;
+				for (GameViewList::iterator i = m_pGame->m_gameViews.begin(); i != m_pGame->m_gameViews.end(); ++i)
+				{
+					(*i)->VOnUpdate(deltaMilliseconds);
+				}
+				currentTime = timeNow;
+				DXUTRender3DEnvironment();
+			}
+		}
+	}
+	if (pLParam)
+		*pLParam = msg.lParam;
+	if (pWParam)
+		*pWParam = msg.wParam;
+
+	return 0;
+}
+
+
+// -----------------------------------------------------------------------------------------
+// App::GetString											- Chapter 5, page 144
+//
+// Creates a string from a string resource ID in the string table stored
+// in a special DLL, LANG.DLL, so game text strings can be language
+// independent.
+//
+// -----------------------------------------------------------------------------------------
+std::wstring App::GetString(std::wstring sID)
+{
+	auto localizedString = m_textResource.find(sID);
+	if (localizedString == m_textResource.end())
+	{
+		//Nv_ASSERT(0 && "String not found!");
+		return L"";
+	}
+	return localizedString->second;
+}
+
+//
+// App::GetHumanView()						- not described in the book.
+//
+//		FUTURE WORK - This function should accept a player number for split screen games.
+//
+HumanView* App::GetHumanView()
+{
+	HumanView* pView = nullptr;
+	for (GameViewList::iterator i = m_pGame->m_gameViews.begin(); i != m_pGame->m_gameViews.end(); ++i)
+	{
+		if ((*i)->VGetType() == GameView_Human)
+		{
+			std::shared_ptr<IGameView> pIGameView(*i);
+			pView = static_cast<HumanView*> (&*pIGameView);
+			break;
+		}
+	}
+	return pView;
+}
+
+int App::Modal(std::shared_ptr<IScreenElement> pModalScreen, int defaultAnswer)
+{
+	// If we're going to display a dialog box, we need a human view
+	// to interact with
+
+	HumanView* pView = GetHumanView();
+
+	if (!pView)
+	{
+		// Whoops! There's no human view attached.
+		return defaultAnswer;
+	}
+
+	if (m_HasModalDialog & 0x10000000)
+	{
+		//Nv_ASSERT(0 && "Too many nested dialogs!");
+		return defaultAnswer;
+	}
+
+	//Nv_ASSERT(GetHwnd() != nullptr && _T("Main Window is NULL!"));
+	if ((GetHwnd() != nullptr) && IsIconic(GetHwnd()))
+	{
+		FlashWhileMinimized();
+	}
+
+	m_HasModalDialog <<= 1;
+	m_HasModalDialog |= 1;
+
+	pView->VPushElement(pModalScreen);
+
+	LPARAM lParam = 0;
+	int result = PumpUntilMessage(g_MsgEndModal, nullptr, &lParam);
+
+	if (lParam != 0)
+	{
+		if (lParam == g_QuitNoPrompt)
+			result = defaultAnswer;
+		else
+			result = (int)lParam;
+	}
+
+	pView->VRemoveElement(pModalScreen);
+	m_HasModalDialog >>= 1;
+
+	return result;
+}
+
 
 
 // -----------------------------------------------------------------------------------------

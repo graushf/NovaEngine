@@ -8,6 +8,27 @@
 #include "Common/CommonStd.h"
 #include "Graphics3D/Scene.h"
 
+const DWORD g_QuitNoPrompt = MAKELPARAM(-1, -1);
+const UINT g_MsgEndModal = (WM_USER + 100);
+
+enum
+{
+	// Lower numbers get drawn first
+	ZORDER_BACKGROUND,
+	ZORDER_LAYER1,
+	ZORDER_LAYER2,
+	ZORDER_LAYER3,
+	ZORDER_TOOLTIP
+};
+
+enum MessageBox_Questions {
+	QUESTION_WHERES_THE_CD,
+	QUESTION_QUIT_GAME,
+};
+
+class FontHandler;
+class BaseUI;
+
 //
 // class BaseUI					- Chapter 10, page 286
 //

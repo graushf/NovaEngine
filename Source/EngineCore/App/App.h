@@ -5,6 +5,7 @@
 #include "BaseAppLogic.h"
 #include "Graphics3D/SceneNodes.h"
 #include "UserInterface/UserInterface.h"
+#include "UserInterface/HumanView.h"
 
 // ================================================================
 // App.h : Defines the entry point for the application.
@@ -15,8 +16,8 @@ protected:
 
 	HINSTANCE m_hInstance;			// the module instance
 	bool m_bWindowedMode;			// true if the app is windowed, false if fullscreen
-	bool m_bQuitting;				// true if the app is running the exit sequence.
 	bool m_bIsRunning;				// true if everything is initialized and the game is in the main loop
+	bool m_bQuitting;				// true if the app is running the exit sequence.
 	//float m_screenSize_x;
 	//float m_screenSize_y;
 	Point m_screenSize;				// game screen size
@@ -28,6 +29,7 @@ protected:
 	std::map<std::wstring, std::wstring> m_textResource;
 
 	int m_HasModalDialog;					// determines if a modal dialog is up
+	int PumpUntilMessage(UINT msgEnd, WPARAM* pWParam, LPARAM* pLParam);
 	void FlashWhileMinimized();
 
 public:
@@ -57,6 +59,9 @@ public:
 	LRESULT OnAltEnter();
 
 	bool LoadStrings(std::string language);
+	std::wstring GetString(std::wstring sID);
+
+	int Modal(std::shared_ptr<IScreenElement> pModalScreen, int defaultAnswer);
 
 	enum Renderer
 	{
@@ -84,6 +89,9 @@ public:
 
 	BaseAppLogic *m_pGame;
 	struct GameOptions m_Options;
+
+
+	HumanView* GetHumanView();
 
 
 	class ResCache* m_ResCache;
