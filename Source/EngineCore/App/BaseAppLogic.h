@@ -76,6 +76,14 @@ public:
 	// rest of code
 
 
+
 	// Render Diagnostics
 	virtual void VRenderDiagnostics();
+
+
+	void AttachProcess(StrongProcessPtr pProcess) { if (m_pProcessManager) { m_pProcessManager->AttachProcess(pProcess); } }
+
+
+protected:
+
 };

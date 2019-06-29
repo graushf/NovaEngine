@@ -20,6 +20,10 @@ public:
 
 	// These are exported to Lua
 	static bool LoadAndExecuteScriptResource(const char* scriptResource);
+
+
+	// process system
+	static void AttachScriptProcess(LuaPlus::LuaObject scriptProcess);
 };
 
 bool InternalScriptExports::LoadAndExecuteScriptResource(const char* scriptResource)
@@ -32,6 +36,20 @@ bool InternalScriptExports::LoadAndExecuteScriptResource(const char* scriptResou
 		return true;
 
 	return false;
+}
+
+void InternalScriptExports::AttachScriptProcess(LuaPlus::LuaObject scriptProcess)
+{
+	LuaPlus::LuaObject temp = scriptProcess.Lookup("__object");
+	if (!temp.IsNil())
+	{
+		std::shared_ptr<Process> pProcess(static_cast<Process*>(temp.GetLightUserData()));
+		g_pApp->m_pGame->AttachProcess(pProcess);
+	}
+	else
+	{
+		//Nv_ERROR("Couldn't find __object in script process");
+	}
 }
 
 void ScriptExports::Register(void)
