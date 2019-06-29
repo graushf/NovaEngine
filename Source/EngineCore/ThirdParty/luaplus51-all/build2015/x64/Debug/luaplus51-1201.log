@@ -1,0 +1,239 @@
+﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(368,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
+  LuaTableIterator.cpp
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\luastate.inl(802): warning C4244: 'argument': conversion from 'lua_Integer' to 'int', possible loss of data
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\luacall.inl(122): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(1769): note: see declaration of 'sprintf'
+  LuaState_DumpObject.cpp
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\luastate.inl(802): warning C4244: 'argument': conversion from 'lua_Integer' to 'int', possible loss of data
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\luacall.inl(122): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(1769): note: see declaration of 'sprintf'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\luastate_dumpobject.cpp(54): warning C4996: 'vsprintf': This function or variable may be unsafe. Consider using vsprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(1465): note: see declaration of 'vsprintf'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\luastate_dumpobject.cpp(215): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(1769): note: see declaration of 'sprintf'
+  LuaStateOutFile.cpp
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\luastate.inl(802): warning C4244: 'argument': conversion from 'lua_Integer' to 'int', possible loss of data
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\luacall.inl(122): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(1769): note: see declaration of 'sprintf'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\luastateoutfile.cpp(48): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(205): note: see declaration of 'fopen'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\luastateoutfile.cpp(50): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(205): note: see declaration of 'fopen'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\luastateoutfile.cpp(70): warning C4996: 'vsprintf': This function or variable may be unsafe. Consider using vsprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(1465): note: see declaration of 'vsprintf'
+  LuaState.cpp
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\luastate.inl(802): warning C4244: 'argument': conversion from 'lua_Integer' to 'int', possible loss of data
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\luacall.inl(122): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(1769): note: see declaration of 'sprintf'
+  LuaPlus_Libs.cpp
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\luastate.inl(802): warning C4244: 'argument': conversion from 'lua_Integer' to 'int', possible loss of data
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\luacall.inl(122): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(1769): note: see declaration of 'sprintf'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\luaplus_libs.cpp(73): warning C4996: 'vsprintf': This function or variable may be unsafe. Consider using vsprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(1465): note: see declaration of 'vsprintf'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\luaplus_libs.cpp(88): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(346): note: see declaration of 'strncpy'
+  LuaPlusFunctions.cpp
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\luastate.inl(802): warning C4244: 'argument': conversion from 'lua_Integer' to 'int', possible loss of data
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\luacall.inl(122): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(1769): note: see declaration of 'sprintf'
+  LuaPlus.cpp
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\luastate.inl(802): warning C4244: 'argument': conversion from 'lua_Integer' to 'int', possible loss of data
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\luacall.inl(122): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(1769): note: see declaration of 'sprintf'
+  LuaObject.cpp
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\luastate.inl(802): warning C4244: 'argument': conversion from 'lua_Integer' to 'int', possible loss of data
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\luacall.inl(122): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(1769): note: see declaration of 'sprintf'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\luaobject.cpp(1107): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(346): note: see declaration of 'strncpy'
+  Generating Code...
+  srm.c
+  print.c
+  lzio.c
+  lvm.c
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\lvm.c(63): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(1769): note: see declaration of 'sprintf'
+  lundump.c
+  ltm.c
+  ltablib.c
+  ltable.c
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\ltable.c(382): warning C4334: '<<': result of 32-bit shift implicitly converted to 64 bits (was 64-bit shift intended?)
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\ltable.c(447): warning C4334: '<<': result of 32-bit shift implicitly converted to 64 bits (was 64-bit shift intended?)
+  lstrlib.c
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\lstrlib.c(775): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(1769): note: see declaration of 'sprintf'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\lstrlib.c(806): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(1769): note: see declaration of 'sprintf'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\lstrlib.c(832): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(346): note: see declaration of 'strncpy'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\lstrlib.c(842): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(119): note: see declaration of 'strcpy'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\lstrlib.c(865): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(1769): note: see declaration of 'sprintf'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\lstrlib.c(870): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(1769): note: see declaration of 'sprintf'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\lstrlib.c(875): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(1769): note: see declaration of 'sprintf'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\lstrlib.c(880): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(1769): note: see declaration of 'sprintf'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\lstrlib.c(898): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(1769): note: see declaration of 'sprintf'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\lstrlib.c(910): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(119): note: see declaration of 'strcpy'
+  lstring.c
+  lstate.c
+  lparser.c
+  loslib.c
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\loslib.c(32): warning C4996: 'strerror': This function or variable may be unsafe. Consider using strerror_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(178): note: see declaration of 'strerror'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\loslib.c(66): warning C4996: 'tmpnam': This function or variable may be unsafe. Consider using tmpnam_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(442): note: see declaration of 'tmpnam'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\loslib.c(79): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdlib.h(1183): note: see declaration of 'getenv'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\loslib.c(142): warning C4996: 'gmtime': This function or variable may be unsafe. Consider using gmtime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\time.h(495): note: see declaration of 'gmtime'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\loslib.c(146): warning C4996: 'localtime': This function or variable may be unsafe. Consider using localtime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\time.h(505): note: see declaration of 'localtime'
+  lopcodes.c
+  lobject.c
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\lobject.c(320): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(1769): note: see declaration of 'sprintf'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\lobject.c(362): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(346): note: see declaration of 'strncpy'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\lobject.c(371): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(119): note: see declaration of 'strcpy'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\lobject.c(374): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(90): note: see declaration of 'strcat'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\lobject.c(376): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(90): note: see declaration of 'strcat'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\lobject.c(382): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(119): note: see declaration of 'strcpy'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\lobject.c(384): warning C4996: 'strncat': This function or variable may be unsafe. Consider using strncat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(255): note: see declaration of 'strncat'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\lobject.c(385): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(90): note: see declaration of 'strcat'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\lobject.c(388): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(90): note: see declaration of 'strcat'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\lobject.c(389): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(90): note: see declaration of 'strcat'
+  loadlib.c
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\loadlib.c(189): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(119): note: see declaration of 'strcpy'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\loadlib.c(190): warning C4996: 'access': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _access. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\corecrt_io.h(439): note: see declaration of 'access'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\loadlib.c(224): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(119): note: see declaration of 'strcpy'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\loadlib.c(227): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(119): note: see declaration of 'strcpy'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\loadlib.c(270): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(119): note: see declaration of 'strcpy'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\loadlib.c(272): warning C4996: 'stricmp': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _stricmp. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(568): note: see declaration of 'stricmp'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\loadlib.c(278): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(90): note: see declaration of 'strcat'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\loadlib.c(561): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(205): note: see declaration of 'fopen'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\loadlib.c(825): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdlib.h(1183): note: see declaration of 'getenv'
+  lmem.c
+  lmathlib.c
+  llex.c
+  liolib.c
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\liolib.c(46): warning C4996: 'strerror': This function or variable may be unsafe. Consider using strerror_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(178): note: see declaration of 'strerror'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\liolib.c(48): warning C4996: 'strerror': This function or variable may be unsafe. Consider using strerror_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(178): note: see declaration of 'strerror'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\liolib.c(56): warning C4996: 'strerror': This function or variable may be unsafe. Consider using strerror_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(178): note: see declaration of 'strerror'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\liolib.c(172): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(205): note: see declaration of 'fopen'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\liolib.c(193): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(431): note: see declaration of 'tmpfile'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\liolib.c(216): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(205): note: see declaration of 'fopen'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\liolib.c(268): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(205): note: see declaration of 'fopen'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\liolib.c(286): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(1193): note: see declaration of 'fscanf'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\liolib.c(396): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(205): note: see declaration of 'fopen'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\liolib.c(419): warning C4996: 'strerror': This function or variable may be unsafe. Consider using strerror_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(178): note: see declaration of 'strerror'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\liolib.c(463): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(205): note: see declaration of 'fopen'
+  Generating Code...
+  Compiling...
+  linit.c
+  lgc.c
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\lgc.c(311): warning C4334: '<<': result of 32-bit shift implicitly converted to 64 bits (was 64-bit shift intended?)
+  lfunc.c
+  ldump.c
+  ldo.c
+  ldebug.c
+  ldblib.c
+  lcode.c
+  lbaselib.c
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\lbaselib.c(633): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(119): note: see declaration of 'strcpy'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\lbaselib.c(636): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(119): note: see declaration of 'strcpy'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\lbaselib.c(639): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(1769): note: see declaration of 'sprintf'
+  lauxlib.c
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\lauxlib.c(585): warning C4996: 'strerror': This function or variable may be unsafe. Consider using strerror_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(178): note: see declaration of 'strerror'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\lauxlib.c(605): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(205): note: see declaration of 'fopen'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\src\lauxlib.c(619): warning C4996: 'freopen': This function or variable may be unsafe. Consider using freopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(240): note: see declaration of 'freopen'
+  lapi.c
+  pt.c
+  popen.c
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\popen.c(102): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdlib.h(1183): note: see declaration of 'getenv'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\popen.c(107): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(119): note: see declaration of 'strcpy'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\popen.c(108): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(90): note: see declaration of 'strcat'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\popen.c(109): warning C4996: 'strlwr': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _strlwr. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(574): note: see declaration of 'strlwr'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\popen.c(112): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(90): note: see declaration of 'strcat'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\popen.c(113): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(90): note: see declaration of 'strcat'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\popen.c(115): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(90): note: see declaration of 'strcat'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\popen.c(191): warning C4311: 'type cast': pointer truncation from 'HANDLE' to 'long'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\popen.c(199): warning C4311: 'type cast': pointer truncation from 'HANDLE' to 'long'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\popen.c(160): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdlib.h(1183): note: see declaration of 'getenv'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\popen.c(165): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(119): note: see declaration of 'strcpy'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\popen.c(166): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(90): note: see declaration of 'strcat'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\popen.c(167): warning C4996: 'strlwr': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _strlwr. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(574): note: see declaration of 'strlwr'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\popen.c(170): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(90): note: see declaration of 'strcat'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\popen.c(171): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(90): note: see declaration of 'strcat'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\popen.c(173): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(90): note: see declaration of 'strcat'
+  lwstrlib.c
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\lwstrlib.c(927): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(1769): note: see declaration of 'sprintf'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\lwstrlib.c(934): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(1769): note: see declaration of 'sprintf'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\lwstrlib.c(941): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(1769): note: see declaration of 'sprintf'
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\lwstrlib.c(948): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(1769): note: see declaration of 'sprintf'
+  luathread.c
+  LuaPlusAddons.c
+d:\usuarios\gustavo\hobby\game_engine\gamecode4-vs2015-georgebr\source\gcc4\3rdparty\luaplus51-all\src\luaplus\luaplusaddons.c(40): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(1769): note: see declaration of 'sprintf'
+  Generating Code...
+     Creating library D:\Usuarios\Gustavo\Hobby\GAME_ENGINE\gamecode4-vs2015-georgebr\Source\GCC4\3rdParty\luaplus51-all\build2015\x64\Debug\Output\luaplus51-1201.lib and object D:\Usuarios\Gustavo\Hobby\GAME_ENGINE\gamecode4-vs2015-georgebr\Source\GCC4\3rdParty\luaplus51-all\build2015\x64\Debug\Output\luaplus51-1201.exp
+  luaplus51-1201.vcxproj -> D:\Usuarios\Gustavo\Hobby\GAME_ENGINE\gamecode4-vs2015-georgebr\Source\GCC4\3rdParty\luaplus51-all\build2015\x64\Debug\Output\luaplus51-1201.dll
+  luaplus51-1201.vcxproj -> D:\Usuarios\Gustavo\Hobby\GAME_ENGINE\gamecode4-vs2015-georgebr\Source\GCC4\3rdParty\luaplus51-all\build2015\x64\Debug\Output\luaplus51-1201.pdb (Full PDB)
