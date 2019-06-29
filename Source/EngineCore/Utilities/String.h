@@ -8,6 +8,7 @@
 #include "Common/CommonStd.h"
 
 #define MAX_DIGITS_IN_INT 12		// max number of digits in an int (-2147483647 = 11 digits, +1 for the '\0')
+typedef std::vector<std::string> StringVec;
 
 // Does a classic * & ? pattern match on a file name - this is case sensitive!
 extern BOOL WildcardMatch(const char* pat, const char* str);
@@ -20,6 +21,16 @@ extern std::string ToStr(int num, int base = 10);
 
 
 extern std::string ws2s(const std::wstring& s);
+
+
+// Splits a string by the delimeter into a vector of strings. For example, say you have the following strings:
+// std::string test("one, two, three");
+// You could call Split() like this:
+// Split(test, outVec, ',');
+// outVec will have the following values:
+// "one", "two", "three"
+void Split(const std::string& str, StringVec& vec, char delimiter);
+
 
 // A hashed string. It retains the initial (ANSI) string in addition to the hash value for easy reference.
 class HashedString

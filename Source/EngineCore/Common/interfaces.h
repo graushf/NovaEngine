@@ -286,3 +286,18 @@ public:
 
 	virtual ~ISceneNode() { };
 };
+
+
+// --------------------------------------------------------------------------
+// IScriptManager Description
+//
+//		This is the public interface for the scripting systems.
+// --------------------------------------------------------------------------
+class IScriptManager
+{
+public:
+	virtual ~IScriptManager(void) { }
+	virtual bool VInit(void) = 0;
+	virtual void VExecuteFile(const char* resource) = 0;
+	virtual void VExecuteString(const char* str) = 0;	
+};

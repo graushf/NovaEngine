@@ -76,3 +76,30 @@ std::string ToStr(int num, int base)
 	return (std::string(str));
 	// end ToStr()
 }
+
+// ------------------------------------------------------------------------------------------------------
+// This is basically like the Perl split() function. It splits str into substrins by cutting it at each 
+// delimiter. The result is stored in vec.
+// ------------------------------------------------------------------------------------------------------
+void Split(const std::string& str, StringVec& vec, char delimiter)
+{
+	vec.clear();
+	size_t strLen = str.size();
+	if (strLen == 0)
+		return;
+
+	size_t startIndex = 0;
+	size_t indexOfDel = str.find_first_of(delimiter, startIndex);
+	while (indexOfDel != std::string::npos)
+	{
+		vec.push_back(str.substr(startIndex, indexOfDel - startIndex));
+		startIndex = indexOfDel + 1;
+		if (startIndex >= strLen)
+		{
+			break;
+		}
+		indexOfDel = str.find_first_of(delimiter, startIndex);
+	}
+	if (startIndex < strLen)
+		vec.push_back(str.substr(startIndex));
+}
