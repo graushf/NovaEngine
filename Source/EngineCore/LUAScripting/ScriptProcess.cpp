@@ -43,7 +43,7 @@ bool ScriptProcess::BuildCppDataFromScript(LuaPlus::LuaObject scriptClass, LuaPl
 
 		// OnSuccess()
 		temp = scriptClass.GetByName("OnSuccess");
-		if (temp.IsFunction)
+		if (temp.IsFunction())
 			m_scriptSuccessFunction = temp;
 
 		// OnFail()

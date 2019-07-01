@@ -38,6 +38,15 @@ using std::tr1::static_pointer_cast;
 using std::tr1::dynamic_pointer_cast;
 #endif
 
+class Nv_noncopyable
+{
+private:
+	Nv_noncopyable(const Nv_noncopyable& x);
+	Nv_noncopyable& operator=(const Nv_noncopyable& x);
+public:
+	Nv_noncopyable() {};	// Default constructor
+};
+
 // Game Code Complete - Chapter 12, page 446-447
 #if defined(_DEBUG)
 #	define Nv_NEW new(_NORMAL_BLOCK,__FILE__, __LINE__)

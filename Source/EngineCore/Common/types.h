@@ -7,6 +7,8 @@
 //
 // ================================================================================
 
+//#include "Common/CommonStd.h"
+#include <windows.h>
 #include <math.h>
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -51,4 +53,9 @@ public:
 	float Length() const { return sqrt((float)(x*x + y * y)); }
 };
 
-inline Point operator-(const Point& left, const Point& right) { Point temp(left); temp -= right; return temp; }
+inline Point operator-(const Point& left, const Point& right) 
+{ 
+	Point temp(left); 
+	temp -= right; 
+	return temp; 
+}

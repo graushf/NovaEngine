@@ -40,6 +40,18 @@
     <Filter Include="MainLoop">
       <UniqueIdentifier>{d7703c03-660c-4b17-a577-668c39aff2f2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UserInterface">
+      <UniqueIdentifier>{282369e8-e6e9-485a-8329-967aba2f18e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EventManager">
+      <UniqueIdentifier>{c297ca16-239c-4807-ad80-94a8ae9644c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LUAScripting">
+      <UniqueIdentifier>{d3feda4a-1d59-4db9-8ff3-2f83394ca6b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Multicore">
+      <UniqueIdentifier>{bbcb4312-099f-494e-8d3d-49ffd84f1f5a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Deprecated\BaseWindow.h">
@@ -106,18 +118,57 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="Graphics3D\D3DRenderer.h">
-      <Filter>Header Files</Filter>
+      <Filter>Graphics3D</Filter>
     </ClInclude>
     <ClInclude Include="UserInterface\HumanView.h">
-      <Filter>Header Files</Filter>
+      <Filter>UserInterface</Filter>
     </ClInclude>
-    <ClInclude Include="UserInterface\UserInterface.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Graphics3D\MovementController.h">
+      <Filter>Graphics3D</Filter>
     </ClInclude>
     <ClInclude Include="Graphics3D\Scene.h">
-      <Filter>Header Files</Filter>
+      <Filter>Graphics3D</Filter>
     </ClInclude>
     <ClInclude Include="Graphics3D\SceneNodes.h">
+      <Filter>Graphics3D</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\UserInterface.h">
+      <Filter>UserInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="EventManager\EventManager.h">
+      <Filter>EventManager</Filter>
+    </ClInclude>
+    <ClInclude Include="EventManager\EventManagerImpl.h">
+      <Filter>EventManager</Filter>
+    </ClInclude>
+    <ClInclude Include="EventManager\Events.h">
+      <Filter>EventManager</Filter>
+    </ClInclude>
+    <ClInclude Include="LUAScripting\LuaStateManager.h">
+      <Filter>LUAScripting</Filter>
+    </ClInclude>
+    <ClInclude Include="Multicore\CriticalSection.h">
+      <Filter>Multicore</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface\MessageBox.h">
+      <Filter>UserInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="LUAScripting\ScriptExports.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LUAScripting\ScriptProcess.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LUAScripting\ScriptEvent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Actors\BaseScriptComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Actors\ScriptComponentInterface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\SoundResource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -161,16 +212,43 @@
     <ClCompile Include="App\BaseAppLogic.cpp">
       <Filter>App</Filter>
     </ClCompile>
-    <ClCompile Include="ResourceCache\ResCache.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Utilities\String.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics3D\D3DRenderer.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Graphics3D</Filter>
     </ClCompile>
     <ClCompile Include="UserInterface\HumanView.cpp">
+      <Filter>UserInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics3D\MovementController.cpp">
+      <Filter>Graphics3D</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceCache\ResCache.cpp">
+      <Filter>ResourceCache</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities\String.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="EventManager\EventManager.cpp">
+      <Filter>EventManager</Filter>
+    </ClCompile>
+    <ClCompile Include="EventManager\Events.cpp">
+      <Filter>EventManager</Filter>
+    </ClCompile>
+    <ClCompile Include="LUAScripting\LuaStateManager.cpp">
+      <Filter>LUAScripting</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface\MessageBox.cpp">
+      <Filter>UserInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="LUAScripting\ScriptExports.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LUAScripting\ScriptProcess.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LUAScripting\ScriptEvent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Actors\BaseScriptComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -190,8 +190,6 @@ void MovementController::OnUpdate(DWORD const deltaMilliseconds)
 	{
 		float elapsedTime = (float)deltaMilliseconds / 1000.0f;
 
-		Vec3 direction = upWorld +rightWorld;
-
 		Vec3 direction = atWorld + rightWorld + upWorld;
 		direction.Normalize();
 

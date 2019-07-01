@@ -47,14 +47,14 @@ BaseScriptComponent::~BaseScriptComponent(void)
 bool BaseScriptComponent::VInit(TiXmlElement* pData)
 {
 	LuaStateManager* pStateMgr = LuaStateManager::Get();
-	Nv_ASSERT(pStateMgr);
+	//Nv_ASSERT(pStateMgr);
 
 
 	// load the <ScriptObject> tag and validate it.
 	TiXmlElement* pScriptObjectElement = pData->FirstChildElement("ScriptObject");
 	if (!pScriptObjectElement)
 	{
-		Nv_ERROR("No <ScriptObject> tag in XML. This won't be a very useful script component.");
+		//Nv_ERROR("No <ScriptObject> tag in XML. This won't be a very useful script component.");
 		return true;	// technically it succeeded even though it won't be accessible.
 	}
 
@@ -163,11 +163,11 @@ TiXmlElement* BaseScriptComponent::VGenerateXml(void)
 void BaseScriptComponent::CreateScriptObject(void)
 {
 	LuaStateManager* pStateMgr = LuaStateManager::Get();
-	Nv_ASSERT(pStateMgr);
-	Nv_ASSERT(!m_scriptObject.IsNil());
+	//Nv_ASSERT(pStateMgr);
+	//Nv_ASSERT(!m_scriptObject.IsNil());
 
 	LuaPlus::LuaObject metaTableObj = pStateMgr->GetGlobalVars().Lookup(METATABLE_NAME);
-	Nv_ASSERT(!metaTableObj.IsNil());
+	//Nv_ASSERT(!metaTableObj.IsNil());
 
 	LuaPlus::LuaObject boxedPtr = pStateMgr->GetLuaState()->BoxPointer(this);
 	boxedPtr.SetMetaTable(metaTableObj);

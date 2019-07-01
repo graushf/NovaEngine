@@ -199,6 +199,6 @@ void LuaStateManager::ConvertTableToVec3(const LuaPlus::LuaObject& luaTable, Vec
 	temp = luaTable.Get("z");
 	if (temp.IsNumber())
 		outVec3.z = temp.GetFloat();
-	else
+	//else
 		//Nv_ERROR("luaTable.z is not a number");
 }
