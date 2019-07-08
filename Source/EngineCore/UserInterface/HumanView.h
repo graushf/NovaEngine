@@ -5,7 +5,7 @@
 //
 // ================================================================================
 
-#include "Common/CommonStd.h"
+#include "../Common/CommonStd.h"
 
 class HumanView : public IGameView
 {

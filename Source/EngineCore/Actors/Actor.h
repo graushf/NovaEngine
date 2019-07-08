@@ -5,7 +5,7 @@
 //
 // =======================================================================
 
-#include "Common/CommonStd.h"
+#include "../Common/CommonStd.h"
 
 class TiXmlElement;
 typedef std::string ActorType;

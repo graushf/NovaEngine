@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Common/CommonStd.h"
-#include "Initialization/Initialization.h"
+#include "../Common/CommonStd.h"
+#include "../Initialization/Initialization.h"
 #include "BaseAppLogic.h"
-#include "Graphics3D/SceneNodes.h"
-#include "UserInterface/UserInterface.h"
-#include "UserInterface/HumanView.h"
+#include "../Graphics3D/SceneNodes.h"
+#include "../UserInterface/UserInterface.h"
+#include "../UserInterface/HumanView.h"
 
 // ================================================================
 // App.h : Defines the entry point for the application.

@@ -12,6 +12,7 @@
 // -----------------------------------------------------------------------------
 class LuaStateManager : public IScriptManager
 {
+	
 	static LuaStateManager* s_pSingleton;
 	LuaPlus::LuaState* m_pLuaState;
 	std::string m_lastError;
@@ -45,4 +46,5 @@ private:
 	// private constructor & destructor; call the static Create() and Destroy() functions instead
 	explicit LuaStateManager(void);
 	virtual ~LuaStateManager(void);
+
 };

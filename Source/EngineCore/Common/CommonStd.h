@@ -57,18 +57,19 @@ public:
 #define DXUT_AUTOLIB
 
 // DirectX Includes
-#include <dxut.h>
-//#include "../ThirdParty/DXUT11/Core/DXUT.h"
+//#include <dxut.h>
+#include "../ThirdParty/DXUT11/Core/DXUT.h"
 #include <d3dx9tex.h>
-#include <dxut.h>
-#include <SDKmisc.h>
+//#include <dxut.h>
+//#include <SDKmisc.h>
+#include "../ThirdParty/DXUT11/Optional/SDKmisc.h"
 
-#include <tinyxml.h>
+#include "../ThirdParty/tinyxml_2_6_2/tinyxml.h"
 
 
 // App #includes
-#include "Common/templates.h"
-#include "Graphics3D/Geometry.h"
+#include "templates.h"
+#include "../Graphics3D/Geometry.h"
 
 
 
@@ -105,7 +106,7 @@ struct AppMsg
 	LPARAM m_lParam;
 };
 
-#include "Common/interfaces.h"
+#include "../Common/interfaces.h"
 
 // Useful #defines
 
@@ -121,7 +122,7 @@ extern const int SCREEN_WIDTH;
 extern const int SCREEN_HEIGHT;
 
 //#include "App/AppInterfaces.h"
-#include "App/App.h"
+#include "../App/App.h"
 
 extern INT WINAPI AppInst
 (

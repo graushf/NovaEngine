@@ -1,9 +1,9 @@
 #pragma once
 
 //#include "Common/CommonStd.h"
-#include "MainLoop/ProcessManager.h"
-#include "Utilities/Math.h"
-#include "Actors/Actor.h"
+#include "../MainLoop/ProcessManager.h"
+#include "../Utilities/Math.h"
+#include "../Actors/Actor.h"
 
 class PathingGraph;
 class ActorFactory;

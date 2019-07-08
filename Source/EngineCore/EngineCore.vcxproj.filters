@@ -19,9 +19,6 @@
     <Filter Include="Common">
       <UniqueIdentifier>{79666787-dcad-474e-9dc8-e85d5fd5a741}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Deprecated">
-      <UniqueIdentifier>{40a16d7a-fd93-4222-b430-c0746c8ec9f5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Initialization">
       <UniqueIdentifier>{07a2f600-ce1b-4e38-831e-34a2ae85f98a}</UniqueIdentifier>
     </Filter>
@@ -54,12 +51,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Deprecated\BaseWindow.h">
-      <Filter>Deprecated</Filter>
-    </ClInclude>
-    <ClInclude Include="Deprecated\MainWindow.h">
-      <Filter>Deprecated</Filter>
-    </ClInclude>
     <ClInclude Include="Common\CommonStd.h">
       <Filter>Common</Filter>
     </ClInclude>
@@ -178,9 +169,6 @@
     </ClCompile>
     <ClCompile Include="App\AppInst.cpp">
       <Filter>App</Filter>
-    </ClCompile>
-    <ClCompile Include="Deprecated\EngineCore.cpp">
-      <Filter>Deprecated</Filter>
     </ClCompile>
     <ClCompile Include="App\App.cpp">
       <Filter>App</Filter>

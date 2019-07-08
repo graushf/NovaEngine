@@ -13,6 +13,8 @@
 //#include "PhysicsComponent.h"
 //#include "RenderComponentInterface.h"
 
+
+
 // This is the name of the metatable where all the function definitions exported to Lua will live.
 static const char* METATABLE_NAME = "BaseScriptComponentMetaTable";
 const char* BaseScriptComponent::g_Name = "BaseScriptComponent";
@@ -43,6 +45,7 @@ BaseScriptComponent::~BaseScriptComponent(void)
 		LuaStateManager::Get()->VExecuteString(m_scriptObjectName.c_str());
 	}
 }
+
 
 bool BaseScriptComponent::VInit(TiXmlElement* pData)
 {
@@ -140,6 +143,7 @@ void BaseScriptComponent::VPostInit(void)
 	}
 }
 
+
 TiXmlElement* BaseScriptComponent::VGenerateXml(void)
 {
 	TiXmlElement* pBaseElement = Nv_NEW TiXmlElement(VGetName());
@@ -175,6 +179,7 @@ void BaseScriptComponent::CreateScriptObject(void)
 	m_scriptObject.SetMetaTable(metaTableObj);
 }
 
+
 void BaseScriptComponent::RegisterScriptFunctions(void)
 {
 	// create the metatable
@@ -193,6 +198,7 @@ void BaseScriptComponent::RegisterScriptFunctions(void)
 	metaTableObj.RegisterObjectDirect("SetPosition", (BaseScriptComponent*)0, &BaseScriptComponent::SetPosition);
 }
 
+
 void BaseScriptComponent::UnregisterScriptFunctions(void)
 {
 	LuaPlus::LuaObject metaTableObj = LuaStateManager::Get()->GetGlobalVars().Lookup(METATABLE_NAME);
@@ -201,7 +207,7 @@ void BaseScriptComponent::UnregisterScriptFunctions(void)
 	}
 }
 
-LuaPlus::LuaObject BaseScriptComponent::GetActorId(void)
+bool BaseScriptComponent::GetActorId(void)
 {
 	//GCC_LOG("ObjectSystem", "BaseScriptComponent::GetEntityId() return 0x" + ToStr(m_pOwner->GetId(), 16) + " on C++ side");
 
@@ -213,12 +219,12 @@ LuaPlus::LuaObject BaseScriptComponent::GetActorId(void)
 	// data back to Lua land, so it's probably okay.
 	LuaPlus::LuaObject ret;
 	ret.AssignInteger(LuaStateManager::Get()->GetLuaState(), m_pOwner->GetId());
-	return ret;
+	return true;
 
 	// return m_pOwner->GetId();
 }
 
-LuaPlus::LuaObject BaseScriptComponent::GetPos(void)
+bool BaseScriptComponent::GetPos(void)
 {
 	LuaPlus::LuaObject ret;
 
@@ -228,9 +234,10 @@ LuaPlus::LuaObject BaseScriptComponent::GetPos(void)
 	}
 	else {
 		ret.AssignNil(LuaStateManager::Get()->GetLuaState());
+		return false;
 	}
 
-	return ret;
+	return true;
 }
 
 void BaseScriptComponent::SetPos(LuaPlus::LuaObject newPos)
@@ -248,7 +255,7 @@ void BaseScriptComponent::SetPos(LuaPlus::LuaObject newPos)
 	}
 }
 
-LuaPlus::LuaObject BaseScriptComponent::GetLookAt(void) const
+bool BaseScriptComponent::GetLookAt(void) const
 {
 	LuaPlus::LuaObject ret;
 
@@ -258,10 +265,12 @@ LuaPlus::LuaObject BaseScriptComponent::GetLookAt(void) const
 	}
 	else {
 		ret.AssignNil(LuaStateManager::Get()->GetLuaState());
+		return false;
 	}
 
-	return ret;
+	return true;
 }
+
 
 float BaseScriptComponent::GetYOrientationRadians(void) const
 {
@@ -276,35 +285,38 @@ float BaseScriptComponent::GetYOrientationRadians(void) const
 		return 0;
 	}
 	*/
+	
 	return 0.0;
 }
 
-float BaseScriptComponent::RotateY(float angleRadians)
+void BaseScriptComponent::RotateY(float angleRadians)
 {
-	/*
-	std::shared_ptr<PhysicsComponent> pPhysicalComponent = MakeStrongPtr(m_pOwner->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name));
-	if (pPhysicalComponent) {
-		pPhysicalComponent->RotateY(angleRadians);
-	}
-	*/
+
+	//std::shared_ptr<PhysicsComponent> pPhysicalComponent = MakeStrongPtr(m_pOwner->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name));
+	//if (pPhysicalComponent) {
+	//	pPhysicalComponent->RotateY(angleRadians);
+	//
+	//}
 }
+
+
 
 void BaseScriptComponent::SetPosition(float x, float y, float z)
 {
-	/*
-	std::shared_ptr<PhysicsComponent> pPhysicalComponent = MakeStrongPtr(m_pOwner->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name));
-	if (pPhysicalComponent) {
-		pPhysicalComponent->SetPosition(x, y, z);
-	}
-	*/
+	
+	//std::shared_ptr<PhysicsComponent> pPhysicalComponent = MakeStrongPtr(m_pOwner->GetComponent<PhysicsComponent>(PhysicsComponent::g_Name));
+	//if (pPhysicalComponent) {
+	//	pPhysicalComponent->SetPosition(x, y, z);
+	//}
+	
 }
 
 void BaseScriptComponent::Stop(void)
 {
-	/*
-	std::shared_ptr<PhysicsComponent> pPhysicalComponent = MakeStrongPtr(m_pOwner->GetComponent > PhysicsComponent > (PhysicsComponent::g_Name));
-	if (pPhysicalComponent) {
-		pPhysicalComponent->Stop();
-	}
-	*/
+	
+	//std::shared_ptr<PhysicsComponent> pPhysicalComponent = MakeStrongPtr(m_pOwner->GetComponent > PhysicsComponent > (PhysicsComponent::g_Name));
+	//if (pPhysicalComponent) {
+	//	pPhysicalComponent->Stop();
+	//}
+	
 }

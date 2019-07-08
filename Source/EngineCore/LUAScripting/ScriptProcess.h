@@ -11,6 +11,7 @@
 // --------------------------------------------------------------------------------------
 // ScriptProcess												-Chapter 12, page 370
 // --------------------------------------------------------------------------------------
+
 class ScriptProcess : public Process
 {
 	unsigned long m_frequency, m_time;
@@ -32,7 +33,9 @@ protected:
 private:
 	// private helpers
 	static void RegisterScriptClassFunctions(LuaPlus::LuaObject& metaTableObj);
-	static LuaPlus::LuaObject CreateFromScript(LuaPlus::LuaObject self, LuaPlus::LuaObject constructionData, LuaPlus::LuaObject originalSubClass);
+	//static LuaPlus::LuaObject CreateFromScript(LuaPlus::LuaObject self, LuaPlus::LuaObject constructionData, LuaPlus::LuaObject originalSubClass);
+	static bool CreateFromScript(LuaPlus::LuaObject self, LuaPlus::LuaObject constructionData, LuaPlus::LuaObject originalSubClass);
+
 	virtual bool BuildCppDataFromScript(LuaPlus::LuaObject scriptClass, LuaPlus::LuaObject constructionData);
 
 	// These are needd because the base-class version of these functions are all const and LuaPlus can't deal 
@@ -46,4 +49,8 @@ private:
 
 	// don't allow construction outside of this class
 	explicit ScriptProcess(void);
+
+	// [gustavo] Added because of book.
+	static ScriptProcess* Create(const char* scriptName = NULL);
+	static void Destroy(ScriptProcess* pObj);
 };

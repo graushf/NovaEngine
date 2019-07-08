@@ -68,6 +68,8 @@
 #include "EventManager/EventManager.h"
 #include "LuaPlus.h"
 
+
+
 class ScriptEvent;
 typedef ScriptEvent* (*CreateEventForScriptFunctionType)(void); // function ptr typedef to create a script event
 

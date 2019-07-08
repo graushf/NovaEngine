@@ -15,6 +15,7 @@
 // ----------------------------------------------------------------------------------------------------
 class BaseScriptComponent : public ScriptComponentInterface
 {
+	
 	std::string m_scriptObjectName;
 	std::string m_constructorName;
 	std::string m_destructorName;
@@ -40,14 +41,14 @@ private:
 	void CreateScriptObject(void);
 
 	// component script functions
-	LuaPlus::LuaObject GetActorId(void);
+	bool GetActorId(void);
 
 	// physics component script functions
-	LuaPlus::LuaObject GetPos(void);
+	bool GetPos(void);
 	void SetPos(LuaPlus::LuaObject newPos);
-	LuaPlus::LuaObject GetLookAt(void) const;
+	bool GetLookAt(void) const;
 	float GetYOrientationRadians(void) const;
-	float RotateY(float angleRadians);
+	void RotateY(float angleRadians);
 	void SetPosition(float x, float y, float z);
 	void LookAt(Vec3 target);
 	void Stop(void);

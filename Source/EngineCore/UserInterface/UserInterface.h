@@ -5,8 +5,8 @@
 //
 // ================================================================================
 
-#include "Common/CommonStd.h"
-#include "Graphics3D/Scene.h"
+#include "../Common/CommonStd.h"
+#include "../Graphics3D/Scene.h"
 
 const DWORD g_QuitNoPrompt = MAKELPARAM(-1, -1);
 const UINT g_MsgEndModal = (WM_USER + 100);

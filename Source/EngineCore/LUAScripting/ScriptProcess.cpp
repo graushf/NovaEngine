@@ -5,6 +5,7 @@
 #include "Common/CommonStd.h"
 #include "ScriptProcess.h"
 
+
 const char* SCRIPT_PROCESS_NAME = "ScriptProcess";
 
 ScriptProcess::ScriptProcess(void)
@@ -19,6 +20,7 @@ ScriptProcess::ScriptProcess(void)
 	m_scriptFailFunction.AssignNil(pLuaState);
 	m_scriptAbortFunction.AssignNil(pLuaState);
 }
+
 
 bool ScriptProcess::BuildCppDataFromScript(LuaPlus::LuaObject scriptClass, LuaPlus::LuaObject constructionData)
 {
@@ -44,17 +46,23 @@ bool ScriptProcess::BuildCppDataFromScript(LuaPlus::LuaObject scriptClass, LuaPl
 		// OnSuccess()
 		temp = scriptClass.GetByName("OnSuccess");
 		if (temp.IsFunction())
+		{
 			m_scriptSuccessFunction = temp;
+		}
 
 		// OnFail()
 		temp = scriptClass.GetByName("OnFail");
 		if (temp.IsFunction())
+		{
 			m_scriptFailFunction = temp;
-
+		}
+			
 		// OnAbort()
 		temp = scriptClass.GetByName("OnAbort");
 		if (temp.IsFunction())
+		{
 			m_scriptAbortFunction = temp;
+		}
 	}
 	else
 	{
@@ -163,10 +171,45 @@ void ScriptProcess::RegisterScriptClass(void)
 	metaTableObj.SetObject("base", metaTableObj); // base refers to the parent class; ie the metatable
 	metaTableObj.SetBoolean("cpp", true);
 	RegisterScriptClassFunctions(metaTableObj);
+	
+	//metaTableObj.RegisterDirect("Create", &ScriptProcess::CreateFromScriptDebug);
 	metaTableObj.RegisterDirect("Create", &ScriptProcess::CreateFromScript);
+
 }
 
+//
+// Original CreateFromScript function from GCC
+//
+/*
 LuaPlus::LuaObject ScriptProcess::CreateFromScript(LuaPlus::LuaObject self, LuaPlus::LuaObject constructionData, LuaPlus::LuaObject originalSubClass)
+{
+	// Note: The self parameter is not used in this function, but it allows us to be consistent when calling
+	// Create(). The Lua version of this function needs self.
+	//Nv_LOG("Script", std::string("Creating instance of ") + SCRIPT_PROCESS_NAME);
+	ScriptProcess* pObj = Nv_NEW ScriptProcess;
+
+	pObj->m_self.AssignNewTable(LuaStateManager::Get()->GetLuaState());
+	if (pObj->BuildCppDataFromScript(originalSubClass, constructionData))
+	{
+		LuaPlus::LuaObject metaTableObj = LuaStateManager::Get()->GetGlobalVars().Lookup(SCRIPT_PROCESS_NAME);
+		//Nv_ASSERT(!metaTableObj.IsNil());
+
+		pObj->m_self.SetLightUserData("__object", pObj);
+		pObj->m_self.SetMetaTable(metaTableObj);
+	}
+	else
+	{
+		pObj->m_self.AssignNil(LuaStateManager::Get()->GetLuaState());
+		SAFE_DELETE(pObj);
+
+		return false;
+	}
+
+	return true;
+}
+*/
+
+bool ScriptProcess::CreateFromScript(LuaPlus::LuaObject self, LuaPlus::LuaObject constructionData, LuaPlus::LuaObject originalSubClass)
 {
 	// Note: The self parameter is not used in this function, but it allows us to be consistent when calling
 	// Create(). The Lua version of this function needs self.
@@ -186,9 +229,11 @@ LuaPlus::LuaObject ScriptProcess::CreateFromScript(LuaPlus::LuaObject self, LuaP
 	{
 		pObj->m_self.AssignNil(LuaStateManager::Get()->GetLuaState());
 		SAFE_DELETE(pObj);
+		
+		return false;
 	}
 
-	return pObj->m_self;
+	return true;
 }
 
 
@@ -203,3 +248,4 @@ void ScriptProcess::RegisterScriptClassFunctions(LuaPlus::LuaObject& metaTableOb
 	metaTableObj.RegisterObjectDirect("IsPaused", (ScriptProcess*)0, &ScriptProcess::ScriptIsPaused);
 	metaTableObj.RegisterObjectDirect("AttachChild", (ScriptProcess*)0, &ScriptProcess::ScriptAttachChild);
 }
+

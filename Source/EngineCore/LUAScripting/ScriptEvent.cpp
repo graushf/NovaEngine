@@ -6,8 +6,8 @@
 #include "ScriptEvent.h"
 #include "LuaStateManager.h"
 
-ScriptEvent::CreationFunctions ScriptEvent::s_creationFunctions;
 
+ScriptEvent::CreationFunctions ScriptEvent::s_creationFunctions;
 
 // -------------------------------------------------------------------------------------------------------
 // Returns the event data after building it (if necessary).

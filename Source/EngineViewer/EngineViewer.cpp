@@ -1,13 +1,12 @@
 #include <windows.h>
 
-#include "../EngineCore/CommonStd.h"
+#include "../EngineCore/Common/CommonStd.h"
 
 //LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow)
 {
-
-	return EngineCore(hInstance, hInstance, pCmdLine, nCmdShow);
+	return AppInst(hInstance, hInstance, pCmdLine, nCmdShow);
 	// Register the window class.
 	//const wchar_t CLASS_NAME[] = L"Sample Window Class";
 

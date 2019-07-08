@@ -40,8 +40,6 @@
     <ClInclude Include="Common\interfaces.h" />
     <ClInclude Include="Common\templates.h" />
     <ClInclude Include="Common\types.h" />
-    <ClInclude Include="Deprecated\BaseWindow.h" />
-    <ClInclude Include="Deprecated\MainWindow.h" />
     <ClInclude Include="EventManager\EventManager.h" />
     <ClInclude Include="EventManager\EventManagerImpl.h" />
     <ClInclude Include="EventManager\Events.h" />
@@ -75,7 +73,6 @@
     <ClCompile Include="App\AppInst.cpp" />
     <ClCompile Include="App\BaseAppLogic.cpp" />
     <ClCompile Include="Common\CommonStd.cpp" />
-    <ClCompile Include="Deprecated\EngineCore.cpp" />
     <ClCompile Include="EventManager\EventManager.cpp" />
     <ClCompile Include="EventManager\Events.cpp" />
     <ClCompile Include="Graphics3D\D3DRenderer.cpp" />
@@ -170,14 +167,14 @@
     <OutDir>$(SolutionDir)..\Binaries\EngineCore_Lib\$(PlatformName)_$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\Temp\$(ProjectName)_$(PlatformName)_$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(PlatformName)_$(Configuration)</TargetName>
-    <IncludePath>$(ProjectDir);$(ProjectDir)\ThirdParty\DXUT11\Optional;$(ProjectDir)\ThirdParty\DXUT11\Effects11\Inc;$(ProjectDir)\ThirdParty\DXUT11\Core;$(ProjectDir)\ThirdParty\tinyxml_2_6_2;$(ProjectDir)\ThirdParty\zlib-1.2.11;$(ProjectDir)\ThirdParty\FastDelegate;$(ProjectDir)\ThirdParty\luaplus51-all\Src\LuaPlus;$(DXSDK_DIR)\Include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir);$(ProjectDir)\ThirdParty\DXUT11\Optional;$(ProjectDir)\ThirdParty\DXUT11\Effects11\Inc;$(ProjectDir)\ThirdParty\DXUT11\Core;$(ProjectDir)\ThirdParty\tinyxml_2_6_2;$(ProjectDir)\ThirdParty\zlib-1.2.11;$(ProjectDir)\ThirdParty\FastDelegate;$(ProjectDir)\ThirdParty\luaplus51-all\Src\LuaPlus;$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)..\Binaries\EngineCore_Lib\$(PlatformName)_$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\Temp\$(ProjectName)_$(PlatformName)_$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(PlatformName)_$(Configuration)</TargetName>
-    <IncludePath>$(ProjectDir);$(ProjectDir)\ThirdParty\DXUT11\Optional;$(ProjectDir)\ThirdParty\DXUT11\Effects11\Inc;$(ProjectDir)\ThirdParty\DXUT11\Core;$(ProjectDir)\ThirdParty\tinyxml_2_6_2;$(ProjectDir)\ThirdParty\zlib-1.2.11;$(ProjectDir)\ThirdParty\FastDelegate;$(ProjectDir)\ThirdParty\luaplus51-all\Src\LuaPlus;$(DXSDK_DIR)\Include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir);$(ProjectDir)\ThirdParty\DXUT11\Optional;$(ProjectDir)\ThirdParty\DXUT11\Effects11\Inc;$(ProjectDir)\ThirdParty\DXUT11\Core;$(ProjectDir)\ThirdParty\tinyxml_2_6_2;$(ProjectDir)\ThirdParty\zlib-1.2.11;$(ProjectDir)\ThirdParty\FastDelegate;$(ProjectDir)\ThirdParty\luaplus51-all\Src\LuaPlus;$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -205,7 +202,7 @@
     <OutDir>$(SolutionDir)..\Binaries\EngineCore_Lib\$(PlatformName)_$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\Temp\$(ProjectName)_$(PlatformName)_$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(PlatformName)_$(Configuration)</TargetName>
-    <IncludePath>$(ProjectDir);$(ProjectDir)\ThirdParty\DXUT11\Optional;$(ProjectDir)\ThirdParty\DXUT11\Effects11\Inc;$(ProjectDir)\ThirdParty\DXUT11\Core;$(ProjectDir)\ThirdParty\tinyxml_2_6_2;$(ProjectDir)\ThirdParty\zlib-1.2.11;$(ProjectDir)\ThirdParty\FastDelegate;$(ProjectDir)\ThirdParty\luaplus51-all\Src\LuaPlus;$(DXSDK_DIR)\Include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir);$(ProjectDir)\ThirdParty\DXUT11\Optional;$(ProjectDir)\ThirdParty\DXUT11\Effects11\Inc;$(ProjectDir)\ThirdParty\DXUT11\Core;$(ProjectDir)\ThirdParty\tinyxml_2_6_2;$(ProjectDir)\ThirdParty\zlib-1.2.11;$(ProjectDir)\ThirdParty\FastDelegate;$(ProjectDir)\ThirdParty\luaplus51-all\Src\LuaPlus;$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
