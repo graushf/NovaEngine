@@ -202,7 +202,7 @@ bool WaveResourceLoader::ParseWave(char* wavStream, size_t bufferLength, std::sh
 		// If both blocks have been seen, we can return true.
 		if (copiedBuffer)
 		{
-			extra->m_LengthMilli = (handle->Size() * 1000) / extra->GerFormat()->nAvgBytesPerSec;
+			extra->m_LengthMilli = (handle->Size() * 1000) / extra->GetFormat()->nAvgBytesPerSec;
 			return true;
 		}
 
@@ -349,12 +349,52 @@ std::shared_ptr<IResourceLoader> CreateOGGResourceLoader()
 
 unsigned int OggResourceLoader::VGetLoadedResourceSize(char* rawBuffer, unsigned int rawSize)
 {
+	OggVorbis_File vf;				// for the vorbisfile interface
 
+	ov_callbacks oggCallbacks;
+
+	OggMemoryFile* vorbisMemoryFile = Nv_NEW OggMemoryFile;
+	vorbisMemoryFile->dataRead = 0;
+	vorbisMemoryFile->dataSize = rawSize;
+	vorbisMemoryFile->dataPtr = (unsigned char*)rawBuffer;
+
+	oggCallbacks.read_func = VorbisRead;
+	oggCallbacks.close_func = VorbisClose;
+	oggCallbacks.seek_func = VorbisSeek;
+	oggCallbacks.tell_func = VorbisTell;
+
+	int ov_ret = ov_open_callbacks(vorbisMemoryFile, &vf, NULL, 0, oggCallbacks);
+	//Nv_ASSERT(ov_ret >= 0);
+
+	// ok now the tricky part
+	// the vorbis_info struct keeps the most of the interesting format info
+	vorbis_info* vi = ov_info(&vf, -1);
+
+	DWORD size = 4096 * 16;
+	DWORD pos = 0;
+	int sec = 0;
+	int ret = 1;
+
+	DWORD bytes = (DWORD)ov_pcm_total(&vf, -1);
+	bytes *= 2 * vi->channels;
+
+	ov_clear(&vf);
+
+	SAFE_DELETE(vorbisMemoryFile);
+
+	return bytes;
 }
 
 bool OggResourceLoader::VLoadResource(char* rawBuffer, unsigned int rawSize, std::shared_ptr<ResHandle> handle)
 {
-
+	std::shared_ptr<SoundResourceExtraData> extra = std::shared_ptr<SoundResourceExtraData>(Nv_NEW SoundResourceExtraData());
+	extra->m_SoundType = SOUND_TYPE_OGG;
+	handle->SetExtra(std::shared_ptr<SoundResourceExtraData>(extra));
+	if (!ParseOgg(rawBuffer, rawSize, handle))
+	{
+		return false;
+	}
+	return true;
 }
 
 //

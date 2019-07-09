@@ -22,7 +22,7 @@ public:
 	virtual ~SoundResourceExtraData() { }
 	virtual std::string VToString() { return "SoundResourceExtraData"; }
 	enum SoundType GetSoundType() { return m_SoundType; }
-	WAVEFORMATEX const* GerFormat() { return &m_WavFormatEx; }
+	WAVEFORMATEX const* GetFormat() { return &m_WavFormatEx; }
 	int GetLengthMilli() const { return m_LengthMilli; }
 
 protected:		
