@@ -4,6 +4,16 @@
 
 #include "Common/CommonStd.h"
 
+#include <io.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+
+#include <ogg/os_types.h> // [graushf] to fix compiler error
+
+#include <vorbis/codec.h>
+#include <vorbis/vorbisfile.h>
+
 #include "SoundResource.h"
 #include "Audio.h"
 
@@ -111,13 +121,12 @@ bool WaveResourceLoader::VLoadResource(char* rawBuffer, unsigned int rawSize, st
 bool WaveResourceLoader::ParseWave(char* wavStream, size_t bufferLength, std::shared_ptr<ResHandle> handle)
 {
 	std::shared_ptr<SoundResourceExtraData> extra = static_pointer_cast<SoundResourceExtraData>(handle->GetExtra());
-	DWORD file = 0;
-	DWORD fileEnd = 0;
-
-	DWORD length = 0;
-	DWORD type = 0;
-
-	DWORD pos = 0;
+	
+	DWORD file		= 0;
+	DWORD fileEnd	= 0;
+	DWORD length	= 0;
+	DWORD type		= 0;
+	DWORD pos		= 0;
 
 	// mmioFOURCC -- converts four chars into a 4 byte integer code.
 	// The first 4 bytes of a valid .wav file is 'R','I','F','F'
@@ -232,19 +241,81 @@ struct OggMemoryFile
 //
 size_t VorbisRead(void* data_ptr, size_t byteSize, size_t sizeToRead, void* data_src)
 {
+	OggMemoryFile* pVorbisData = static_cast<OggMemoryFile*>(data_src);
+	
+	if (NULL == pVorbisData)
+	{
+		return -1;
+	}
 
+	size_t actualSizeToRead, spaceToEOF =
+		pVorbisData->dataSize - pVorbisData->dataRead;
+
+	if ((sizeToRead*byteSize) < spaceToEOF)
+	{
+		actualSizeToRead = (sizeToRead * byteSize);
+	}
+	else
+	{
+		actualSizeToRead = spaceToEOF;
+	}
+
+	if (actualSizeToRead)
+	{
+		memcpy(data_ptr,
+			(char*)pVorbisData->dataPtr + pVorbisData->dataRead, actualSizeToRead);
+		pVorbisData->dataRead += actualSizeToRead;
+	}
+
+	return actualSizeToRead;
 }
 
 //
 // VorbisSeek									- Chapter 13, page 404
 //
-//int VorbisSeek(void* data_src, ogg_int64_t offset, int origin)
-//{
-//
-//}
+int VorbisSeek(void* data_src, ogg_int64_t offset, int origin)
+{
+	OggMemoryFile* pVorbisData = static_cast<OggMemoryFile*>(data_src);
+	
+	if (NULL == pVorbisData)
+	{
+		return -1;
+	}
+
+	switch (origin)
+	{
+		case SEEK_SET:
+		{
+			ogg_int64_t actualOffset;
+			actualOffset = (pVorbisData->dataSize >= offset) ? offset : pVorbisData->dataSize;
+			pVorbisData->dataRead = static_cast<size_t>(actualOffset);
+			break;
+		}
+		case SEEK_CUR:
+		{
+			size_t spaceToEOF =
+				pVorbisData->dataSize - pVorbisData->dataRead;
+
+			ogg_int64_t actualOffset;
+			actualOffset = (offset < spaceToEOF) ? offset : spaceToEOF;
+
+			pVorbisData->dataRead += static_cast<LONG>(actualOffset);
+			break;
+		}
+		case SEEK_END:
+			pVorbisData->dataRead = pVorbisData->dataSize + 1;
+			break;
+
+		default:
+			//Nv_ASSERT(false && "Bad parameter for 'origin', requires same as fseek.");
+			break;
+	};
+
+	return 0;
+}
 
 //
-// VorbisSeek									- Chapter 13, page 405
+// VorbisClose					- Chapter 13, page 405
 //
 int VorbisClose(void* src)
 {
@@ -257,7 +328,13 @@ int VorbisClose(void* src)
 //
 long VorbisTell(void* data_src)
 {
+	OggMemoryFile* pVorbisData = static_cast<OggMemoryFile*>(data_src);
+	if (NULL == pVorbisData)
+	{
+		return -1L;
+	}
 
+	return static_cast<long>(pVorbisData->dataRead);
 }
 
 std::shared_ptr<IResourceLoader> CreateWAVResourceLoader()
@@ -285,5 +362,73 @@ bool OggResourceLoader::VLoadResource(char* rawBuffer, unsigned int rawSize, std
 //
 bool OggResourceLoader::ParseOgg(char* oggStream, size_t length, std::shared_ptr<ResHandle> handle)
 {
+	std::shared_ptr<SoundResourceExtraData> extra = static_pointer_cast<SoundResourceExtraData>(handle->GetExtra());
 
+	OggVorbis_File vf;			// for the vorbisfile interface
+
+	ov_callbacks oggCallbacks;
+
+	OggMemoryFile* vorbisMemoryFile = Nv_NEW OggMemoryFile;
+	vorbisMemoryFile->dataRead = 0;
+	vorbisMemoryFile->dataSize = length;
+	vorbisMemoryFile->dataPtr = (unsigned char*)oggStream;
+
+	oggCallbacks.read_func = VorbisRead;
+	oggCallbacks.close_func = VorbisClose;
+	oggCallbacks.seek_func = VorbisSeek;
+	oggCallbacks.tell_func = VorbisTell;
+
+	int ov_ret = ov_open_callbacks(vorbisMemoryFile, &vf, nullptr, 0, oggCallbacks);
+	//Nv_ASSERT(ov_ret >= 0);
+
+	// ok now the tricky part
+	// the vorbis_info struct keeps the most of the interesting format info
+	vorbis_info* vi = ov_info(&vf, -1);
+
+	memset(&(extra->m_WavFormatEx), 0, sizeof(extra->m_WavFormatEx));
+
+	extra->m_WavFormatEx.cbSize = sizeof(extra->m_WavFormatEx);
+	extra->m_WavFormatEx.nChannels = vi->channels;
+	// ogg vorbis is always 16 bit.
+	extra->m_WavFormatEx.wBitsPerSample = 16;
+	extra->m_WavFormatEx.nSamplesPerSec = vi->rate;
+	extra->m_WavFormatEx.nAvgBytesPerSec = extra->m_WavFormatEx.nSamplesPerSec * extra->m_WavFormatEx.nChannels * 2;
+	extra->m_WavFormatEx.nBlockAlign = 2 * extra->m_WavFormatEx.nChannels;
+	extra->m_WavFormatEx.wFormatTag = 1;
+
+	DWORD	size	= 4096 * 16;
+	DWORD	pos		= 0;
+	int		sec		= 0;
+	int		ret		= 1;
+
+	// get the total number of PCM samples
+	DWORD bytes = (DWORD)ov_pcm_total(&vf, -1);
+	bytes *= 2 * vi->channels;
+
+	if (handle->Size() != bytes)
+	{
+		//Nv_ASSERT(0 && _T("The Ogg size does not match the memory buffer size!"));
+		ov_clear(&vf);
+		SAFE_DELETE(vorbisMemoryFile);
+		return false;
+	}
+
+	// now read in the bits
+	while (ret && pos < bytes)
+	{
+		ret = ov_read(&vf, handle->WritableBuffer() + pos, size, 0, 2, 1, &sec);
+		pos += ret;
+		if (bytes - pos < size)
+		{
+			size = bytes - pos;
+		}
+	}
+
+	extra->m_LengthMilli = (int)(1000.0f * ov_time_total(&vf, -1));
+
+	ov_clear(&vf);
+
+	SAFE_DELETE(vorbisMemoryFile);
+
+	return true;
 }
