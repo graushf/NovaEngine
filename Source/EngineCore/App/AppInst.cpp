@@ -1,10 +1,19 @@
 #include "Common/CommonStd.h"
 //#include "App.h"
 
-#pragma comment(lib, "dxerr.lib")
+#pragma comment(lib, "dxerr.lib") // [graushf] added this for Compiler issues
 
 #pragma comment(lib, "dxut.lib")
 #pragma comment(lib, "dxutopt.lib")
+
+
+#pragma comment(lib, "zlibstat.lib") // [graushf] this wasnt added before, and wasnt giving linker issues ¿?
+
+/*
+#pragma comment(lib, "libogg_static.lib")
+#pragma comment(lib, "libvorbis_static.lib")
+#pragma comment(lib, "libvorbisfile_static.lib")
+*/
 
 #pragma comment(lib, "tinyxml.lib")
 
