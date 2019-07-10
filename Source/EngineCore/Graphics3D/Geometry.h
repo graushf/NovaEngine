@@ -1,5 +1,9 @@
 #pragma once
 
+//========================================================================
+// Geometry.h
+//========================================================================
+
 #include "../Common/CommonStd.h"
 
 
@@ -72,6 +76,14 @@ public:
 };
 
 inline Vec3::Vec3(const Vec4& v4) { x = v4.x; y = v4.y; z = v4.z; }
+
+inline Vec4 operator + (const Vec4& a, const Vec4& b)
+{
+	Vec4 out;
+	D3DXVec4Add(&out, &a, &b);
+
+	return out;
+}
 
 extern Vec3 g_Up;
 extern Vec3 g_Right;
@@ -146,14 +158,6 @@ inline Quaternion operator * (const Quaternion& a, const Quaternion& b)
 	// matrices - the new quat represents rot A followed by rot B.
 	Quaternion out;
 	D3DXQuaternionMultiply(&out, &a, &b);
-	return out;
-}
-
-inline Vec4 operator + (const Vec4& a, const Vec4& b)
-{
-	Vec4 out;
-	D3DXVec4Add(&out, &a, &b);
-
 	return out;
 }
 
