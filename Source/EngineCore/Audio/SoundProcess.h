@@ -53,3 +53,50 @@ protected:
 	SoundProcess();		// Disable Default Construction
 
 };
+
+// --------------------------------------------------------------------------------
+// class SoundProcess									-Chapter 13, page 433
+//
+// This is an example of a process that uses a simple state machine
+// to control itself.
+//
+// --------------------------------------------------------------------------------
+
+class ExplosionProcess : public Process
+{
+protected:
+	int m_Stage;
+	std::shared_ptr<SoundProcess> m_Sound;
+
+public:
+	ExplosionProcess() { m_Stage = 0; }
+
+protected:
+	virtual void VOnInit();
+	virtual void VOnUpdate(unsigned long deltaMs);
+};
+
+// --------------------------------------------------------------------------------
+// class FadeProcess									-Chapter 13, page 433
+//
+// Fades sound volume in or out over time and then kills itself.
+// This should be useful for groups of sound effects, too - such as when
+// an AI barks and it must be heard above the other effects like too much
+// freaking thunder.
+//
+// --------------------------------------------------------------------------------
+
+class FadeProcess : public Process
+{
+protected:
+	std::shared_ptr<SoundProcess> m_Sound;
+
+	int m_TotalFadeTime;
+	int m_ElapsedTime;
+	int m_StartVolume;
+	int m_EndVolume;
+
+public:
+	FadeProcess(std::shared_ptr<SoundProcess> sound, int fadeTime, int endVolume);
+	virtual void VOnUpdate(unsigned long deltaMs);
+};

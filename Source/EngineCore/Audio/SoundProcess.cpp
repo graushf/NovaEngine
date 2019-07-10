@@ -161,3 +161,96 @@ float SoundProcess::GetProgress()
 
 	return 0.0f;
 }
+
+
+void ExplosionProcess::VOnInit()
+{
+	Process::VOnInit();
+	Resource resource("explosion.wav");
+	std::shared_ptr<ResHandle> srh = g_pApp->m_ResCache->GetHandle(&resource);
+	m_Sound.reset(Nv_NEW SoundProcess(srh));
+
+	// Imagine cool explosion graphics setup here!!!
+	//
+	//
+	//
+}
+
+void ExplosionProcess::VOnUpdate(unsigned long deltaMs)
+{
+	// Since the sound is the real pacing mechanism - we ignore deltaMilliseconds
+	float progress = m_Sound->GetProgress();
+
+	switch (m_Stage)
+	{
+		case 0:
+		{
+			if (progress > 0.55f)
+			{
+				++m_Stage;
+				// Imagine secondary explosion effect launch right here!
+			}
+			break;
+		}
+
+		case 1:
+		{
+			if (progress > 0.75f)
+			{
+				++m_Stage;
+				// Imagine tertiary explosion effect launch right here!
+			}
+			break;
+		}
+
+		default:
+		{
+			break;
+		}
+	}
+}
+
+// -----------------------------------------------------------------
+//
+// FadeProcess Implementation
+//
+// -----------------------------------------------------------------
+
+FadeProcess::FadeProcess(std::shared_ptr<SoundProcess> sound, int fadeTime, int endVolume)
+{
+	m_Sound = sound;
+	m_TotalFadeTime = fadeTime;
+	m_StartVolume = sound->GetVolume();
+	m_EndVolume = endVolume;
+	m_ElapsedTime = 0;
+
+	VOnUpdate(0);
+}
+
+void FadeProcess::VOnUpdate(unsigned long deltaMs)
+{
+	m_ElapsedTime += deltaMs;
+
+	if (m_Sound->IsDead()) {
+		Succeed();
+	}
+
+	float coeff = (float)m_ElapsedTime / m_TotalFadeTime;
+
+	// TODO: use clamp to do this
+	if (coeff > 1.0f) {
+		coeff = 1.0f;
+	}
+	if (coeff < 0.0f) {
+		coeff = 0.0f;
+	}
+
+	int newVolume = m_StartVolume + (int)(float(m_EndVolume - m_StartVolume) * coeff);
+
+	if (m_ElapsedTime >= m_TotalFadeTime) {
+		newVolume = m_EndVolume;
+		Succeed();
+	}
+
+	m_Sound->SetVolume(newVolume);
+}
