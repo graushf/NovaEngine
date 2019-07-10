@@ -23,7 +23,6 @@ const float Nv_2PI = 2 * Nv_PI;
 typedef D3DXVECTOR2 Vec2;
 
 
-
 class Vec3 : public D3DXVECTOR3
 {
 public:
@@ -82,6 +81,74 @@ extern Vec4 g_Up4;
 extern Vec4 g_Right4;
 extern Vec4 g_Forward4;
 
+// ----------------------------------------------------
+//
+// Vec3List Description
+// Vec4List Description
+//
+// An STL list of Vectors.
+//
+// ----------------------------------------------------
+
+typedef std::list<Vec3> Vec3List;
+typedef std::list<Vec4> Vec4List;
+
+// ----------------------------------------------------
+//
+// Quaternion Description
+//
+// ----------------------------------------------------
+
+class Quaternion : public D3DXQUATERNION
+{
+public:
+
+	// Modifiers
+	void Normalize() { D3DXQuaternionNormalize(this, this); };
+	void Slerp(const Quaternion& begin, const Quaternion& end, float coeff)
+	{
+		// performs spherical linear interpolation between begin & end
+		// NOTE: set coeff between 0.0f and -1.0f
+		D3DXQuaternionSlerp(this, &begin, &end, coeff);
+	}
+
+	// Accessors
+	void GetAxisAngle(Vec3& axis, float& angle) const
+	{
+		D3DXQuaternionToAxisAngle(this, &axis, &angle);
+	}
+
+	// Initializers
+	void Build(const class Mat4x4& mat);
+
+	void BuildRotYawPitchRoll(
+		const float yawRadians,
+		const float pitchRadians,
+		const float rollRadians)
+	{
+		D3DXQuaternionRotationYawPitchRoll(this, yawRadians, pitchRadians, rollRadians);
+	}
+
+	void BuildAxisAngle(const Vec3& axis, const float radians)
+	{
+		D3DXQuaternionRotationAxis(this, &axis, radians);
+	}
+
+	Quaternion(D3DXQUATERNION& q) : D3DXQUATERNION(q) { }
+	Quaternion() { }
+
+	static const Quaternion g_Identity;
+};
+
+inline Quaternion operator * (const Quaternion& a, const Quaternion& b)
+{
+	// for rotations, this is exactly like concatenating
+	// matrices - the new quat represents rot A followed by rot B.
+	Quaternion out;
+	D3DXQuaternionMultiply(&out, &a, &b);
+	return out;
+}
+
 inline Vec4 operator + (const Vec4& a, const Vec4& b)
 {
 	Vec4 out;
@@ -89,6 +156,12 @@ inline Vec4 operator + (const Vec4& a, const Vec4& b)
 
 	return out;
 }
+
+// -------------------------------------------------------
+//
+// Mat4x4 Description
+//
+// -------------------------------------------------------
 
 class Mat4x4 : public D3DXMATRIX
 {
@@ -116,18 +189,130 @@ public:
 
 	// Initialization methods
 	inline void BuildTranslation(const Vec3& pos);
+	inline void BuildTranslation(const float x, const float y, const float z);
+	inline void BuildRotationX(const float radians) { D3DXMatrixRotationX(this, radians); }
+	inline void BuildRotationY(const float radians) { D3DXMatrixRotationY(this, radians); }
+	inline void BuildRotationZ(const float radians) { D3DXMatrixRotationZ(this, radians); }
+	inline void BuildYawPitchRoll(const float yawRadians, const float pitchRadians, const float rollRadians);
 	inline void BuildYawPitchRoll(const float yawRadians, const float pitchRadians, const float rollRadians)
 	{
 		D3DXMatrixRotationYawPitchRoll(this, yawRadians, pitchRadians, rollRadians);
 	}
+	inline void BuildRotationQuat(const Quaternion& q) 
+	{
+		D3DXMatrixRotationQuaternion(this, &q);
+	}
+	inline void BuildRotationLookAt(const Vec3& eye, const Vec3& at, const Vec3& up) {
+		D3DXMatrixLookAtRH(this, &eye, &at, &up);
+	}
+	inline void BuildScale(const float x, const float y, const float z);
 
 };
+
+inline void Mat4x4::SetPosition(Vec3 const& pos)
+{
+	m[3][0] = pos.x;
+	m[3][1] = pos.y;
+	m[3][2] = pos.z;
+	m[3][3] = 1.0f;
+}
+
+inline void Mat4x4::SetPosition(Vec4 const& pos)
+{
+	m[3][0] = pos.x;
+	m[3][1] = pos.y;
+	m[3][2] = pos.z;
+	m[3][3] = pos.w;
+}
+
+inline void Mat4x4::SetScale(Vec3 const& scale)
+{
+	m[1][1] = scale.x;
+	m[2][2] = scale.y;
+	m[3][3] = scale.z;
+}
 
 inline Vec3 Mat4x4::GetPosition() const
 {
 	return Vec3(m[3][0], m[3][1], m[3][2]);
 }
 
+inline Vec3 Mat4x4::GetDirection() const
+{
+	// Note - the following code can be used to double check the vector construction above.
+	Mat4x4 justRot = *this;
+	justRot.SetPosition(Vec3(0.f, 0.f, 0.f));
+	Vec3 forward = justRot.Xform(g_Forward);
+	return forward;
+}
+
+inline Vec3 Mat4x4::GetRight() const
+{
+	// Note - the following code can be used to double check the vector construction above.
+	Mat4x4 justRot = *this;
+	justRot.SetPosition(Vec3(0.f, 0.f, 0.f));
+	Vec3 right = justRot.Xform(g_Right);
+	return right;
+}
+
+inline Vec3 Mat4x4::GetUp() const
+{
+	// Note - the following code can be used to double check the vector construction above.
+	Mat4x4 justRot = *this;
+	justRot.SetPosition(Vec3(0.f, 0.f, 0.f));
+	Vec3 up = justRot.Xform(g_Up);
+	return up;
+}
+
+inline Vec3 Mat4x4::GetYawPitchRoll() const
+{
+	float yaw, pitch, roll;
+
+	pitch = asin(-_32);
+
+	double threshold = 0.001; // Hardcoded constant - watchout
+	double test = cos(pitch);
+
+	if (test > threshold)
+	{
+		roll = atan2(_12, _22);
+		yaw = atan2(_31, _33);
+	}
+	else
+	{
+		roll = atan2(-_21, _11);
+		yaw = 0.0f;
+	}
+
+	return (Vec3(yaw, pitch, roll));
+}
+
+inline Vec3 Mat4x4::GetScale() const
+{
+	return Vec3(m[0][0], m[1][1], m[2][2]);
+}
+
+inline Vec4 Mat4x4::Xform(Vec4& v) const
+{
+	Vec4 temp;
+	D3DXVec4Transform(&temp, &v, this);
+	return temp;
+}
+
+inline Vec3 Mat4x4::Xform(Vec3& v) const
+{
+	Vec4 temp(v);
+	Vec4 out;
+	D3DXVec4Transform(&out, &temp, this);
+	return Vec3(out.x, out.y, out.z);
+}
+
+inline Mat4x4 Mat4x4::Inverse() const
+{
+	Mat4x4 out;
+	D3DXMatrixInverse(&out, NULL, this);
+	return out;
+}
 
 inline void Mat4x4::BuildTranslation(const Vec3& pos)
 {
@@ -135,6 +320,22 @@ inline void Mat4x4::BuildTranslation(const Vec3& pos)
 	m[3][0] = pos.x;
 	m[3][1] = pos.y;
 	m[3][2] = pos.z;
+}
+
+inline void Mat4x4::BuildTranslation(const float x, const float y, const float z)
+{
+	*this = Mat4x4::g_Identity;
+	m[3][0] = x;
+	m[3][1] = y;
+	m[3][2] = z;
+}
+
+inline void Mat4x4::BuildScale(const float x, const float y, const float z)
+{
+	*this = Mat4x4::g_Identity;
+	m[1][1] = x;
+	m[2][2] = y;
+	m[3][3] = z;
 }
 
 inline Mat4x4 operator* (const Mat4x4& a, const Mat4x4& b)
@@ -145,21 +346,10 @@ inline Mat4x4 operator* (const Mat4x4& a, const Mat4x4& b)
 	return out;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+inline void Quaternion::Build(const Mat4x4& mat)
+{
+	D3DXQuaternionRotationMatrix(this, &mat);
+}
 
 //
 // Plane Definition
