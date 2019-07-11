@@ -64,7 +64,10 @@ class D3DTextureResourceExtraData11 : public IResourceExtraData
 
 public:
 	D3DTextureResourceExtraData11();
-	virtual ~D3DTextureResourceExtraData11() { SAFE_RELEASE(m_pTexture); SAFE_RELEASE(m_pSamplerLinear); }
+	virtual ~D3DTextureResourceExtraData11() { 
+		SAFE_RELEASE(m_pTexture); 
+		SAFE_RELEASE(m_pSamplerLinear); 
+	}
 	virtual std::string VToString() { return "D3DTextureResourceExtraData11"; }
 
 	ID3D11ShaderResourceView* const* GetTexture() { return &m_pTexture; }
