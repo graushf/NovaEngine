@@ -57,6 +57,23 @@ inline Vec3 operator + (const Vec3& a, const Vec3& b)
 	return out;
 }
 
+inline Vec3 operator - (const Vec3& a, const Vec3& b)
+{
+	Vec3 out;
+	D3DXVec3Subtract(&out, &a, &b);
+
+	return out;
+}
+
+// [graushf]
+inline Vec3 operator * (const float& a, const Vec3& b)
+{
+	Vec3 out;
+	D3DXVec3Scale(&out, &b, FLOAT(a));
+
+	return out;
+}
+
 //
 //
 //
@@ -147,6 +164,10 @@ public:
 	}
 
 	Quaternion(D3DXQUATERNION& q) : D3DXQUATERNION(q) { }
+
+	// [graushf]
+	Quaternion(D3DXQUATERNION q) : D3DXQUATERNION(q) { }
+
 	Quaternion() { }
 
 	static const Quaternion g_Identity;
@@ -187,6 +208,10 @@ public:
 	inline Mat4x4 Inverse() const;
 
 	Mat4x4(D3DXMATRIX &mat) { memcpy(&m, &mat.m, sizeof(mat.m)); }
+
+	// [graushf]
+	Mat4x4(D3DXMATRIX mat) { memcpy(&m, mat.m, sizeof(mat.m)); }
+
 	Mat4x4() : D3DXMATRIX() { }
 
 	static const Mat4x4 g_Identity;
@@ -394,14 +419,14 @@ class Frustum
 public:
 	enum Side { Near, Far, Top, Right, Bottom, Left, NumPlanes };
 
-	Plane m_Planes[NumPlanes];
-	Vec3 m_NearClip[4];
-	Vec3 m_FarClip[4];
+	Plane m_Planes[NumPlanes];		// planes of the frustum in camera space
+	Vec3 m_NearClip[4];				// verts of the near clip plane in camera space.
+	Vec3 m_FarClip[4];				// verts of the far clip plane in camera space.
 
-	float m_Fov;
-	float m_Aspect;
-	float m_Near;
-	float m_Far;
+	float m_Fov;					// field of view in radians
+	float m_Aspect;					// aspect ratio - width divided by height
+	float m_Near;					// near clipping distance.
+	float m_Far;					// far clipping distance.
 
 public:
 	Frustum();

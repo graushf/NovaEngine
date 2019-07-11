@@ -35,6 +35,9 @@
     <ClInclude Include="Actors\TransformComponent.h" />
     <ClInclude Include="App\App.h" />
     <ClInclude Include="App\BaseAppLogic.h" />
+    <ClInclude Include="Audio\Audio.h" />
+    <ClInclude Include="Audio\DirectSoundAudio.h" />
+    <ClInclude Include="Audio\SoundProcess.h" />
     <ClInclude Include="Audio\SoundResource.h" />
     <ClInclude Include="Common\CommonStd.h" />
     <ClInclude Include="Common\interfaces.h" />
@@ -72,10 +75,15 @@
     <ClCompile Include="App\App.cpp" />
     <ClCompile Include="App\AppInst.cpp" />
     <ClCompile Include="App\BaseAppLogic.cpp" />
+    <ClCompile Include="Audio\Audio.cpp" />
+    <ClCompile Include="Audio\DirectSoundAudio.cpp" />
+    <ClCompile Include="Audio\SoundProcess.cpp" />
+    <ClCompile Include="Audio\SoundResource.cpp" />
     <ClCompile Include="Common\CommonStd.cpp" />
     <ClCompile Include="EventManager\EventManager.cpp" />
     <ClCompile Include="EventManager\Events.cpp" />
     <ClCompile Include="Graphics3D\D3DRenderer.cpp" />
+    <ClCompile Include="Graphics3D\Geometry.cpp" />
     <ClCompile Include="Graphics3D\MovementController.cpp" />
     <ClCompile Include="Initialization\Initialization.cpp" />
     <ClCompile Include="LUAScripting\LuaStateManager.cpp" />
@@ -167,14 +175,14 @@
     <OutDir>$(SolutionDir)..\Binaries\EngineCore_Lib\$(PlatformName)_$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\Temp\$(ProjectName)_$(PlatformName)_$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(PlatformName)_$(Configuration)</TargetName>
-    <IncludePath>$(ProjectDir);$(ProjectDir)\ThirdParty\DXUT11\Optional;$(ProjectDir)\ThirdParty\DXUT11\Effects11\Inc;$(ProjectDir)\ThirdParty\DXUT11\Core;$(ProjectDir)\ThirdParty\tinyxml_2_6_2;$(ProjectDir)\ThirdParty\zlib-1.2.11;$(ProjectDir)\ThirdParty\FastDelegate;$(ProjectDir)\ThirdParty\luaplus51-all\Src\LuaPlus;$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir);$(ProjectDir)\ThirdParty\DXUT11\Optional;$(ProjectDir)\ThirdParty\DXUT11\Effects11\Inc;$(ProjectDir)\ThirdParty\DXUT11\Core;$(ProjectDir)\ThirdParty\tinyxml_2_6_2;$(ProjectDir)\ThirdParty\zlib-1.2.11;$(ProjectDir)\ThirdParty\FastDelegate;$(ProjectDir)\ThirdParty\luaplus51-all\Src\LuaPlus;$(ProjectDir)ThirdParty\libogg-1.3.0\include;$(ProjectDir)ThirdParty\libvorbis-1.3.2\include;$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)..\Binaries\EngineCore_Lib\$(PlatformName)_$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\Temp\$(ProjectName)_$(PlatformName)_$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(PlatformName)_$(Configuration)</TargetName>
-    <IncludePath>$(ProjectDir);$(ProjectDir)\ThirdParty\DXUT11\Optional;$(ProjectDir)\ThirdParty\DXUT11\Effects11\Inc;$(ProjectDir)\ThirdParty\DXUT11\Core;$(ProjectDir)\ThirdParty\tinyxml_2_6_2;$(ProjectDir)\ThirdParty\zlib-1.2.11;$(ProjectDir)\ThirdParty\FastDelegate;$(ProjectDir)\ThirdParty\luaplus51-all\Src\LuaPlus;$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir);$(ProjectDir)\ThirdParty\DXUT11\Optional;$(ProjectDir)\ThirdParty\DXUT11\Effects11\Inc;$(ProjectDir)\ThirdParty\DXUT11\Core;$(ProjectDir)\ThirdParty\tinyxml_2_6_2;$(ProjectDir)\ThirdParty\zlib-1.2.11;$(ProjectDir)\ThirdParty\FastDelegate;$(ProjectDir)\ThirdParty\luaplus51-all\Src\LuaPlus;$(ProjectDir)ThirdParty\libogg-1.3.0\include;$(ProjectDir)ThirdParty\libvorbis-1.3.2\include;$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -202,7 +210,7 @@
     <OutDir>$(SolutionDir)..\Binaries\EngineCore_Lib\$(PlatformName)_$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\Temp\$(ProjectName)_$(PlatformName)_$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(PlatformName)_$(Configuration)</TargetName>
-    <IncludePath>$(ProjectDir);$(ProjectDir)\ThirdParty\DXUT11\Optional;$(ProjectDir)\ThirdParty\DXUT11\Effects11\Inc;$(ProjectDir)\ThirdParty\DXUT11\Core;$(ProjectDir)\ThirdParty\tinyxml_2_6_2;$(ProjectDir)\ThirdParty\zlib-1.2.11;$(ProjectDir)\ThirdParty\FastDelegate;$(ProjectDir)\ThirdParty\luaplus51-all\Src\LuaPlus;$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir);$(ProjectDir)\ThirdParty\DXUT11\Optional;$(ProjectDir)\ThirdParty\DXUT11\Effects11\Inc;$(ProjectDir)\ThirdParty\DXUT11\Core;$(ProjectDir)\ThirdParty\tinyxml_2_6_2;$(ProjectDir)\ThirdParty\zlib-1.2.11;$(ProjectDir)\ThirdParty\FastDelegate;$(ProjectDir)\ThirdParty\luaplus51-all\Src\LuaPlus;$(ProjectDir)ThirdParty\libogg-1.3.0\include;$(ProjectDir)ThirdParty\libvorbis-1.3.2\include;$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
