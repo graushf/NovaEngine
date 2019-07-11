@@ -380,6 +380,43 @@ inline void Quaternion::Build(const Mat4x4& mat)
 	D3DXQuaternionRotationMatrix(this, &mat);
 }
 
+// ---------------------------------------------------------------
+// 
+//	D3D11 Rendering Structures
+//
+// ---------------------------------------------------------------
+struct D3D11_SimpleVertex
+{
+	Vec3 Pos;
+	Vec3 Normal;
+};
+
+struct D3D11Vertex_UnlitTextured
+{
+	Vec3 Pos;
+	Vec3 Normal;
+	Vec2 Uv;
+};
+
+struct D3D11Vertex_UnlitTexturedColored
+{
+	Vec3 Pos;
+	Vec3 Normal;
+	Vec3 Diffuse;
+	Vec2 Uv;
+};
+
+struct D3D11Vertex_PositionColored
+{
+	Vec3 Pos;
+	Vec3 Diffuse;
+};
+
+//
+// INPUT DIRECTX VAO DEFINITIONS WOULD COME HERE
+//
+
+
 //
 // Plane Definition
 //
