@@ -12,6 +12,7 @@ class Scene
 {
 protected:
 	std::shared_ptr<CameraNode> m_Camera;
+	std::shared_ptr<IRenderer> m_Renderer;
 
 public:
 	Scene(std::shared_ptr<IRenderer> renderer);
@@ -26,5 +27,7 @@ public:
 
 
 	void SetCamera(std::shared_ptr<CameraNode> camera) { m_Camera = camera; }
+	const std::shared_ptr<CameraNode> GetCamera() const { return m_Camera; }
 
+	std::shared_ptr<IRenderer> GetRenderer() { return m_Renderer; }
 };

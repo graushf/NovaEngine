@@ -8,6 +8,40 @@
 #include "Common/CommonStd.h"
 #include <DXUTgui.h>
 
+struct ConstantBuffer_Matrices
+{
+	Mat4x4 m_WorldViewProj;
+	Mat4x4 m_World;
+};
+
+struct ConstantBuffer_Material
+{
+	Vec4 m_vDiffuseObjectColor;
+	Vec4 m_vAmbientObjectColor;
+	BOOL m_bHasTexture;
+	Vec3 m_vUnused;
+};
+
+#define MAXIMUM_LIGHTS_SUPPORTED (8)
+
+struct ConstantBuffer_Lighting
+{
+	Vec4 m_vLightDiffuse[MAXIMUM_LIGHTS_SUPPORTED];
+	Vec4 m_vLightDir[MAXIMUM_LIGHTS_SUPPORTED];
+	Vec4 m_vLightAmbient;
+	UINT m_nNumLights;
+	Vec3 m_vUnused;
+};
+
+//
+// class D3DRenderer11								- Chapter 10, page 270
+//
+// The D3DRenderer and D3DRenderer9 classes are not discussed in the book. The D3DRenderer class is designed to
+// implement the IRenderer interface, which abstracts the implementation of the renderer technology, which for this
+// engine can be either D3D9 or D3D11. It also encapsulates the usefulness of CDXUTDialogResourceManager
+// and CDXUTTextHelper for user interface tasks whether D3D9 OR D3D11 is being used.
+//
+
 class D3DRenderer : public IRenderer
 {
 public:
