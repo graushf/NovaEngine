@@ -7,7 +7,11 @@
 // ================================================================================
 
 #include "../Common/CommonStd.h"
+//#include "../Actors/RenderComponent"
+
 #include "Geometry.h"
+#include "Material.h"
+#include "Shaders.h"
 
 // Forward declarations
 class SceneNode;
@@ -20,6 +24,25 @@ class BaseRenderComponent;
 
 // FUTURE WORK - Smart pointers don't work right... going to use a naked pointer for now
 typedef BaseRenderComponent* WeakBaseRenderComponentPtr;
+
+
+// ----------------------------------------------------------
+//
+// AlphaType						-Chapter X, page Y
+//
+//	This enum defines the different types of alpha blending
+//  types that can be set on a scene node.
+//
+// ----------------------------------------------------------
+
+enum AlphaType
+{
+	AlphaOpaque,
+	AlphaTexture,
+	AlphaMaterial,
+	AlphaVertex
+};
+
 
 // ----------------------------------------------------------
 //  SceneNodeProperties				-Chapter 16, page 527
@@ -35,16 +58,35 @@ class SceneNodeProperties
 	friend class SceneNode;
 
 protected:
-
+	ActorId					m_ActorId;
+	std::string				m_Name;
 	Mat4x4					m_ToWorld, m_FromWorld;
+	float					m_Radius;
+	RenderPass				m_RenderPass;
 	Material				m_Material;
+	AlphaType				m_AlphaType;
+
+	void SetAlpha(const float alpha)
+	{
+		m_AlphaType = AlphaMaterial;
+		m_Material.SetAlpha(alpha);
+	}
 
 public:
 	SceneNodeProperties(void);
-
+	const ActorId& ActorId() const { return m_ActorId; }
+	Mat4x4 const& ToWorld() const { return m_ToWorld; }
 	Mat4x4 const& FromWorld() const { return m_FromWorld; }
-	
 	void Transform(Mat4x4* toWorld, Mat4x4* fromWorld) const;
+
+	const char* Name() const { return m_Name.c_str(); }
+
+	bool HasAlpha() const { return m_Material.HasAlpha(); }
+	float Alpha() const { return m_Material.GetAlpha(); }
+	AlphaType AlphaType() const { return m_AlphaType; }
+
+	RenderPass RenderPass() const { return m_RenderPass; }
+	float Radius() const { return m_Radius; }
 
 	Material GetMaterial() const { return m_Material; }
 };
@@ -88,7 +130,66 @@ public:
 	virtual const SceneNodeProperties* const VGet() const { return &m_Props; }
 
 	virtual void VSetTransform(const Mat4x4* toWorld, const Mat4x4* fromWorld = nullptr);
+
+	virtual HRESULT VOnRestore(Scene* pScene);
+	virtual HRESULT VOnUpdate(Scene *, DWORD const elapsedMs);
+
+	virtual HRESULT VPreRender(Scene* pScene);
+	virtual bool VIsVisible(Scene* pScene) const;
+	virtual HRESULT VRender(Scene* pScene) { return S_OK; }
+	virtual HRESULT VRenderChildren(Scene* pScene);
+	virtual HRESULT VPostRender(Scene* pScene);
+
+	virtual bool VAddChild(std::shared_ptr<ISceneNode> kid);
+	virtual bool VRemoveChild(ActorId id);
+
+	virtual HRESULT VOnLostDevice(Scene* pScene);
+	virtual HRESULT VPick(Scene* pScene, RayCast* pRayCast);
+
+	void SetAlpha(float alpha);
+	float GetAlpha() const { return m_Props.Alpha(); }
+
+	Vec3 GetPosition() const { return m_Props.m_ToWorld.GetPosition(); }
+	void SetPosition(const Vec3& pos) { m_Props.m_ToWorld.SetPosition(pos); }
+
+	const Vec3 GetWorldPosition() const;	// [mrmike] added post-press to respect ancestor's position
+
+	Vec3 GetDirection() const { return m_Props.m_ToWorld.GetDirection(); }
+
+	void SetRadius(const float radius) { m_Props.m_Radius = radius; }
+	void SetMaterial(const Material& mat) { m_Props.m_Material = mat; }
 };
+
+
+class D3DSceneNode11 : public SceneNode
+{
+public:
+	virtual HRESULT VRender(Scene* pScene) { return S_OK; }
+};
+
+// =====================================================================
+//
+// AlphaSceneNode Description					- Chapter 16, page 535
+// AlphaSceneNodes Description					- Chapter 16, page 535
+//
+// A list of scene nodes that need to be drawn in the alpha pass;
+// the list is defined as an STL list.
+//
+// =====================================================================
+struct AlphaSceneNode
+{
+	std::shared_ptr<ISceneNode> m_pNode;
+	Mat4x4 m_Concat;
+	float m_ScreenZ;
+
+	// For the STL sort...
+	bool const operator < (AlphaSceneNode const& other) { return m_ScreenZ < other.m_ScreenZ; }
+};
+
+typedef std::list<AlphaSceneNode*> AlphaSceneNodes;
+
+
+
 
 // ---------------------------------------------
 // 

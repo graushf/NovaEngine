@@ -48,9 +48,11 @@
     <ClInclude Include="EventManager\Events.h" />
     <ClInclude Include="Graphics3D\D3DRenderer.h" />
     <ClInclude Include="Graphics3D\Geometry.h" />
+    <ClInclude Include="Graphics3D\Material.h" />
     <ClInclude Include="Graphics3D\MovementController.h" />
     <ClInclude Include="Graphics3D\Scene.h" />
     <ClInclude Include="Graphics3D\SceneNodes.h" />
+    <ClInclude Include="Graphics3D\Shaders.h" />
     <ClInclude Include="Initialization\Initialization.h" />
     <ClInclude Include="LUAScripting\LuaStateManager.h" />
     <ClInclude Include="LUAScripting\ScriptEvent.h" />
@@ -84,7 +86,9 @@
     <ClCompile Include="EventManager\Events.cpp" />
     <ClCompile Include="Graphics3D\D3DRenderer.cpp" />
     <ClCompile Include="Graphics3D\Geometry.cpp" />
+    <ClCompile Include="Graphics3D\Material.cpp" />
     <ClCompile Include="Graphics3D\MovementController.cpp" />
+    <ClCompile Include="Graphics3D\Shaders.cpp" />
     <ClCompile Include="Initialization\Initialization.cpp" />
     <ClCompile Include="LUAScripting\LuaStateManager.cpp" />
     <ClCompile Include="LUAScripting\ScriptEvent.cpp" />
@@ -99,6 +103,22 @@
     <ClCompile Include="Utilities\Math.cpp" />
     <ClCompile Include="Utilities\MathRandom.cpp" />
     <ClCompile Include="Utilities\String.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shaders\Nova_VSMain_VS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+    </FxCompile>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

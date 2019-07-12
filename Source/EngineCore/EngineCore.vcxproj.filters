@@ -171,6 +171,12 @@
     <ClInclude Include="Audio\SoundProcess.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Graphics3D\Material.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics3D\Shaders.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Common\CommonStd.cpp">
@@ -263,5 +269,14 @@
     <ClCompile Include="Graphics3D\Geometry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics3D\Material.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics3D\Shaders.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shaders\Nova_VSMain_VS.hlsl" />
   </ItemGroup>
 </Project>

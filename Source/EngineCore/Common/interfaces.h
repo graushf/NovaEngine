@@ -260,7 +260,7 @@ public:
 //
 // class ISceneNode				- Chapter 16, page 524
 //
-//		Thisis the public interface for nodes in a 3D scene graph.
+//		This is the public interface for nodes in a 3D scene graph.
 //
 class ISceneNode
 {

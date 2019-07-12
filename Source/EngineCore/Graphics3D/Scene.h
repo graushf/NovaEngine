@@ -57,6 +57,26 @@ public:
 	void SetCamera(std::shared_ptr<CameraNode> camera) { m_Camera = camera; }
 	const std::shared_ptr<CameraNode> GetCamera() const { return m_Camera; }
 
+	void PushAndSetMatrix(const Mat4x4& toWorld)
+	{
+		// Note this code carefully!!! It is COMPLETELY different
+		// from some DirectX 9 documentation out there....
+		// Scene::PushAndSetMatrix				- Chapter 16, page 541
+
+		m_MatrixStack->Push();
+		m_MatrixStack->MultMatrixLocal(&toWorld);
+		Mat4x4 mat = GetTopMatrix();
+		m_Renderer->VSetWorldTransform(&mat);
+	}
+
+	void PopMatrix()
+	{
+		// Scene::PopMatrix			- Chapter 16, page 541
+		m_MatrixStack->Pop();
+		Mat4x4 mat = GetTopMatrix();
+		m_Renderer->VSetWorldTransform(&mat);
+	}
+
 	const Mat4x4 GetTopMatrix()
 	{
 		// Scene::GetTopMatrix - Chapter 16, page 541
@@ -64,6 +84,8 @@ public:
 	}
 
 	LightManager* GetLightManager() { return m_LightManager; }
+
+	void AddAlphaSceneNode(AlphaSceneNode* asn) { m_AlphaSceneNodes.push_back(ans); }
 
 	std::shared_ptr<IRenderer> GetRenderer() { return m_Renderer; }
 };

@@ -103,6 +103,7 @@ public:
 	int GetExitCode() { return DXUTGetExitCode(); }
 	bool IsRunning() { return m_bIsRunning; }
 
+	BaseAppLogic* GetAppLogic(void) const { return m_pGame; }
 
 protected:
 
