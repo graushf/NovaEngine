@@ -164,3 +164,116 @@ HRESULT Nova_Hlsl_VertexShader::SetupRender(Scene* pScene, SceneNode* pNode)
 
 	return S_OK;
 }
+
+Nova_Hlsl_PixelShader::Nova_Hlsl_PixelShader()
+{
+	m_pPixelShader = NULL;
+	m_pcbPSMaterial = NULL;
+}
+
+Nova_Hlsl_PixelShader::~Nova_Hlsl_PixelShader()
+{
+	SAFE_RELEASE(m_pPixelShader);
+	SAFE_RELEASE(m_pcbPSMaterial);
+}
+
+HRESULT Nova_Hlsl_PixelShader::OnRestore(Scene* pScene)
+{
+	HRESULT hr = S_OK;
+
+	SAFE_RELEASE(m_pPixelShader);
+	SAFE_RELEASE(m_pcbPSMaterial);
+
+	std::shared_ptr<D3DRenderer11> d3dRenderer11 = static_pointer_cast<D3DRenderer11>(pScene->GetRenderer());
+
+	// ================================================================
+	// Set up the pixel shader and related constant buffers
+
+	// Compile the pixel shader using the lowest possible profile for broadest feature level support.
+	ID3DBlob* pPixelShaderBuffer = NULL;
+
+	std::string hlslFileName = "Effecs\\Sh_PSMain_PS.hlsl";
+	Resource resource(hlslFileName.c_str());
+	std::shared_ptr<ResHandle> pResourceHandle = g_pApp->m_ResCache->GetHandle(&resource); // this actually loads the HLSL file from the zip file.
+	if (FAILED(d3dRenderer11->CompileShader(pResourceHandle->Buffer, pResourceHandle->Size(), hlslFileName.c_str(), "Sh_PSMain", "ps_4_0_level_11_0", &pPixelShaderBuffer)))
+	{
+		SAFE_RELEASE(pPixelShaderBuffer);
+		return hr;
+	}
+
+	if (SUCCEEDED(DXUTGetD3D11Device()->CreatePixelShader(pPixelShaderBuffer->GetBufferPointer(),
+																pPixelShaderBuffer->GetBufferSize(), NULL, &m_pPixelShader)))
+	{
+		DXUT_SetDebugName(m_pPixelShader, "Sh_PSMain");
+
+		// Setup constant buffers
+		D3D11_BUFFER_DESC Desc;
+		Desc.Usage = D3D11_USAGE_DYNAMIC;
+		Desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		Desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		Desc.MiscFlags = 0;
+
+		Desc.ByteWidth = sizeof(ConstantBuffer_Material);
+		hr = DXUTGetD3D11Device()->CreateBuffer(&Desc, NULL, &m_pcbPSMaterial);
+		DXUT_SetDebugName(m_pcbPSMaterial, "ConstantBuffer_Material");
+	}
+
+	SAFE_RELEASE(pPixelShaderBuffer);
+	return hr;
+}
+
+HRESULT Nova_Hlsl_PixelShader::SetupRender(Scene* pScene, SceneNode* pNode)
+{
+	HRESULT hr = S_OK;
+
+	DXUTGetD3D11DeviceContext()->PSSetShader(m_pPixelShader, NULL, 0);
+
+	D3D11_MAPPED_SUBRESOURCE MappedResource;
+
+	V(DXUTGetD3D11DeviceContext()->Map(m_pcbPSMaterial, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource));
+	ConstantBuffer_Material* pPSMaterial = (ConstantBuffer_Material*)MappedResource.pData;
+
+	Color color = pNode->VGet()->GetMaterial().GetDiffuse();
+	pPSMaterial->m_vDiffuseObjectColor = Vec4(color.r, color.g, color.b, color.a);
+
+	if (m_textureResource.length() > 0)
+	{
+		pPSMaterial->m_bHasTexture = true;
+	}
+	else
+	{
+		pPSMaterial->m_bHasTexture = false;
+	}
+
+	DXUTGetD3D11DeviceContext()->Unmap(m_pcbPSMaterial, 0);
+	DXUTGetD3D11DeviceContext()->PSSetConstantBuffers(0, 1, &m_pcbPSMaterial);
+
+	// Set up the the texture
+	SetTexture(m_textureResource);
+
+	return S_OK;
+}
+
+HRESULT Nova_Hlsl_PixelShader::SetTexture(const std::string& textureName)
+{
+	m_textureResource = textureName;
+	if (m_textureResource.length() > 0)
+	{
+		Resource resource(m_textureResource);
+		std::shared_ptr<ResHandle> texture = g_pApp->m_ResCache->GetHandle(&resource);
+		if (texture)
+		{
+			std::shared_ptr<D3DTextureResourceExtraData11> extra = static_pointer_cast<D3DTextureResourceExtraData11>(texture->GetExtra());
+			SetTexture(extra->GetTexture(), extra->GetSampler());
+		}
+	}
+	return S_OK;
+}
+
+HRESULT Nova_Hlsl_PixelShader::SetTexture(ID3D11ShaderResourceView* const* pDiffuseRV, ID3D11SamplerState* const* ppSamplers)
+{
+	DXUTGetD3D11DeviceContext()->PSSetShaderResources(0, 1, pDiffuseRV);
+	DXUTGetD3D11DeviceContext()->PSSetSamplers(0, 1, ppSamplers);
+
+	return S_OK;
+}

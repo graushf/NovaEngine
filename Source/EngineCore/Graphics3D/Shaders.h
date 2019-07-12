@@ -41,3 +41,19 @@ protected:
 };
 
 // class with PixelShader --
+class Nova_Hlsl_PixelShader
+{
+public:
+	Nova_Hlsl_PixelShader();
+	~Nova_Hlsl_PixelShader();
+
+	HRESULT OnRestore(Scene* pScene);
+	HRESULT SetupRender(Scene* pScene, SceneNode* pNode);
+	HRESULT SetTexture(const std::string& textureName);
+	HRESULT SetTexture(ID3D11ShaderResourceView* const* pDiffuseRV, ID3D11SamplerState* const* ppSamplers);
+
+protected:
+	ID3D11PixelShader*			m_pPixelShader;
+	ID3D11Buffer*				m_pcbPSMaterial;
+	std::string					m_textureResource;
+};
