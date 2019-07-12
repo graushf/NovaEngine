@@ -4,6 +4,7 @@
 // Scene.h : Implements the container class for 3D Graphics scenes.
 //
 // ================================================================================
+#include "../Common/CommonStd.h"
 
 #include "Geometry.h"
 #include "SceneNodes.h"
@@ -29,18 +30,25 @@ typedef std::map<ActorId, std::shared_ptr<ISceneNode>> SceneActorMap;
 //
 // -----------------------------------------------------------------------
 
+class CameraNode;
+class SkyNode;
+class LightNode;
 class LightManager;
-
 
 class Scene
 {
 protected:
+	std::shared_ptr<SceneNode>	m_Root;
 	std::shared_ptr<CameraNode> m_Camera;
 	std::shared_ptr<IRenderer>	m_Renderer;
 
 	ID3DXMatrixStack*			m_MatrixStack;
+	AlphaSceneNodes				m_AlphaSceneNodes;
+	SceneActorMap				m_ActorMap;
 
 	LightManager				*m_LightManager;
+
+	void RenderAlphaPass();
 
 public:
 	Scene(std::shared_ptr<IRenderer> renderer);
@@ -50,9 +58,15 @@ public:
 	HRESULT OnRestore();
 	HRESULT OnLostDevice();
 	HRESULT OnUpdate(const int deltaMilliseconds);
-
+	std::shared_ptr<ISceneNode> FindActor(ActorId id);
 	bool AddChild(ActorId id, std::shared_ptr<ISceneNode> kid);
+	bool RemoveChild(ActorId id);
 
+	// event delegates
+	void NewRenderComponentDelegate(IEventDataPtr pEventData);
+	void ModifiedRenderComponentDelegate(IEventDataPtr pEventData);		// added post-press!
+	void DestroyActorDelegate(IEventDataPtr pEventData);
+	void MoveActorDelegate(IEventDataPtr pEventData);
 
 	void SetCamera(std::shared_ptr<CameraNode> camera) { m_Camera = camera; }
 	const std::shared_ptr<CameraNode> GetCamera() const { return m_Camera; }
@@ -85,7 +99,9 @@ public:
 
 	LightManager* GetLightManager() { return m_LightManager; }
 
-	void AddAlphaSceneNode(AlphaSceneNode* asn) { m_AlphaSceneNodes.push_back(ans); }
+	void AddAlphaSceneNode(AlphaSceneNode* asn) { m_AlphaSceneNodes.push_back(asn); }
+
+	HRESULT Pick(RayCast* pRayCast) { return m_Root->VPick(this, pRayCast); }
 
 	std::shared_ptr<IRenderer> GetRenderer() { return m_Renderer; }
 };

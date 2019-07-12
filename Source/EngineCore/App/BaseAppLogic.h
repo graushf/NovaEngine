@@ -75,7 +75,9 @@ public:
 	
 	// rest of code
 
-
+	// Changing Game Logic State
+	virtual void VChangeState(BaseGameState newState);
+	const BaseGameState GetState() const { return m_State; }
 
 	// Render Diagnostics
 	virtual void VRenderDiagnostics();
