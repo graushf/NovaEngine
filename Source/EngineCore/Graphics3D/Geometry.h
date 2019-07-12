@@ -210,7 +210,7 @@ public:
 	Mat4x4(D3DXMATRIX &mat) { memcpy(&m, &mat.m, sizeof(mat.m)); }
 
 	// [graushf]
-	Mat4x4(D3DXMATRIX mat) { memcpy(&m, mat.m, sizeof(mat.m)); }
+	//Mat4x4(D3DXMATRIX mat) { memcpy(&m, mat.m, sizeof(mat.m)); }
 
 	Mat4x4() : D3DXMATRIX() { }
 

@@ -8,7 +8,7 @@
 
 #include "D3DRenderer.h"
 #include "Geometry.h"
-//#include "Lights.h"
+#include "Lights.h"
 //#include "Mesh.h"
 #include "SceneNodes.h"
 #include "../ResourceCache/ResCache.h"
@@ -60,7 +60,7 @@ HRESULT Nova_Hlsl_VertexShader::OnRestore(Scene* pScene)
 	// Compile the vertex shader using the lowest possible profile for broadest feature level support
 	ID3DBlob* pVertexShaderBuffer = NULL;
 
-	std::string hlslFileName = "Effects\\Nova_VSMain_VS.hlsl";
+	std::string hlslFileName = "Effects\\Sh_VSMain_VS.hlsl";
 	Resource resource(hlslFileName.c_str());
 	std::shared_ptr<ResHandle> pResourceHandle = g_pApp->m_ResCache->GetHandle(&resource); // this actually loads the HLSL file from the zip file
 	if (FAILED(d3dRenderer11->CompileShader(pResourceHandle->Buffer(), pResourceHandle->Size(), hlslFileName.c_str(), "Nova_VSMain", "vs_4_0_level_11_0", &pVertexShaderBuffer)))
@@ -118,4 +118,49 @@ HRESULT Nova_Hlsl_VertexShader::SetupRender(Scene* pScene, SceneNode* pNode)
 	// Get the projection & view matrix from the camera class
 	Mat4x4 mWorldViewProjection = pScene->GetCamera()->GetWorldViewProjection(pScene);
 	Mat4x4 mWorld = pScene->GetTopMatrix();
+
+	D3D11_MAPPED_SUBRESOURCE MappedResource;
+
+	// -------- Transform Matrices --------------
+	V(DXUTGetD3D11DeviceContext()->Map(m_pcbVSMatrices, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource));
+
+	ConstantBuffer_Matrices* pVSMatrices = (ConstantBuffer_Matrices*)MappedResource.pData;
+	D3DXMatrixTranspose(&pVSMatrices->m_WorldViewProj, &mWorldViewProjection);
+	D3DXMatrixTranspose(&pVSMatrices->m_World, &mWorld);
+
+	DXUTGetD3D11DeviceContext()->Unmap(m_pcbVSMatrices, 0);
+
+	// ------- Lighting -----------
+	V(DXUTGetD3D11DeviceContext()->Map(m_pcbVSLighting, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource));
+	ConstantBuffer_Lighting* pLighting = (ConstantBuffer_Lighting*)MappedResource.pData;
+
+	if (m_enableLights) {
+		pScene->GetLightManager()->CalcLighting(pLighting, pNode);
+	}
+	else
+	{
+		pLighting->m_nNumLights = 0;
+		pLighting->m_vLightAmbient = Vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	}
+
+	DXUTGetD3D11DeviceContext()->Unmap(m_pcbVSLighting, 0);
+
+	// -------- Material -----------
+	V(DXUTGetD3D11DeviceContext()->Map(m_pcbVSMaterial, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource));
+	ConstantBuffer_Material* pPSMaterial = (ConstantBuffer_Material*)MappedResource.pData;
+
+	Color color = pNode->VGet()->GetMaterial().GetDiffuse();
+	pPSMaterial->m_vDiffuseObjectColor = Vec4(color.r, color.g, color.b, color.a);
+	color = (m_enableLights) ? pNode->VGet()->GetMaterial().GetAmbient() : Color(1.0f, 1.0f, 1.0f, 1.0f);
+	pPSMaterial->m_vAmbientObjectColor = Vec4(color.r, color.g, color.b, color.a);
+	// Note - the vertex shader doesn't care about the texture one way or another so we'll just set it to false
+	pPSMaterial->m_bHasTexture = false;
+
+	DXUTGetD3D11DeviceContext()->Unmap(m_pcbVSMaterial, 0);
+
+	DXUTGetD3D11DeviceContext()->VSSetConstantBuffers(0, 1, &m_pcbVSMatrices);
+	DXUTGetD3D11DeviceContext()->VSSetConstantBuffers(1, 1, &m_pcbVSLighting);
+	DXUTGetD3D11DeviceContext()->VSSetConstantBuffers(2, 1, &m_pcbVSMaterial);
+
+	return S_OK;
 }

@@ -36,11 +36,17 @@ class SceneNodeProperties
 
 protected:
 
+	Mat4x4					m_ToWorld, m_FromWorld;
+	Material				m_Material;
+
 public:
 	SceneNodeProperties(void);
+
+	Mat4x4 const& FromWorld() const { return m_FromWorld; }
 	
 	void Transform(Mat4x4* toWorld, Mat4x4* fromWorld) const;
 
+	Material GetMaterial() const { return m_Material; }
 };
 
 
