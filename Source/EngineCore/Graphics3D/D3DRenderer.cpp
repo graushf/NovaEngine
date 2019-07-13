@@ -65,6 +65,50 @@ D3DRendererAlphaPass11::~D3DRendererAlphaPass11()
 	SAFE_RELEASE(m_pOldBlendState);
 }
 
+//
+// clss D3DRendererSkyBoxPass11										- Chapter 16, page 548
+//
+class D3DRendererSkyBoxPass11 : public IRenderState
+{
+protected:
+	ID3D11DepthStencilState* m_pOldDepthStencilState;
+	ID3D11DepthStencilState* m_pSkyboxDepthStencilState;
+
+public:
+	D3DRendererSkyBoxPass11();
+	~D3DRendererSkyBoxPass11();
+	std::string VToString() { return "D3DRendererSkyBoxPass11"; }
+};
+
+//
+// D3DRendererSkyBoxPass11::D3DRendererSkyBoxPass11()				- Chapter 16, page 548
+//
+D3DRendererSkyBoxPass11::D3DRendererSkyBoxPass11()
+{
+	// Depth stencil state
+	D3D11_DEPTH_STENCIL_DESC DSDesc;
+	ZeroMemory(&DSDesc, sizeof(D3D11_DEPTH_STENCIL_DESC));
+	DSDesc.DepthEnable = true;
+	DSDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+	DSDesc.DepthFunc = D3D11_COMPARISON_LESS;
+	DSDesc.StencilEnable = FALSE;
+	DXUTGetD3D11Device()->CreateDepthStencilState(&DSDesc, &m_pSkyboxDepthStencilState);
+	DXUT_SetDebugName(m_pSkyboxDepthStencilState, "SkyboxDepthStencil");
+
+	UINT StencilRef;
+	DXUTGetD3D11DeviceContext()->OMGetDepthStencilState(&m_pOldDepthStencilState, &StencilRef);
+	DXUTGetD3D11DeviceContext()->OMSetDepthStencilState(m_pSkyboxDepthStencilState, 0);
+}
+
+//
+// D3DRendererSkyBoxPass11::~D4DRendererSkyBoxPass11()					- Chapter 16, page 548
+//
+D3DRendererSkyBoxPass11::~D3DRendererSkyBoxPass11()
+{
+	DXUTGetD3D11DeviceContext()->OMSetDepthStencilState(m_pOldDepthStencilState, 0);
+	SAFE_RELEASE(m_pOldDepthStencilState);
+	SAFE_RELEASE(m_pSkyboxDepthStencilState);
+}
 
 // -----------------------------------------------
 // D3DRenderer11 Implementation
@@ -157,4 +201,9 @@ HRESULT D3DRenderer11::CompileShaderFromFile(WCHAR* szFileName, LPCSTR szEntryPo
 std::shared_ptr<IRenderState> D3DRenderer11::VPrepareAlphaPass()
 {
 	return std::shared_ptr<IRenderState>(Nv_NEW D3DRendererAlphaPass11());
+}
+
+std::shared_ptr<IRenderState> D3DRenderer11::VPrepareSkyBoxPass()
+{
+	return std::shared_ptr<IRenderState>(Nv_NEW D3DRendererSkyBoxPass11());
 }

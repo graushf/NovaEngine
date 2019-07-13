@@ -295,6 +295,101 @@ void SceneNode::SetAlpha(float alpha)
 	}
 }
 
+
+// ===========================================================
+// RootNode Implementation
+// ===========================================================
+
+//
+// RootNode::RootNode						- Chapter 16, page 545
+//
+RootNode::RootNode()
+	:SceneNode(INVALID_ACTOR_ID, WeakBaseRenderComponentPtr(), RenderPass_0, &Mat4x4::g_Identity)
+{
+	m_Children.reserve(RenderPass_Last);
+
+	std::shared_ptr<SceneNode> staticGroup(Nv_NEW SceneNode(INVALID_ACTOR_ID, WeakBaseRenderComponentPtr(), RenderPass_Static, &Mat4x4::g_Identity));
+	m_Children.push_back(staticGroup); // RenderPass_Static = 0
+
+	std::shared_ptr<SceneNode> actorGroup(Nv_NEW SceneNode(INVALID_ACTOR_ID, WeakBaseRenderComponentPtr(), RenderPass_Actor, &Mat4x4::g_Identity));
+	m_Children.push_back(actorGroup);	// RenderPass_Actor = 1
+
+	std::shared_ptr<SceneNode> skyGroup(Nv_NEW SceneNode(INVALID_ACTOR_ID, WeakBaseRenderComponentPtr(), RenderPass_Sky, &Mat4x4::g_Identity));
+	m_Children.push_back(skyGroup);	// RenderPass_Sky = 2
+
+	std::shared_ptr<SceneNode> invisibleGroup(Nv_NEW SceneNode(INVALID_ACTOR_ID, WeakBaseRenderComponentPtr(), RenderPass_NotRendered, &Mat4x4::g_Identity));
+	m_Children.push_back(invisibleGroup); // RenderPass_NotRendered = 3
+}
+
+//
+// RootNode::AddChild						- Chapter 16, page 546
+//
+bool RootNode::VAddChild(std::shared_ptr<ISceneNode> kid)
+{
+	// The Root node has children that divide the scene graph into render passes.
+	// Scene nodes will get added to these children based on the value of the 
+	// render pass member variable.
+
+	RenderPass pass = kid->VGet()->RenderPass();
+	if ((unsigned)pass >= m_Children.size() || !m_Children[pass])
+	{
+		//Nv_ASSERT(0 && _T("There is no such render pass"));
+		return false;
+	}
+
+	return m_Children[pass]->VAddChild(kid);
+}
+
+//
+// RootNode::VRemoveChild					- not described in the book.
+//
+//  Returns false if nothing was removed.
+//
+bool RootNode::VRemoveChild(ActorId id)
+{
+	bool anythingRemoved = false;
+	for (int i = RenderPass_0; i < RenderPass_Last; ++i)
+	{
+		if (m_Children[i]->VRemoveChild(id))
+		{
+			anythingRemoved = true;
+		}
+	}
+	return anythingRemoved;
+}
+
+// 
+// RootNode::VRenderChildren				- Chapter 16, page 547
+//
+HRESULT RootNode::VRenderChildren(Scene* pScene)
+{
+	// This code creates fine control of the render passes.
+
+	for (int pass = RenderPass_0; pass < RenderPass_Last; ++pass)
+	{
+		switch (pass)
+		{
+			case RenderPass_Static:
+			case RenderPass_Actor:
+				m_Children[pass]->VRenderChildren(pScene);
+				break;
+			case RenderPass_Sky:
+			{
+				std::shared_ptr<IRenderState> skyPass = pScene->GetRenderer()->VPrepareSkyBoxPass();
+				m_Children[pass]->VRenderChildren(pScene);
+				break;
+			}
+		}
+	}
+
+	return S_OK;
+}
+
+// ===========================================================
+// CameraNode Implementation
+// ===========================================================
+
+
 Mat4x4 CameraNode::GetWorldViewProjection(Scene* pScene)
 {
 	Mat4x4 world = pScene->GetTopMatrix();

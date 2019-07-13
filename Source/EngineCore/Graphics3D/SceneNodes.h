@@ -188,12 +188,55 @@ struct AlphaSceneNode
 
 typedef std::list<AlphaSceneNode*> AlphaSceneNodes;
 
+// ========================================================
+//
+// SceneActorMap Description
+//
+//		An STL map that allows fast lookup of a scene node given an ActorId.
+//
+// ========================================================
+
+typedef std::map<ActorId, std::shared_ptr<ISceneNode>> SceneActorMap;
+
+// ========================================================
+//
+// Scene Description
+//
+// A hierarchical container of scene nodes, which
+// are classes that implement the ISceneNode interface
+//
+// ========================================================
+
+class CameraNode;
+class SkyNode;
 
 
+// ========================================================
+//
+// class RootNode								- Chapter 16, page 545
+//
+// This is the root node of the scene graph.
+//
+// ========================================================
+
+class RootNode : public SceneNode
+{
+public:
+	RootNode();
+	virtual bool VAddChild(std::shared_ptr<ISceneNode> kid);
+	virtual HRESULT VRenderChildren(Scene* pScene);
+	virtual bool VRemoveChild(ActorId id);
+	virtual bool VIsVisible(Scene* pScene) const { return true; }
+};
 
 // ---------------------------------------------
 // 
+// class CameraNode								- Chapter 16, page 548
+// 
+// A camra node controls the D3D view transform and holds the view
+// frustum definition.
 //
+
 // ---------------------------------------------
 class CameraNode : public SceneNode
 {
