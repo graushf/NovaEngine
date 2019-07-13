@@ -10,6 +10,62 @@
 CDXUTDialogResourceManager D3DRenderer::g_DialogResourceManager;
 CDXUTTextHelper* D3DRenderer::g_pTextHelper = nullptr;
 
+
+//
+// class D3DRendererAlphaPass11				- Chapter 16, page 543
+//
+class D3DRendererAlphaPass11 : public IRenderState
+{
+protected:
+	ID3D11BlendState* m_pOldBlendState;
+	FLOAT m_OldBlendFactor[4];
+	UINT m_OldSampleMask;
+
+	ID3D11BlendState* m_pCurrentBlendState;
+
+public:
+	D3DRendererAlphaPass11();
+	~D3DRendererAlphaPass11();
+	std::string VToString() { return "D3DRendererAlphaPass11"; }
+};
+
+//
+// D3DRendererAlphaPass11::D3DRendererAlphaPass11					- Chapter 16, page 544
+//
+D3DRendererAlphaPass11::D3DRendererAlphaPass11()
+{
+	DXUTGetD3D11DeviceContext()->OMGetBlendState(&m_pOldBlendState, m_OldBlendFactor, &m_OldSampleMask);
+	m_pCurrentBlendState = NULL;
+
+	D3D11_BLEND_DESC BlendState;
+	ZeroMemory(&BlendState, sizeof(D3D11_BLEND_DESC));
+
+	BlendState.AlphaToCoverageEnable = false;
+	BlendState.IndependentBlendEnable = false;
+	BlendState.RenderTarget[0].BlendEnable = TRUE;
+	BlendState.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	BlendState.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	BlendState.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	BlendState.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ZERO;
+	BlendState.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+	BlendState.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	BlendState.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+	DXUTGetD3D11Device()->CreateBlendState(&BlendState, &m_pCurrentBlendState);
+	DXUTGetD3D11DeviceContext()->OMSetBlendState(m_pCurrentBlendState, 0, 0xffffffff);
+}
+
+//
+// D3DRendererAlphaPass11:~D3DRendererAlphaPass11					- Chapter 16, page 544
+//
+D3DRendererAlphaPass11::~D3DRendererAlphaPass11()
+{
+	DXUTGetD3D11DeviceContext()->OMSetBlendState(m_pOldBlendState, m_OldBlendFactor, m_OldSampleMask);
+	SAFE_RELEASE(m_pCurrentBlendState);
+	SAFE_RELEASE(m_pOldBlendState);
+}
+
+
 // -----------------------------------------------
 // D3DRenderer11 Implementation
 //
@@ -96,4 +152,9 @@ HRESULT D3DRenderer11::CompileShaderFromFile(WCHAR* szFileName, LPCSTR szEntryPo
 	}
 
 	return S_OK;
+}
+
+std::shared_ptr<IRenderState> D3DRenderer11::VPrepareAlphaPass()
+{
+	return std::shared_ptr<IRenderState>(Nv_NEW D3DRendererAlphaPass11());
 }

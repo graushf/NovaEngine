@@ -6,6 +6,9 @@
 // ================================================================================
 #include "../Common/CommonStd.h"
 
+// [graushf]
+#include "../EventManager/EventManager.h"
+
 #include "Geometry.h"
 #include "SceneNodes.h"
 
