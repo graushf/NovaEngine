@@ -389,6 +389,71 @@ HRESULT RootNode::VRenderChildren(Scene* pScene)
 // CameraNode Implementation
 // ===========================================================
 
+//
+// CameraNode::VRender						- Chapter 16, page 550
+//
+HRESULT CameraNode::VRender(Scene* pScene)
+{
+	if (m_DebugCamera)
+	{
+		pScene->PopMatrix();
+
+		m_Frustum.Render();
+
+		pScene->PushAndSetMatrix(m_Props.ToWorld());
+	}
+
+	return S_OK;
+}
+
+//
+// CameraNode::VOnRestore					- Chapter 16, page 550
+//
+HRESULT CameraNode::VOnRestore(Scene* pScene)
+{
+	m_Frustum.SetAspect(DXUTGetWindowWidth() / (FLOAT)DXUTGetWindowHeight());
+	D3DXMatrixPerspectiveFovLH(&m_Projection, m_Frustum.m_Fov, m_Frustum.m_Aspect, m_Frustum.m_Near, m_Frustum.m_Far);
+	pScene->GetRenderer()->VSetProjectionTransform(&m_Projection);
+	return S_OK;
+}
+
+//
+// CameraNode::SetViewTransform						- Chapter 16, page 550
+//
+//	 Note: this is incorrectly called CameraNode::SetView in the book.
+//
+HRESULT CameraNode::SetViewTransform(Scene* pScene)
+{
+	// If there is a target, make sure the camera is
+	// rigidly attached right behind the target.
+	if (m_pTarget)
+	{
+		Mat4x4 mat = m_pTarget->VGet()->ToWorld();
+		Vec4 at = m_CamOffsetVector;
+		Vec4 atWorld = mat.Xform(at);
+		Vec3 pos = mat.GetPosition() + Vec3(atWorld);
+		mat.SetPosition(pos);
+		VSetTransform(&mat);
+	}
+
+	m_View = VGet()->FromWorld();
+
+	pScene->GetRenderer()->VSetViewTransform(&m_View);
+	return S_OK;
+}
+
+//
+// CameraNode::GetWorldViewProjection				- not described in the book.
+//
+//	 Returns the concatenation of the world and view projection, which is generally sent into vertex shaders.
+//
+Mat4x4 CameraNode::GetWorldViewProjection(Scene* pScene)
+{
+	Mat4x4 world = pScene->GetTopMatrix();
+	Mat4x4 view = VGet()->FromWorld();
+	Mat4x4 worldView = world * view;
+	return worldView * m_Projection;
+}
 
 Mat4x4 CameraNode::GetWorldViewProjection(Scene* pScene)
 {

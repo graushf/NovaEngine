@@ -264,6 +264,7 @@ public:
 	std::shared_ptr<SceneNode> GetTarget() { return m_pTarget; }
 
 	Mat4x4 GetWorldViewProjection(Scene *pScene);
+	HRESULT SetViewTransform(Scene* pScene);
 
 	Mat4x4 GetProjection() { return m_Projection; }
 	Mat4x4 GetView() { return m_View; }
