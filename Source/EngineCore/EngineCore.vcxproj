@@ -48,6 +48,7 @@
     <ClInclude Include="EventManager\Events.h" />
     <ClInclude Include="Graphics3D\D3DRenderer.h" />
     <ClInclude Include="Graphics3D\Geometry.h" />
+    <ClInclude Include="Graphics3D\Lights.h" />
     <ClInclude Include="Graphics3D\Material.h" />
     <ClInclude Include="Graphics3D\MovementController.h" />
     <ClInclude Include="Graphics3D\Scene.h" />
@@ -83,11 +84,14 @@
     <ClCompile Include="Audio\SoundResource.cpp" />
     <ClCompile Include="Common\CommonStd.cpp" />
     <ClCompile Include="EventManager\EventManager.cpp" />
+    <ClCompile Include="EventManager\EventManagerImpl.cpp" />
     <ClCompile Include="EventManager\Events.cpp" />
     <ClCompile Include="Graphics3D\D3DRenderer.cpp" />
     <ClCompile Include="Graphics3D\Geometry.cpp" />
     <ClCompile Include="Graphics3D\Material.cpp" />
     <ClCompile Include="Graphics3D\MovementController.cpp" />
+    <ClCompile Include="Graphics3D\Scene.cpp" />
+    <ClCompile Include="Graphics3D\SceneNodes.cpp" />
     <ClCompile Include="Graphics3D\Shaders.cpp" />
     <ClCompile Include="Initialization\Initialization.cpp" />
     <ClCompile Include="LUAScripting\LuaStateManager.cpp" />
