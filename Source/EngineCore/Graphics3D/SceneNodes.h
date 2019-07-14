@@ -284,3 +284,31 @@ protected:
 	std::shared_ptr<SceneNode>		m_pTarget;
 	Vec4							m_CamOffsetVector;			// Direction of camera relative to target.
 };
+
+
+class D3DGrid11 : public SceneNode
+{
+protected:
+	DWORD						m_numVerts;
+	DWORD						m_numPolys;
+
+//	int							m_squares;
+
+	ID3D11Buffer*				m_pIndexBuffer;
+	ID3D11Buffer*				m_pVertexBuffer;
+
+	Nova_Hlsl_VertexShader		m_VertexShader;
+	Nova_Hlsl_PixelShader		m_PixelShader;
+
+public:
+	bool						m_bTextureHasAlpha;
+
+	D3DGrid11(ActorId actorId, WeakBaseRenderComponentPtr renderComponent, /* const std::string& name, const char* textureResource, int squares, const Color& diffuseColor, */ const Mat4x4* pMatrix);
+	virtual ~D3DGrid11();
+	virtual HRESULT VOnRestore(Scene* pScene);
+	virtual HRESULT VRender(Scene* pScene);
+	virtual HRESULT VOnUpdate(Scene* pScene, DWORD const elapsedMs) { return S_OK; }
+	virtual HRESULT VPick(Scene* pScene, RayCast* pRayCast) { return E_FAIL; }
+
+	bool VHasAlpha() const { return m_bTextureHasAlpha; }
+};
