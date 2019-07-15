@@ -104,3 +104,68 @@ void Frustum::Init(const float fov, const float aspect, const float nearClip, co
 	m_Planes[Bottom].Init(m_FarClip[3], m_FarClip[2], origin);
 }
 
+
+
+Vec3 BarycentricToVec3(Vec3 v0, Vec3 v1, Vec3 v2, float u, float v)
+{
+	// V1 + U(V2 - V1) + V(V3 - V1).
+	Vec3 result = v0 + u * (v1 - v0) + v * (v2 - v0);
+	return result;
+}
+
+
+bool IntersectTriangle(const Vec3& orig, const Vec3& dir,
+						Vec3& v0, Vec3& v1, Vec3& v2,
+						FLOAT* t, FLOAT* u, FLOAT* v)
+{
+	// Find vectors for two edges sharing vert0
+	Vec3 edge1 = v1 - v0;
+	Vec3 edge2 = v2 - v0;
+
+	// Begin calculating determinant - also used to calculate U parameter
+	Vec3 pvec;
+	D3DXVec3Cross(&pvec, &dir, &edge2);
+
+	// If determinant is near zero, ray lies in plane of triangle
+	FLOAT det = D3DXVec3Dot(&edge1, &pvec);
+
+	Vec3 tvec;
+	if (det > 0)
+	{
+		tvec = orig - v0;
+	}
+	else
+	{
+		tvec = v0 - orig;
+		det = -det;
+	}
+
+	if (det < 0.0001f) {
+		return FALSE;
+	}
+
+	// Calculate U parameter and test bounds
+	*u = D3DXVec3Dot(&tvec, &pvec);
+	if (*u < 0.0f || *u > det) {
+		return false;
+	}
+
+	// Prepare to test V parameter
+	Vec3 qvec;
+	D3DXVec3Cross(&qvec, &tvec, &edge1);
+
+	// Calculate V paramter and test bounds
+	*v = D3DXVec3Dot(&dir, &qvec);
+	if (*v < 0.0f || *u + *v > det) {
+		return FALSE;
+	}
+
+	// Calculate t, scale parameters, ray intersects triangle
+	*t = D3DXVec3Dot(&edge2, &qvec);
+	FLOAT fInvDet = 1.0f / det;
+	*t *= fInvDet;
+	*u *= fInvDet;
+	*v *= fInvDet;
+
+	return TRUE;
+}

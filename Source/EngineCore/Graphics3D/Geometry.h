@@ -386,6 +386,16 @@ inline void Quaternion::Build(const Mat4x4& mat)
 //
 // ---------------------------------------------------------------
 
+// A structure for our custom vertex type. We added texture coordinates
+struct D3D9Vertex_ColoredTextured
+{
+	D3DXVECTOR3		position; // The position
+	D3DCOLOR		color;	  // The color
+	FLOAT			tu, tv;   // The texture coordinates
+
+	static const DWORD FVF;
+};
+
 struct D3D9Vertex_UnlitTextured
 {
 	D3DXVECTOR3 position;
@@ -503,3 +513,12 @@ public:
 
 	void Render();
 };
+
+// converts Barycentric coordinates to world coordinates
+// inputs are the 3 verts of the triangle, and the u,v barycentric coordinates.
+extern Vec3 BarycentricToVec3(Vec3 v0, Vec3 v1, Vec3 v2, float u, float v);
+
+extern bool IntersectTriangle(const Vec3& orig, const Vec3& dir,
+								Vec3& v0, Vec3& v1, Vec3& v2,
+								FLOAT* t, FLOAT* u, FLOAT* v);
+

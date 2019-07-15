@@ -184,12 +184,114 @@ HRESULT RayCast::Pick(Scene* pScene, ActorId actorId, ID3DXMesh* pMesh)
 
 HRESULT RayCast::Pick(Scene* pScene, ActorId actorId, CDXUTSDKMesh* pMesh)
 {
+	if (!m_bAllHits && m_NumIntersections > 0) {
+		return S_OK;
+	}
 
+	IDirect3DDevice9* pD3Device = DXUTGetD3D9Device();
+
+	// Get the inverse view matrix
+	const Mat4x4 matView = pScene->GetCamera()->GetView();
+	const Mat4x4 matWorld = pScene->GetTopMatrix();
+	const Mat4x4 proj = pScene->GetCamera()->GetProjection();
+
+	// Compute the vector of the Pick ray in screen space
+	D3DXVECTOR3 v;
+	v.x = (((2.0 * m_Point.x) / g_pApp->GetScreenSize().x) - 1) / proj._11;
+	v.y = -(((2.0f * m_Point.y) / g_pApp->GetScreenSize().y) - 1) / proj._22;
+	v.z = 1.0f;
+
+	D3DXMATRIX mWorldView = matWorld * matView;
+	D3DXMATRIX m;
+	D3DXMatrixInverse(&m, NULL, &mWorldView);
+
+	// Transform the screen space Pick ray into 3D space.
+	m_vPickRayDir.x = v.x * m._11 + v.y * m._21 + v.z * m._31;
+	m_vPickRayDir.y = v.x * m._12 + v.y * m._22 + v.z * m._32;
+	m_vPickRayDir.z = v.x * m._13 + v.y * m._23 + v.z * m._33;
+	m_vPickRayOrig.x = m._41;
+	m_vPickRayOrig.y = m._42;
+	m_vPickRayOrig.z = m._43;
+
+	return E_FAIL;
 }
 
 HRESULT RayCast::Pick(Scene* pScene, ActorId actorId, LPDIRECT3DVERTEXBUFFER9 pVB, LPDIRECT3DINDEXBUFFER9 pIB, DWORD numPolys)
 {
+	if (!m_bAllHits && m_NumIntersections > 0) {
+		return S_OK;
+	}
 
+	WORD* pIndices;
+	D3D9Vertex_ColoredTextured* pVertices;
+
+	pIB->Lock(0, 0, (void**)&pIndices, 0);
+	pVB->Lock(0, 0, (void**)&pVertices, 0);
+
+	IDirect3DDevice9* pD3Device = DXUTGetD3D9Device();
+
+	// Get the inverse view matrix
+	const Mat4x4 matView = pScene->GetCamera()->GetView();
+	const Mat4x4 matWorld = pScene->GetTopMatrix();
+	const Mat4x4 proj = pScene->GetCamera()->GetProjection();
+
+	// Compute the vector of the Pick ray in screen space
+	D3DXVECTOR3 v;
+	v.x = (((2.0f * m_Point.x) / g_pApp->GetScreenSize().x) - 1) / proj._11;
+	v.y = -(((2.0f * m_Point.y) / g_pApp->GetScreenSize().y) - 1) / proj._22;
+	v.z = 1.0f;
+
+	D3DXMATRIX mWorldView = matWorld * matView;
+	D3DXMATRIX m;
+	D3DXMatrixInverse(&m, NULL, &mWorldView);
+
+	// Transform the screen space Pick ray into 3D space.
+	m_vPickRayDir.x = v.x * m._11 + v.y * m._21 + v.z * m._31;
+	m_vPickRayDir.y = v.x * m._12 + v.y * m._22 + v.z * m._32;
+	m_vPickRayDir.z = v.x * m._13 + v.y * m._23 + v.z * m._33;
+
+	m_vPickRayOrig.x = m._41;
+	m_vPickRayOrig.y = m._42;
+	m_vPickRayOrig.z = m._43;
+
+	FLOAT fBary1, fBary2;
+	FLOAT fDist;
+	for (DWORD i = 0; i < numPolys; i++)
+	{
+		Vec3 v0 = pVertices[pIndices[3 * i + 0]].position;
+		Vec3 v1 = pVertices[pIndices[3 * i + 1]].position;
+		Vec3 v2 = pVertices[pIndices[3 * i + 2]].position;
+
+		// Check if the Pick ray passes through this point
+		if (IntersectTriangle(m_vPickRayOrig, m_vPickRayDir, v0, v1, v2,
+			&fDist, &fBary1, &fBary2))
+		{
+			if (m_bAllHits || m_NumIntersections == 0 || fDist < m_IntersectionArray[0].m_fDist)
+			{
+				if (!m_bAllHits) {
+					m_NumIntersections = 0;
+				}
+
+				++m_NumIntersections;
+
+				m_IntersectionArray.resize(m_NumIntersections);
+
+				Intersection* pIntersection;
+				pIntersection = &m_IntersectionArray[m_NumIntersections - 1];
+
+				InitIntersection(*pIntersection, i, fDist, fBary1, fBary2, actorId, pIndices, pVertices, matWorld);
+
+				if (m_NumIntersections == m_MaxIntersections) {
+					break;
+				}
+			}
+		}
+	}
+
+	pVB->Unlock();
+	pIB->Unlock();
+
+	return S_OK;
 }
 
 void RayCast::Sort()
