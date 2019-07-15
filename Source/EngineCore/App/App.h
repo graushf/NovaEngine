@@ -1,5 +1,9 @@
 #pragma once
 
+// ================================================================
+// App.h : Defines the entry point for the application.
+// ================================================================
+
 #include "../Common/CommonStd.h"
 #include "../Initialization/Initialization.h"
 #include "BaseAppLogic.h"
@@ -7,9 +11,7 @@
 #include "../UserInterface/UserInterface.h"
 #include "../UserInterface/HumanView.h"
 
-// ================================================================
-// App.h : Defines the entry point for the application.
-// ================================================================
+
 
 class App {
 protected:

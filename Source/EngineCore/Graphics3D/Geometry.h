@@ -382,6 +382,23 @@ inline void Quaternion::Build(const Mat4x4& mat)
 
 // ---------------------------------------------------------------
 // 
+//	D3D9 Rendering Structures
+//
+// ---------------------------------------------------------------
+
+struct D3D9Vertex_UnlitTextured
+{
+	D3DXVECTOR3 position;
+	D3DXVECTOR3 normal;
+	FLOAT tu, tv;
+
+	static const DWORD FVF;
+};
+
+
+
+// ---------------------------------------------------------------
+// 
 //	D3D11 Rendering Structures
 //
 // ---------------------------------------------------------------
