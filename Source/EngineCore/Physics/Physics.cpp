@@ -42,7 +42,41 @@ struct MaterialData
 // ==============================================================
 class NullPhysics : public IGamePhysics
 {
+public:
+	NullPhysics() { }
+	virtual ~NullPhysics() { }
 
+	// Initialization and Maintenance of the Physics World
+	virtual bool VInitialize() { return true; }
+	virtual void VSyncVisibleScene() { };
+	virtual void VOnUpdate(float) { }
+
+	// Initialization of Physics Objects
+	virtual void VAddSphere(float radius, WeakActorPtr gameActor, const std::string& densityStr, const std::string& physicsMaterial) { }
+	virtual void VAddBox(const Vec3& dimensions, WeakActorPtr gameActor, const std::string& densityStr, const std::string& physicsMaterial) { }
+	virtual void VAddPointCloud(Vec3* verts, int numPoints, WeakActorPtr gameActor, const std::string& densityStr, const std::string& physicsMaterial) { }
+	virtual void VRemoveActor(ActorId id) { }
+
+	// Debugging
+	virtual void VRenderDiagnostics() { }
+
+	// Physics world modifiers
+	virtual void VCreateTrigger(WeakActorPtr pGameActor, const Vec3& pos, const float dim) { }
+	virtual void VApplyForce(const Vec3& dir, float newtons, ActorId aid) { }
+	virtual void VApplyTorque(const Vec3& dir, float newtons, ActorId aid) { }
+	virtual bool VKinematicMove(const Mat4x4& mat, ActorId aid) { return true; }
+
+	// Physics actor states
+	virtual void VRotateY(ActorId actorId, float angleRadians, float time) { }
+	virtual float VGetOrientationY(ActorId actorId) { return 0.0f; }
+	virtual void VStopActor(ActorId actorId) { }
+	virtual Vec3 VGetVelocity(ActorId actorId) { return Vec3(); }
+	virtual void VSetVelocity(ActorId actorId, const Vec3& vel) { }
+	virtual Vec3 VGetAngularVelocity(ActorId actorId) { return Vec3(); }
+	virtual void VSetAngularVelocity(ActorId actorId, const Vec3& vel) { }
+	virtual void VTranslate(ActorId actorId, const Vec3& vec) { }
+	virtual void VSetTransform(const ActorId id, const Mat4x4& mat) { }
+	virtual Mat4x4 VGetTransform(const ActorId id) { return Mat4x4::g_Identity; }
 };
 
 #ifndef DISABLE_PHYSICS
@@ -685,10 +719,375 @@ void BulletPhysics::VCreateTrigger(WeakActorPtr pGameActor, const Vec3& pos, con
 	m_rigidBodyToActorId[body] = pStrongActor->GetId();
 }
 
+// ==============================================================================
+// BulletPhysics::VApplyForce							- Chapter 17, page 603
+// ==============================================================================
+void BulletPhysics::VApplyForce(const Vec3& dir, float newtons, ActorId aid)
+{
+	if (btRigidBody* const body = FindBulletRigidBody(aid))
+	{
+		body->setActivationState(DISABLE_DEACTIVATION);
 
+			btVector3 const force(dir.x * newtons,
+									dir.y * newtons,
+									dir.z * newtons);
+		
+		body->applyCentralImpulse(force);
+	}
+}
 
+// ==============================================================================
+// BulletPhysics::VApplyTorque							- Chapter 17, page 603
+// ==============================================================================
+void BulletPhysics::VApplyTorque(const Vec3& dir, float magnitude, ActorId aid)
+{
+	if (btRigidBody* const body = FindBulletRigidBody(aid))
+	{
+		body->setActivationState(DISABLE_DEACTIVATION);
 
-#endif
+		btVector3 const torque(dir.x * magnitude,
+							   dir.y * magnitude,
+							   dir.z * magnitude);
+
+		body->applyTorqueImpulse(torque);
+	}
+}
+
+// ==============================================================================
+// BulletPhysics::VKinematicMove					- not described in the book
+// ==============================================================================
+bool BulletPhysics::VKinematicMove(const Mat4x4& mat, ActorId aid)
+{
+	if (btRigidBody* const body = FindBulletRigidBody(aid))
+	{
+		body->setActivationState(DISABLE_DEACTIVATION);
+
+		// warp the body to the new position
+		body->setWorldTransform(Mat4x4_to_btTransform(mat));
+		return true;
+	}
+
+	return false;
+}
+
+// ==============================================================================
+// BulletPhysics::VGetTransform						- not described in the book
+//
+// Sets the current transform of the physics object.
+//
+// ==============================================================================
+void BulletPhysics::VSetTransform(ActorId actorId, const Mat4x4& mat)
+{
+	VKinematicMove(mat, actorId);
+}
+
+// ==============================================================================
+// BulletPhysics::VRotateY							- not described in the book
+//
+// A helper function used to turn objects to a new heading.
+//
+// ==============================================================================
+void BulletPhysics::VRotateY(ActorId const actorId, float const deltaAngleRadians, float const time)
+{
+	btRigidBody* pRigidBody = FindBulletRigidBody(actorId);
+	//Nv_ASSERT(pRigidBody);
+
+	// create a transform to represent the additional turning this frame
+	btTransform angleTransform;
+	angleTransform.setIdentity();
+	angleTransform.getBasis().setEulerYPR(0, deltaAngleRadians, 0); // rotation about body Y-axis.
+
+	// concatenate the transform onto the body's transform
+	pRigidBody->setCenterOfMassTransform(pRigidBody->getCenterOfMassTransform() * angleTransform);
+}
+
+// ==============================================================================
+// BulletPhysics::VGetOrientationY					- not described in the book
+//
+// A helper function used to access the current heading of a physics object.
+//
+// ==============================================================================
+float BulletPhysics::VGetOrientationY(ActorId actorId)
+{
+	btRigidBody* pRigidBody = FindBulletRigidBody(actorId);
+	//Nv_ASSERT(pRigidBody);
+
+	const btTransform& actorTransform = pRigidBody->getCenterOfMassTransform();
+	btMatrix3x3 actorRotationMat(actorTransform.getBasis()); // should be just the rotation information
+
+	btVector3 startingVec(0, 0, 1);
+	btVector3 endingVec = actorRotationMat * startingVec; // transform the vector
+
+	endingVec.setY(0); // we only care about rotation on the XZ plane
+
+	float const endingVecLength = endingVec.length();
+	if (endingVecLength < 0.001)
+	{
+		// ginal lock (orientation is straight up or down)
+		return 0;
+	}
+	else {
+		btVector3 cross = startingVec.cross(endingVec);
+		float sign = cross.getY() > 0 ? 1.0f : -1.0f;
+		return (acosf(startingVec.dot(endingVec) / endingVecLength) * sign);
+	}
+
+	return FLT_MAX; // fail...
+}
+
+// ==============================================================================
+// BulletPhysics::VStopActor							- Chapter 17, page 604
+// ==============================================================================
+void BulletPhysics::VStopActor(ActorId actorId)
+{
+	VSetVelocity(actorId, Vec3(0.f, 0.f, 0.f));
+}
+
+// ==============================================================================
+// BulletPhysics::VGetVelocity							- Chapter 17, page 604
+// ==============================================================================
+Vec3 BulletPhysics::VGetVelocity(ActorId actorId)
+{
+	btRigidBody* pRigidBody = FindBulletRigidBody(actorId);
+	//Nv_ASSERT(pRigidBody);
+	if (!pRigidBody) {
+		return Vec3();
+	}
+	btVector3 btVel = pRigidBody->getLinearVelocity();
+	return btVector3_to_Vec3(btVel);
+}
+
+// ==============================================================================
+// BulletPhysics::VStopActor							- Chapter 17, page 604
+// ==============================================================================
+void BulletPhysics::VSetVelocity(ActorId actorId, const Vec3& vel)
+{
+	btRigidBody* pRigidBody = FindBulletRigidBody(actorId);
+	//Nv_ASSERT(pRigidBody);
+	if (!pRigidBody) {
+		return;
+	}
+	btVector3 btVel = Vec3_to_btVector3(vel);
+	pRigidBody->setLinearVelocity(btVel);
+}
+
+Vec3 BulletPhysics::VGetAngularVelocity(ActorId actorId)
+{
+	btRigidBody* pRigidBody = FindBulletRigidBody(actorId);
+	//Nv_ASSERT(pRigidBody);
+	if (!pRigidBody) {
+		return Vec3();
+	}
+	btVector3 btVel = pRigidBody->getAngularVelocity();
+	return btVector3_to_Vec3(btVel);
+}
+
+void BulletPhysics::VSetAngularVelocity(ActorId actorId, const Vec3& vel)
+{
+	btRigidBody* pRigidBody = FindBulletRigidBody(actorId);
+	//Nv_ASSERT(pRigidBody);
+	if (!pRigidBody) {
+		return;
+	}
+	btVector3 btVel = Vec3_to_btVector3(vel);
+	pRigidBody->setAngularVelocity(btVel);
+}
+
+void BulletPhysics::VTranslate(ActorId actorId, const Vec3& vec)
+{
+	btRigidBody* pRigidBody = FindBulletRigidBody(actorId);
+	//Nv_ASSERT(pRigidBody);
+	btVector3 btVec = Vec3_to_btVector3(vec);
+	pRigidBody->translate(btVec);
+}
+
+// ==============================================================================
+// BulletPhysics::BulletInternalTickCallback			- Chapter 17, page 606
+//
+// This function is called after bullet performs its internal update. We use
+//   it to detect collisions between objects for Nova engine.
+// ==============================================================================
+void BulletPhysics::BulletInternalTickCallback(btDynamicsWorld* const world, btScalar const timeStep)
+{
+	//Nv_ASSERT(world);
+
+	//Nv_ASSERT(world->getWorldUserInfo());
+	BulletPhysics* const bulletPhysics = static_cast<BulletPhysics*>(world->getWorldUserInfo());
+
+	CollisionPairs currentTickCollisionPairs;
+
+	// look at all existing contacts
+	btDispatcher* const dispatcher = world->getDispatcher();
+	for (int manifoldIdx = 0; manifoldIdx < dispatcher->getNumManifolds(); ++manifoldIdx)
+	{
+		// get the "manifold", which is the set of data corresponding to a contact point
+		//  between two physics objects
+		btPersistentManifold const* const manifold = dispatcher->getManifoldByIndexInternal(manifoldIdx);
+		//Nv_ASSERT(manifold);
+
+		// get the two bodies used in the manifold. Bullet stores them as void*, so we must cast
+		// them back to btRigidBody's. Manipulating void* pointers is usually a bad idea,
+		// but we have to work with the environment that we're given. We know this is
+		// safe because we only evet add btRigidBodys to the simulation.
+		btRigidBody const* const body0 = static_cast<btRigidBody const *>(manifold->getBody0());
+		btRigidBody const* const body1 = static_cast<btRigidBody const *>(manifold->getBody1());
+
+		// always create the pair in a predictable order
+		bool const swapped = body0 > body1;
+
+		btRigidBody const * const sortedBodyA = swapped ? body1 : body0;
+		btRigidBody const * const sortedBodyB = swapped ? body0 : body1;
+
+		CollisionPair const thisPair = std::make_pair(sortedBodyA, sortedBodyB);
+		currentTickCollisionPairs.insert(thisPair);
+
+		if (bulletPhysics->m_previousTickCollisionPairs.find(thisPair) == bulletPhysics->m_previousTickCollisionPairs.end())
+		{
+			// this is a new contact, which wasn't in our list before. send an event to the game.
+			bulletPhysics->SendCollisionPairAddEvent(manifold, body0, body1);
+		}
+	}
+
+	CollisionPairs removedCollisionPairs;
+
+	// use the STL set difference function to find collision pairs that existed during the previous tick but not any more
+	std::set_difference(bulletPhysics->m_previousTickCollisionPairs.begin(), bulletPhysics->m_previousTickCollisionPairs.end(),
+						currentTickCollisionPairs.begin(), currentTickCollisionPairs.end(),
+						std::inserter(removedCollisionPairs, removedCollisionPairs.begin()));
+
+	for (CollisionPairs::const_iterator it = removedCollisionPairs.begin(),
+		end = removedCollisionPairs.end(); it != end; ++it)
+	{
+		btRigidBody const * const body0 = it->first;
+		btRigidBody const * const body1 = it->second;
+
+		bulletPhysics->SendCollisionPairRemoveEvent(body0, body1);
+	}
+
+	// the current tick becomes the previous tick. this is the way of all things.
+	bulletPhysics->m_previousTickCollisionPairs = currentTickCollisionPairs;
+}
+
+void BulletPhysics::SendCollisionPairAddEvent(btPersistentManifold const * manifold, btRigidBody const * const body0, btRigidBody const * const body1)
+{
+	if (body0->getUserPointer() || body1->getUserPointer())
+	{
+		// only triggers have non-NULL userPointers
+
+		// figure out which actor is the trigger
+		btRigidBody const* triggerBody, *otherBody;
+
+		if (body0->getUserPointer())
+		{
+			triggerBody = body0;
+			otherBody = body1;
+		}
+		else
+		{
+			otherBody = body0;
+			triggerBody = body1;
+		}
+
+		// send the trigger event.
+		int const triggerId = *static_cast<int*>(triggerBody->getUserPointer());
+		std::shared_ptr<EvtData_PhysTrigger_Enter> pEvent(Nv_NEW EvtData_PhysTrigger_Enter(triggerId, FindActorID(otherBody)));
+		IEventManager::Get()->VQueueEvent(pEvent);
+	}
+	else
+	{
+		ActorId const id0 = FindActorID(body0);
+		ActorId const id1 = FindActorID(body1);
+
+		if (id0 == INVALID_ACTOR_ID || id1 == INVALID_ACTOR_ID)
+		{
+			// something is colliding with a non-actor. we currently don't send events for that.
+			return;
+		}
+
+		// this pair of colliding objects is new. send a collision-begun event.
+		Vec3List collisionPoints;
+		Vec3 sumNormalForce;
+		Vec3 sumFrictionForce;
+
+		for (int pointIdx = 0; pointIdx < manifold->getNumContacts(); ++pointIdx)
+		{
+			btManifoldPoint const & point = manifold->getContactPoint(pointIdx);
+
+			collisionPoints.push_back(btVector3_to_Vec3(point.getPositionWorldOnB()));
+
+			sumNormalForce += btVector3_to_Vec3(point.m_combinedRestitution * point.m_normalWorldOnB);
+			sumFrictionForce += btVector3_to_Vec3(point.m_combinedFriction * point.m_lateralFrictionDir1);
+		}
+
+		// send the event for the game
+		std::shared_ptr<EvtData_PhysCollision> pEvent(Nv_NEW EvtData_PhysCollision(id0, id1, sumNormalForce, sumFrictionForce, collisionPoints));
+		IEventManager::Get()->VQueueEvent(pEvent);
+	}
+}
+
+void BulletPhysics::SendCollisionPairRemoveEvent(btRigidBody const * const body0, btRigidBody const * const body1)
+{
+	if (body0->getUserPointer() || body1->getUserPointer())
+	{
+		// figure out which actor is the trigger
+		btRigidBody const * triggerBody, *otherBody;
+
+		if (body0->getUserPointer())
+		{
+			triggerBody = body0;
+			otherBody = body1;
+		}
+		else
+		{
+			otherBody = body0;
+			triggerBody = body1;
+		}
+
+		// send the trigger event.
+		int const triggerId = *static_cast<int*>(triggerBody->getUserPointer());
+		std::shared_ptr<EvtData_PhysTrigger_Leave> pEvent(Nv_NEW EvtData_PhysTrigger_Leave(triggerId, FindActorID(otherBody)));
+		IEventManager::Get()->VQueueEvent(pEvent);
+	}
+	else
+	{
+		ActorId const id0 = FindActorID(body0);
+		ActorId const id1 = FindActorID(body1);
+
+		if (id0 == INVALID_ACTOR_ID || id1 == INVALID_ACTOR_ID)
+		{
+			// collision is ending between some object(s) that don't have actors. we don't send events for that.
+			return;
+		}
+
+		std::shared_ptr<EvtData_PhysSeparation> pEvent(Nv_NEW EvtData_PhysSeparation(id0, id1));
+		IEventManager::Get()->VQueueEvent(pEvent);
+	}
+}
+
+float BulletPhysics::LookupSpecificGravity(const std::string& densityStr)
+{
+	float density = 0;
+	auto densityIt = m_densityTable.find(densityStr);
+	if (densityIt != m_densityTable.end()) {
+		density = densityIt->second;
+	}
+	// else : dump error
+
+	return density;
+}
+
+MaterialData BulletPhysics::LookupMaterialData(const std::string& materialStr)
+{
+	auto materialIt = m_materialTable.find(materialStr);
+	if (materialIt != m_materialTable.end()) {
+		return materialIt->second;
+	}
+	else {
+		return MaterialData(0, 0);
+	}
+}
+
+#endif // #ifndef DISABLE_PHYSICS
 
 
 
@@ -699,12 +1098,29 @@ void BulletPhysics::VCreateTrigger(WeakActorPtr pGameActor, const Vec3& pos, con
 //		the IGamePhysics interface.
 //
 // ==============================================================
-IGamePhysics* CreateGamePhysics
+IGamePhysics* CreateGamePhysics()
 {
+	std::auto_ptr<IGamePhysics> gamePhysics;
+	gamePhysics.reset(Nv_NEW BulletPhysics);
+	
+	if (gamePhysics.get() && !gamePhysics->VInitialize())
+	{
+		// physics failed to initialize. delete it.
+		gamePhysics.reset();
+	}
 
+	return gamePhysics.release();
 }
 
 IGamePhysics* CreateNullPhysics()
 {
+	std::auto_ptr<IGamePhysics> gamePhysics;
+	gamePhysics.reset(Nv_NEW NullPhysics);
+	if (gamePhysics.get() && !gamePhysics->VInitialize())
+	{
+		// physics failed to initialize. delete it.
+		gamePhysics.reset();
+	}
 
+	return gamePhysics.release();
 }
