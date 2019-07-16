@@ -42,6 +42,31 @@ private:
 	virtual std::shared_ptr<SceneNode> VGetSceneNode(void) override;
 };
 
+// ======================================================================================
+// Grids, which represent the world
+// ======================================================================================
+class GridRenderComponent : public BaseRenderComponent
+{
+	std::string m_textureResource;
+	int m_squares;
+
+public:
+	static const char* g_Name;
+	virtual const char* VGetName() const { return g_Name; }
+
+	GridRenderComponent(void);
+	const char* GetTextureResource() { return m_textureResource.c_str(); }
+	const int GetDivision() { return m_squares; }
+
+protected:
+	virtual bool VDelegateInit(TiXmlElement* pData) override;
+	virtual std::shared_ptr<SceneNode> VCreateSceneNode(void) override; // factory method to create the appropriate scene node
+
+	// editor stuff
+	virtual void VCreateInheritedXmlElements(TiXmlElement* pBaseElement);
+};
+
+
 
 // ======================================================================================
 // Lights

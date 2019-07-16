@@ -92,6 +92,64 @@ Color BaseRenderComponent::LoadColor(TiXmlElement* pData)
 }
 
 // =================================================================================
+// GridRenderComponent
+// =================================================================================
+GridRenderComponent::GridRenderComponent(void)
+{
+	m_textureResource = "";
+	m_squares = 0;
+}
+
+bool GridRenderComponent::VDelegateInit(TiXmlElement* pData)
+{
+	TiXmlElement* pTexture = pData->FirstChildElement("Texture");
+	if (pTexture) {
+		m_textureResource = pTexture->FirstChild()->Value();
+	}
+
+	TiXmlElement* pDivision = pData->FirstChildElement("Division");
+	if (pDivision) {
+		m_squares = atoi(pDivision->FirstChild()->Value());
+	}
+
+	return true;
+}
+
+std::shared_ptr<SceneNode> GridRenderComponent::VCreateSceneNode(void)
+{
+	std::shared_ptr<TransformComponent> pTransformComponent = MakeStrongPtr(m_pOwner->GetComponent<TransformComponent>(TransformComponent::g_Name));
+	if (pTransformComponent)
+	{
+		WeakBaseRenderComponentPtr weakThis(this);
+
+		switch (App::GetRendererImpl())
+		{
+			case App::Renderer_D3D11:
+				return std::shared_ptr<SceneNode>(Nv_NEW D3DGrid11(m_pOwner->GetId(), weakThis, &(pTransformComponent->GetTransform())));
+
+			default:
+				//Nv_ERROR("Unknown Renderer Implementation in GridRenderComponent");
+		}
+	}
+
+	return std::shared_ptr<SceneNode>();
+}
+
+void GridRenderComponent::VCreateInheritedXmlElements(TiXmlElement* pBaseElement)
+{
+	TiXmlElement* pTextureNode = Nv_NEW TiXmlElement("Texture");
+	TiXmlText* pTextureText = Nv_NEW TiXmlText(m_textureResource.c_str());
+	pTextureNode->LinkEndChild(pTextureText);
+	pBaseElement->LinkEndChild(pTextureNode);
+
+	TiXmlElement* pDivisionNode = Nv_NEW TiXmlElement("Division");
+	TiXmlText* pDivisionText = Nv_NEW TiXmlText(ToStr(m_squares).c_str());
+	pDivisionNode->LinkEndChild(pDivisionText);
+	pBaseElement->LinkEndChild(pDivisionNode);
+}
+
+
+// =================================================================================
 // LightRenderComponent
 // =================================================================================
 LightRenderComponent::LightRenderComponent(void)
