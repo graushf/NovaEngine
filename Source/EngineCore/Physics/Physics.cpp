@@ -60,6 +60,19 @@ class NullPhysics : public IGamePhysics
 #include <iterator>
 #include <map>
 
+// =================================================================================
+// helpers for conversion to and from Bullet's data types
+
+static btVector3 Vec3_to_btVector3(Vec3 const& vec3)
+{
+	return btVector3(vec3.x, vec3.y, vec3.z);
+}
+
+static Vec3 btVector3_to_Vec3(btVector3 const& btvec)
+{
+	return Vec3(btvec.x(), btvec.y(), btvec.z());
+}
+
 
 static btTransform Mat4x4_to_btTransform(Mat4x4 const & mat)
 {
@@ -578,6 +591,98 @@ void BulletPhysics::VAddBox(const Vec3& dimensions, WeakActorPtr pGameActor, con
 	btScalar const mass = volume * specificGravity;
 
 	AddShape(pStrongActor, /* initialTransform */ boxShape, mass, physicsMaterial);
+}
+
+// ==============================================================================
+// BulletPhysics::VAddPointCloud 						
+// ==============================================================================
+void BulletPhysics::VAddPointCloud(Vec3* verts, int numPoints, WeakActorPtr pGameActor, /* const Mat4x4& initialTransform, */ const std::string& densityStr, const std::string& physicsMaterial)
+{
+	StrongActorPtr pStrongActor = MakeStrongPtr(pGameActor);
+	if (!pStrongActor) {
+		return;	// FUTURE WORK: Add a call to the error log here.
+	}
+
+	btConvexHullShape* const shape = new btConvexHullShape();
+
+	// add the points to the shape one at a time
+	for (int ii = 0; ii < numPoints; ++ii)
+	{
+		shape->addPoint(Vec3_to_btVector3(verts[ii]));
+	}
+
+	//approximate absolute mass using bounding box
+	btVector3 aabbMin(0, 0, 0), aabbMax(0, 0, 0);
+	shape->getAabb(btTransform::getIdentity(), aabbMin, aabbMax);
+
+	btVector3 const aabbExtents = aabbMax - aabbMin;
+
+	float specificGravity = LookupSpecificGravity(densityStr);
+	float const volume = aabbExtents.x() * aabbExtents.y() * aabbExtents.z();
+	btScalar const mass = volume * specificGravity;
+
+	AddShape(pStrongActor, shape, mass, physicsMaterial);
+}
+
+// ==============================================================================
+// BulletPhysics::VRemoveActor						-not described in the book 						
+//
+//		Implements the method to remove actors from the physics simulation
+//
+// ==============================================================================
+void BulletPhysics::VRemoveActor(ActorId id)
+{
+	if (btRigidBody* const body = FindBulletRigidBody(id))
+	{
+		// destroy the body and all its components
+		RemoveCollisionObject(body);
+		m_actorIdToRigidBody.erase(id);
+		m_rigidBodyToActorId.erase(body);
+	}
+}
+
+// ==============================================================================
+// BulletPhysics::VRenderDiagnostics					- Chapter 17, page 604 						
+// ==============================================================================
+void BulletPhysics::VRenderDiagnostics()
+{
+	m_dynamicsWorld->debugDrawWorld();
+}
+
+// ==============================================================================
+// BulletPhysics::VCreateTrigger						- Chapter 17, page 602
+//
+// FUTURE WORK: Mike create a trigger actor archetype that can be instantiated in the editor!!!
+//
+// ==============================================================================
+void BulletPhysics::VCreateTrigger(WeakActorPtr pGameActor, const Vec3& pos, const float dim)
+{
+	StrongActorPtr pStrongActor = MakeStrongPtr(pGameActor);
+	if (!pStrongActor) {
+		return; // FUTURE WORK: Add a call to the error log here
+	}
+
+	// Create the collision body, which specifies the shape of the object
+	btBoxShape* const boxShape = new btBoxShape(Vec3_to_btVector3(Vec3(dim, dim, dim)));
+
+	// triggers are immoveable. 0 mass signals this to Bullet.
+	btScalar const mass = 0;
+
+	// set the initial position of the body from the actor
+	Mat4x4 triggerTrans = Mat4x4::g_Identity;
+	triggerTrans.SetPosition(pos);
+	ActorMotionState* const myMotionState = Nv_NEW ActorMotionState(triggerTrans);
+
+	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, boxShape, btVector3(0, 0, 0));
+	btRigidBody * const body = new btRigidBody(rbInfo);
+
+	m_dynamicsWorld->addRigidBody(body);
+
+	// a trigger is just a box that doesn't collide with anything. That's what "CF_NO_CONTACT_RESPONSE" indicates.
+	body->setCollisionFlags(body->getCollisionFlags() | btRigidBody::CF_NO_CONTACT_RESPONSE);
+
+	m_actorIdToRigidBody[pStrongActor->GetId()] = body;
+	m_rigidBodyToActorId[body] = pStrongActor->GetId();
 }
 
 
