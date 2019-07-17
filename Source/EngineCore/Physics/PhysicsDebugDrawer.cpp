@@ -23,6 +23,7 @@ void BulletDebugDrawer::drawContactPoint(const btVector3& PointOnB, const btVect
 void BulletDebugDrawer::reportErrorWarning(const char* warningString)
 {
 	//Nv_WARNING(warningString);
+	OutputDebugString(LPCWSTR(warningString));
 }
 
 void BulletDebugDrawer::draw3dText(const btVector3& location, const char* textString)

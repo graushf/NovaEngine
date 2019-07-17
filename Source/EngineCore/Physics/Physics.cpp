@@ -188,10 +188,6 @@ struct ActorMotionState : public btMotionState
 	}
 };
 
-
-
-
-
 // ======================================================================================
 // 
 // BulletPhysics								-Chapter 17, page 590
@@ -728,9 +724,9 @@ void BulletPhysics::VApplyForce(const Vec3& dir, float newtons, ActorId aid)
 	{
 		body->setActivationState(DISABLE_DEACTIVATION);
 
-			btVector3 const force(dir.x * newtons,
-									dir.y * newtons,
-									dir.z * newtons);
+		btVector3 const force(dir.x * newtons,
+							  dir.y * newtons,
+							  dir.z * newtons);
 		
 		body->applyCentralImpulse(force);
 	}
