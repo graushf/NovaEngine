@@ -64,12 +64,86 @@ BaseAppLogic::BaseAppLogic()
 
 BaseAppLogic::~BaseAppLogic()
 {
+	// [mrmike]: 12 Apr-2009
+	// Added this to explicitly remove views from the game logic list.
+	while (!m_gameViews.empty()) {
+		m_gameViews.pop_front();
+	}
 
+	SAFE_DELETE(m_pLevelManager);
+	SAFE_DELETE(m_pProcessManager);
+	SAFE_DELETE(m_pActorFactory);
+
+	// destroy all actors
+	for (auto it = m_actors.begin(); it != m_actors.end(); ++it)
+	{
+		it->second->Destroy();
+	}
+	m_actors.clear();
+
+	IEventManager::Get()->VRemoveListener(fastdelegate::MakeDelegate(this, &BaseAppLogic::RequestDestroyActorDelegate), EvtData_Request_Destroy_Actor::sk_EventType);
 }
 
 bool BaseAppLogic::Init(void)
 {
+	m_pActorFactory = VCreateActorFactory();
+	//m_pPathingGraph.reset(CreatePathingGraph());
+
+	IEventManager::Get()->VAddListener(fastdelegate::MakeDelegate(this, &BaseAppLogic::RequestDestroyActorDelegate), EvtData_Request_Destroy_Actor::sk_EventType);
+
 	return true;
+}
+
+std::string BaseAppLogic::GetActorXml(const ActorId id)
+{
+	StrongActorPtr pActor = MakeStrongPtr(VGetActor(id));
+	if (pActor) {
+		return pActor->ToXML();
+	}
+	else {
+		//Nv_ERROR("Couldn't find actor: " + ToStr(id));
+	}
+
+	return std::string();
+}
+
+bool BaseAppLogic::VLoadGame(const char* levelResource)
+{
+
+}
+
+void BaseAppLogic::VSetProxy()
+{
+
+}
+
+StrongActorPtr BaseAppLogic::VCreateActor(const std::string& actorResource, TiXmlElement* overrides, const Mat4x4* initialTransform, const ActorId serversActorId)
+{
+	Nv_ASSERT(m_pActorFactory);
+	if (!m_bProxy && serversActorId != INVALID_ACTOR_ID) {
+		return StrongActorPtr();
+	}
+
+	if (m_bProxy && serversActorId == INVALID_ACTOR_ID) {
+		return StrongActorPtr();
+	}
+
+	StrongActorPtr pActor = m_pActorFactory->CreateActor(actorResource.c_str(), overrides, initialTransform, serversActorId);
+	if (pActor) {
+		m_actors.insert(std::make_pair(pActor->GetId(), pActor));
+		if (!m_bProxy && (m_State == BGS_SpawningPlayersActors || m_State == BGS_Running))
+		{
+			std::shared_ptr<EvtData_Request_New_Actor> pNewActor(Nv_NEW EvtData_Request_New_Actor(actorResource, initialTransform, pActor->GetId()));
+			IEventManager::Get()->VTriggerEvent(pNewActor);
+		}
+		return pActor;
+	}
+	else
+	{
+		// FUTURE WORK: Log Error: couldn't create actor
+		return StrongActorPtr();
+	}
+
 }
 
 void BaseAppLogic::VRenderDiagnostics()

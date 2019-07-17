@@ -345,7 +345,102 @@ public:
 
 // --------------------------------------------------------------------------------------------------
 // class EvtData_Request_New_Actor
+// This event is sent by a server asking Client proxy logics to create new actors from their local
+// resources.
+// It can be sent from script or via code.
+// This event is also sent from the server game logic to client logics AFTER it has created a new
+// actor. The logics will allow follow suit to stay in sync.
 // --------------------------------------------------------------------------------------------------
+class EvtData_Request_New_Actor : public BaseEventData
+{
+	std::string m_actorResource;
+	bool m_hasInitialTransform;
+	Mat4x4 m_initialTransform;
+	ActorId m_serverActorId;
+	GameViewId m_viewId;
+
+public:
+	static const EventType sk_EventType;
+
+	EvtData_Request_New_Actor()
+	{
+		m_actorResource = "";
+		m_hasInitialTransform = false;
+		m_initialTransform = Mat4x4::g_Identity;
+		m_serverActorId = -1;
+		m_viewId = gc_InvalidGameViewId;
+	}
+
+	explicit EvtData_Request_New_Actor(const std::string& actorResource, const Mat4x4* initialTransform = NULL, const ActorId serverActorId = INVALID_ACTOR_ID, const GameViewId viewId = gc_InvalidGameViewId)
+	{
+		m_actorResource = actorResource;
+		if (initialTransform)
+		{
+			m_hasInitialTransform = true;
+			m_initialTransform = *initialTransform;
+		}
+		else
+		{
+			m_hasInitialTransform = false;
+		}
+
+		m_serverActorId = serverActorId;
+		m_viewId = viewId;
+	}
+
+	virtual const EventType& VGetEventType(void) const
+	{
+		return sk_EventType;
+	}
+
+	virtual void VDeserialize(std::istrstream& in)
+	{
+		in >> m_actorResource;
+		in >> m_hasInitialTransform;
+		if (m_hasInitialTransform)
+		{
+			for (int i = 0; i < 4; ++i)
+			{
+				for (int j = 0; j < 4; ++j)
+				{
+					in >> m_initialTransform.m[i][j];
+				}
+			}
+		}
+		in >> m_serverActorId;
+		in >> m_viewId;
+	}
+
+	virtual IEventDataPtr VCopy() const
+	{
+		return IEventDataPtr(Nv_NEW EvtData_Request_New_Actor(m_actorResource, (m_hasInitialTransform) ? &m_initialTransform : NULL, m_serverActorId, m_viewId));
+	}
+
+	virtual void VSerialize(std::ostrstream& out) const
+	{
+		out << m_actorResource << " ";
+		out << m_hasInitialTransform << " ";
+		if (m_hasInitialTransform)
+		{
+			for (int i = 0; i < 4; ++i)
+			{
+				for (int j = 0; j < 4; ++j)
+				{
+					out << m_initialTransform.m[i][j] << " ";
+				}
+			}
+		}
+		out << m_serverActorId << " ";
+		out << m_viewId << " ";
+	}
+
+	virtual const char* GetName(void) const { return "EvtData_Request_New_Actor"; }
+
+	const std::string& GetActorResource(void) const { return m_actorResource; }
+	const Mat4x4* GetInitialTransform(void) const { return (m_hasInitialTransform) ? &m_initialTransform : NULL; }
+	const ActorId GetServerActorId(void) const { return m_serverActorId; }
+	GameViewId GetViewId(void) const { return m_viewId; }
+};
 
 // --------------------------------------------------------------------------------------------------
 // EvtData_Request_Destroy_Actor - sent by any system requesting that the game logic destroy an actor
