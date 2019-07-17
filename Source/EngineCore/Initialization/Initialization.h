@@ -17,6 +17,9 @@ struct GameOptions
 	float m_ScreenSize_x;
 	float m_ScreenSize_y;
 
+	// TiXmlElement - look at this to find other options added by the developer
+	TiXmlDocument* m_pDoc;
+
 	GameOptions();
 	~GameOptions() { };
 

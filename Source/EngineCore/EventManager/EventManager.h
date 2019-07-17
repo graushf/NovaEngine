@@ -27,7 +27,7 @@ typedef concurrent_queue<IEventDataPtr> ThreadSafeEventQueue;
 // Macro for event registration
 // ----------------------------------------------
 extern GenericObjectFactory<IEventData, EventType> g_eventFactory;
-#define REGISTER_EVENT(eventClass) g_eventFactory.Register<eventclass>(eventClass::sk_EventType)
+#define REGISTER_EVENT(eventClass) g_eventFactory.Register<eventClass>(eventClass::sk_EventType)
 #define CREATE_EVENT(eventType) g_eventFactory.Create(eventType)
 
 

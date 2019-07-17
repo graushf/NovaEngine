@@ -84,8 +84,8 @@ public:
 #include "../Graphics3D/Geometry.h"
 #include "../EventManager/Events.h"
 
-//#include "PhysicsDebugDrawer.h"
-//#include "PhysicsEventListener.h"
+#include "PhysicsDebugDrawer.h"
+#include "PhysicsEventListener.h"
 
 #include "btBulletDynamicsCommon.h"
 #include "btBulletCollisionCommon.h"
@@ -211,7 +211,7 @@ class BulletPhysics : public IGamePhysics, Nv_noncopyable
 	btCollisionDispatcher*						m_dispatcher;
 	btConstraintSolver*							m_solver;
 	btDefaultCollisionConfiguration*				m_collisionConfiguration;
-	//BulletDebugDrawer*						m_debugDrawer;
+	BulletDebugDrawer*						m_debugDrawer;
 
 	// tables read from the XML
 	typedef std::map<std::string, float> DensityTable;
@@ -321,7 +321,7 @@ BulletPhysics::~BulletPhysics()
 
 	m_rigidBodyToActorId.clear();
 
-	//SAFE_DELETE(m_debugDrawer);
+	SAFE_DELETE(m_debugDrawer);
 	SAFE_DELETE(m_dynamicsWorld);
 	SAFE_DELETE(m_solver);
 	SAFE_DELETE(m_broadphase);
@@ -769,6 +769,22 @@ bool BulletPhysics::VKinematicMove(const Mat4x4& mat, ActorId aid)
 
 	return false;
 }
+
+// ==============================================================================
+// BulletPhysics::VGetTransform						- not described in the book
+//
+// Returns the current transform of the physics object.
+//
+// ==============================================================================
+Mat4x4 BulletPhysics::VGetTransform(const ActorId id)
+{
+	btRigidBody* pRigidBody = FindBulletRigidBody(id);
+	//Nv_ASSERT(pRigidBody);
+
+	const btTransform& actorTransform = pRigidBody->getCenterOfMassTransform();
+	return btTransform_to_Mat4x4(actorTransform);
+}
+
 
 // ==============================================================================
 // BulletPhysics::VGetTransform						- not described in the book

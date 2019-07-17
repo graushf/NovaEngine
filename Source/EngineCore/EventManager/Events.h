@@ -3,10 +3,82 @@
 //========================================================================
 // EventManager.h : Defines common game events
 //========================================================================
+#include "Common/CommonStd.h"
 
 #include "EventManager.h"
-#include "Common/CommonStd.h"
-#include "App/App.h"
+#include "../App/App.h"
+#include "../LUAScripting/ScriptEvent.h"
+
+// Auxiliary data decls...
+//
+// data that is passed per-event in the userData parameter
+//
+// (for some, but not all, events)
+
+// -- new object notification
+
+void RegisterEngineScriptEvents(void);
+
+// ------------------------------------------------------------------------------------
+// EvtData_New_Actor - The event is sent out when an actor is *actually* created.
+// ------------------------------------------------------------------------------------
+class EvtData_New_Actor : public BaseEventData
+{
+	ActorId m_actorId;
+	GameViewId m_viewId;
+
+public:
+	static const EventType sk_EventType;
+
+	EvtData_New_Actor(void)
+	{
+		m_actorId = INVALID_ACTOR_ID;
+		m_viewId = gc_InvalidGameViewId;
+	}
+
+	explicit EvtData_New_Actor(ActorId actorId, GameViewId viewId = gc_InvalidGameViewId)
+		: m_actorId(actorId),
+		m_viewId(viewId)
+	{
+	}
+
+	virtual void VDeserialize(std::istrstream& in)
+	{
+		in >> m_actorId;
+		in >> m_viewId;
+	}
+
+	virtual const EventType& VGetEventType(void) const
+	{
+		return sk_EventType;
+	}
+
+	virtual IEventDataPtr VCopy(void) const
+	{
+		return IEventDataPtr(Nv_NEW EvtData_New_Actor(m_actorId, m_viewId));
+	}
+
+	virtual void VDeserialize(std::ostrstream& out) const
+	{
+		out << m_actorId << " ";
+		out << m_viewId << " ";
+	}
+
+	virtual const char* GetName(void) const
+	{
+		return "EvtData_New_Actor";
+	}
+
+	const ActorId GetActorId(void) const
+	{
+		return m_actorId;
+	}
+
+	GameViewId GetViewId(void) const
+	{
+		return m_viewId;
+	}
+};
 
 
 // ------------------------------------------------------------------------------------
@@ -126,10 +198,6 @@ public:
 	}
 };
 
-
-
-
-
 // --------------------------------------------------------------------------------------------------
 // EvtData_New_Render_Component - This event is sent out when an actor is *actually* created.
 // --------------------------------------------------------------------------------------------------
@@ -238,4 +306,160 @@ public:
 	{
 		return m_id;
 	}
+};
+
+// --------------------------------------------------------------------------------------------------
+// EvtData_Environment_Loaded - 
+// --------------------------------------------------------------------------------------------------
+
+
+// --------------------------------------------------------------------------------------------------
+// EvtData_Remote_Environment_Loaded - 
+// --------------------------------------------------------------------------------------------------
+
+// --------------------------------------------------------------------------------------------------
+// EvtData_Request_Start_Game - 
+// --------------------------------------------------------------------------------------------------
+
+// --------------------------------------------------------------------------------------------------
+// EvtData_Remote_Client - 
+// --------------------------------------------------------------------------------------------------
+
+// --------------------------------------------------------------------------------------------------
+// EvtData_Update_Tick - sent by the game logic each game tick
+// --------------------------------------------------------------------------------------------------
+
+// --------------------------------------------------------------------------------------------------
+// EvtData_Network_Player_Actor_Assignment - sent by the server to the clients when a network view
+//												is assigned a player number.
+// --------------------------------------------------------------------------------------------------
+
+// --------------------------------------------------------------------------------------------------
+// EvtData_Decompress_Request - sent to a multithreaded game event listener to decompress something
+//								in the resource file.								
+// --------------------------------------------------------------------------------------------------
+
+// --------------------------------------------------------------------------------------------------
+// EvtData_Decompression_Progress - sent by the decompression thread to report progress.
+// --------------------------------------------------------------------------------------------------
+
+// --------------------------------------------------------------------------------------------------
+// class EvtData_Request_New_Actor
+// --------------------------------------------------------------------------------------------------
+
+// --------------------------------------------------------------------------------------------------
+// EvtData_Request_Destroy_Actor - sent by any system requesting that the game logic destroy an actor
+//									FUTURE WORK: - this event shouldn't really exist - subsystems
+//									should never ask the game logic to destroy something through
+//									an event, should they?
+// --------------------------------------------------------------------------------------------------
+class EvtData_Request_Destroy_Actor : public ScriptEvent
+{
+	ActorId m_actorId;
+
+public:
+	static const EventType sk_EventType;
+
+	EvtData_Request_Destroy_Actor()
+	{
+		m_actorId = INVALID_ACTOR_ID;
+	}
+
+	EvtData_Request_Destroy_Actor(ActorId actorId)
+	{
+		m_actorId = actorId;
+	}
+
+	virtual const EventType& VGetEventType(void) const
+	{
+		return sk_EventType;
+	}
+
+	virtual void VDeserialize(std::istrstream& in)
+	{
+		in >> m_actorId;
+	}
+
+	virtual IEventDataPtr VCopy() const
+	{
+		return IEventDataPtr(Nv_NEW EvtData_Request_Destroy_Actor(m_actorId));
+	}
+
+	virtual void VSerialize(std::ostrstream& out) const
+	{
+		out << m_actorId;
+	}
+
+	virtual const char* GetName(void) const
+	{
+		return "EvtData_Request_Destroy_Actor";
+	}
+
+	ActorId GetActorId(void) const
+	{
+		return m_actorId;
+	}
+
+	virtual bool VBuildEventFromScript(void)
+	{
+		if (m_eventData.IsInteger())
+		{
+			m_actorId = m_eventData.GetInteger();
+			return true;
+		}
+		return false;
+	}
+
+	EXPORT_FOR_SCRIPT_EVENT(EvtData_Request_Destroy_Actor);
+};
+
+// -------------------------------------------------------------------------------------------------
+// EvtData_PlaySound - sent by any system wishing for a HumanView to play a sound
+// -------------------------------------------------------------------------------------------------
+class EvtData_PlaySound : public ScriptEvent
+{
+	std::string m_soundResource;
+
+public:
+	static const EventType sk_EventType;
+
+	EvtData_PlaySound(void) { }
+	EvtData_PlaySound(const std::string& soundResource)
+		: m_soundResource(soundResource)
+	{
+	}
+
+	virtual const EventType& VGetEventType(void) const
+	{
+		return sk_EventType;
+	}
+
+	virtual IEventDataPtr VCopy() const
+	{
+		return IEventDataPtr(Nv_NEW EvtData_PlaySound(m_soundResource));
+	}
+
+	virtual void VSerialize(std::ostrstream& out) const
+	{
+		out << m_soundResource;
+	}
+
+	virtual void VDeserialize(std::istrstream& in)
+	{
+		in >> m_soundResource;
+	}
+
+	const std::string& GetResource(void) const
+	{
+		return m_soundResource;
+	}
+
+	virtual const char* GetName(void) const
+	{
+		return "EvtData_PlaySound";
+	}
+
+	virtual bool VBuildEventFromScript(void);
+
+	EXPORT_FOR_SCRIPT_EVENT(EvtData_PlaySound);
 };
