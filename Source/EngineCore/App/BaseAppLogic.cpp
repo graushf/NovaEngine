@@ -119,7 +119,7 @@ void BaseAppLogic::VSetProxy()
 
 StrongActorPtr BaseAppLogic::VCreateActor(const std::string& actorResource, TiXmlElement* overrides, const Mat4x4* initialTransform, const ActorId serversActorId)
 {
-	Nv_ASSERT(m_pActorFactory);
+	//Nv_ASSERT(m_pActorFactory);
 	if (!m_bProxy && serversActorId != INVALID_ACTOR_ID) {
 		return StrongActorPtr();
 	}
@@ -143,7 +143,133 @@ StrongActorPtr BaseAppLogic::VCreateActor(const std::string& actorResource, TiXm
 		// FUTURE WORK: Log Error: couldn't create actor
 		return StrongActorPtr();
 	}
+}
 
+void BaseAppLogic::VDestroyActor(const ActorId actorId)
+{
+	// We need to trigger a synchronous event to ensure that any systems responding to this event can still access a
+	// valid actor if need be. The actor will be destroyed after this.
+	std::shared_ptr<EvtData_Destroy_Actor> pEvent(Nv_NEW EvtData_Destroy_Actor(actorId));
+	IEventManager::Get()->VTriggerEvent(pEvent);
+
+	auto findIt = m_actors.find(actorId);
+	if (findIt != m_actors.end())
+	{
+		findIt->second->Destroy();
+		m_actors.erase(findIt);
+	}
+}
+
+WeakActorPtr BaseAppLogic::VGetActor(const ActorId actorId)
+{
+	ActorMap::iterator findIt = m_actors.find(actorId);
+	if (findIt != m_actors.end()) {
+		return findIt->second;
+	}
+	return WeakActorPtr();
+}
+
+void BaseAppLogic::VModifyActor(const ActorId actorId, TiXmlElement* overrides)
+{
+	//Nv_ASSERT(m_pActorFactory);
+	if (!m_pActorFactory) {
+		return;
+	}
+
+	auto findIt = m_actors.find(actorId);
+	if (findIt != m_actors.end()) {
+		m_pActorFactory->ModifyActor(findIt->second, overrides);
+	}
+}
+
+void BaseAppLogic::VOnUpdate(float time, float elapsedTime)
+{
+	int deltaMilliseconds = int(elapsedTime * 1000.0f);
+	m_Lifetime += elapsedTime;
+
+	switch (m_State)
+	{
+		case BGS_Initializing:
+			// If we get to here we're ready to attach players
+			VChangeState(BGS_MainMenu);
+			break;
+
+		case BGS_MainMenu:
+			break;
+
+		case BGS_LoadingGameEnvironment:
+			/***
+			//  [mrmike] This was modified a little from what you see in the book - VLoadGame() is now called from
+			//  BaseAppLogic::VChangeState()
+			//
+			if (!g_pApp->VLoadGame())
+			{
+				Nv_ERROR("The game failed to load.");
+				g_pApp->AbortGame();
+			}
+
+			***/
+			break;
+
+		case BGS_WaitingForPlayersToLoadEnvironment:
+			if (m_ExpectedPlayers + m_ExpectedRemotePlayers <= m_HumanGamesLoaded)
+			{
+				VChangeState(BGS_SpawningPlayersActors);
+			}
+			break;
+
+		case BGS_SpawningPlayersActors:
+			VChangeState(BGS_Running);
+			break;
+
+		case BGS_WaitingForPlayers:
+			if (m_ExpectedPlayers + m_ExpectedRemotePlayers == m_HumanPlayersAttached)
+			{
+				// The server sends us the level name as a part of the login message.
+				// We have to wait until it arrives before loading the level.
+				/*if (!g_pApp->m_Options.m_Level.empty())
+				{
+					VChangeState(BGS_LoadingGameEnvironment);
+				}*/
+			}
+			break;
+
+
+		case BGS_Running:
+			m_pProcessManager->UpdateProcesses(deltaMilliseconds);
+
+			if (m_pPhysics && !m_bProxy)
+			{
+				m_pPhysics->VOnUpdate(elapsedTime);
+				m_pPhysics->VSyncVisibleScene();
+			}
+
+			break;
+
+		default:
+			//Nv_ERROR("Unrecognized state.");
+	}
+
+	// update all game views
+	for (GameViewList::iterator it = m_gameViews.begin(); it != m_gameViews.end(); ++it)
+	{
+		(*it)->VOnUpdate(deltaMilliseconds);
+	}
+
+	// update game actors
+	for (ActorMap::const_iterator it = m_actors.begin(); it != m_actors.end(); ++it)
+	{
+		it->second->Update(deltaMilliseconds);
+	}
+
+}
+
+//
+// BaseAppLogic::VChangeState				- Chapter 19, page 710
+//
+void BaseAppLogic::VChangeState(BaseGameState newState)
+{
+	// TODO
 }
 
 void BaseAppLogic::VRenderDiagnostics()
