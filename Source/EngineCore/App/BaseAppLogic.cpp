@@ -7,7 +7,7 @@
 
 #include <mmsystem.h>
 
-//#include "../AI/Pathing.h"
+#include "../AI/Pathing.h"
 #include "../EventManager/Events.h"							// only for EvtData_Game_State
 #include "../Initialization/Initialization.h"				// only for GameOptions
 #include "../MainLoop/Process.h"

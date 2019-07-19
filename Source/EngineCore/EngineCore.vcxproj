@@ -67,6 +67,7 @@
     <ClInclude Include="LUAScripting\ScriptProcess.h" />
     <ClInclude Include="MainLoop\Process.h" />
     <ClInclude Include="MainLoop\ProcessManager.h" />
+    <ClInclude Include="Memory\MemoryMacros.h" />
     <ClInclude Include="Memory\MemoryPool.h" />
     <ClInclude Include="Multicore\CriticalSection.h" />
     <ClInclude Include="Physics\Physics.h" />
@@ -87,6 +88,7 @@
     <ClCompile Include="Actors\BaseScriptComponent.cpp" />
     <ClCompile Include="Actors\RenderComponent.cpp" />
     <ClCompile Include="Actors\TransformComponent.cpp" />
+    <ClCompile Include="AI\Pathing.cpp" />
     <ClCompile Include="App\App.cpp" />
     <ClCompile Include="App\AppInst.cpp" />
     <ClCompile Include="App\BaseAppLogic.cpp" />
@@ -127,24 +129,6 @@
     <ClCompile Include="Utilities\Math.cpp" />
     <ClCompile Include="Utilities\MathRandom.cpp" />
     <ClCompile Include="Utilities\String.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="Shaders\Nova_VSMain_VS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">Compute</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">4.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">Compute</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">4.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compute</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compute</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
-    </FxCompile>
-    <FxCompile Include="Shaders\Sh_PSMain_PS.hlsl" />
-    <FxCompile Include="Shaders\Sh_VSMain_VS.hlsl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

@@ -210,6 +210,9 @@
     <ClInclude Include="Memory\MemoryPool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Memory\MemoryMacros.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Common\CommonStd.cpp">
@@ -347,10 +350,11 @@
     <ClCompile Include="Memory\MemoryPool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="AI\Pathing.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\Nova_VSMain_VS.hlsl" />
-    <FxCompile Include="Shaders\Sh_PSMain_PS.hlsl" />
-    <FxCompile Include="Shaders\Sh_VSMain_VS.hlsl" />
   </ItemGroup>
 </Project>
