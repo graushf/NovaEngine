@@ -35,6 +35,7 @@
     <ClInclude Include="Actors\RenderComponentInterface.h" />
     <ClInclude Include="Actors\ScriptComponentInterface.h" />
     <ClInclude Include="Actors\TransformComponent.h" />
+    <ClInclude Include="AI\Pathing.h" />
     <ClInclude Include="App\App.h" />
     <ClInclude Include="App\BaseAppLogic.h" />
     <ClInclude Include="Audio\Audio.h" />
@@ -58,6 +59,7 @@
     <ClInclude Include="Graphics3D\Scene.h" />
     <ClInclude Include="Graphics3D\SceneNodes.h" />
     <ClInclude Include="Graphics3D\Shaders.h" />
+    <ClInclude Include="Graphics3D\Sky.h" />
     <ClInclude Include="Initialization\Initialization.h" />
     <ClInclude Include="LUAScripting\LuaStateManager.h" />
     <ClInclude Include="LUAScripting\ScriptEvent.h" />
@@ -65,8 +67,11 @@
     <ClInclude Include="LUAScripting\ScriptProcess.h" />
     <ClInclude Include="MainLoop\Process.h" />
     <ClInclude Include="MainLoop\ProcessManager.h" />
+    <ClInclude Include="Memory\MemoryPool.h" />
     <ClInclude Include="Multicore\CriticalSection.h" />
     <ClInclude Include="Physics\Physics.h" />
+    <ClInclude Include="Physics\PhysicsDebugDrawer.h" />
+    <ClInclude Include="Physics\PhysicsEventListener.h" />
     <ClInclude Include="ResourceCache\ResCache.h" />
     <ClInclude Include="ResourceCache\XmlResource.h" />
     <ClInclude Include="ResourceCache\ZipFile.h" />
@@ -103,6 +108,7 @@
     <ClCompile Include="Graphics3D\Scene.cpp" />
     <ClCompile Include="Graphics3D\SceneNodes.cpp" />
     <ClCompile Include="Graphics3D\Shaders.cpp" />
+    <ClCompile Include="Graphics3D\Sky.cpp" />
     <ClCompile Include="Initialization\Initialization.cpp" />
     <ClCompile Include="LUAScripting\LuaStateManager.cpp" />
     <ClCompile Include="LUAScripting\ScriptEvent.cpp" />
@@ -110,7 +116,10 @@
     <ClCompile Include="LUAScripting\ScriptProcess.cpp" />
     <ClCompile Include="MainLoop\Process.cpp" />
     <ClCompile Include="MainLoop\ProcessManager.cpp" />
+    <ClCompile Include="Memory\MemoryPool.cpp" />
     <ClCompile Include="Physics\Physics.cpp" />
+    <ClCompile Include="Physics\PhysicsDebugDrawer.cpp" />
+    <ClCompile Include="Physics\PhysicsEventListener.cpp" />
     <ClCompile Include="ResourceCache\ResCache.cpp" />
     <ClCompile Include="ResourceCache\ZipFile.cpp" />
     <ClCompile Include="UserInterface\HumanView.cpp" />

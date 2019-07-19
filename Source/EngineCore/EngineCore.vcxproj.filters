@@ -195,6 +195,21 @@
     <ClInclude Include="Physics\Physics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Graphics3D\Sky.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\PhysicsEventListener.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\PhysicsDebugDrawer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\Pathing.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\MemoryPool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Common\CommonStd.cpp">
@@ -318,6 +333,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Physics\Physics.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics3D\Sky.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\PhysicsEventListener.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\PhysicsDebugDrawer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Memory\MemoryPool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
