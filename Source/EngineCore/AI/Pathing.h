@@ -57,7 +57,7 @@ private:
 class PathingArc
 {
 	float m_weight;
-	PathingNode* m_pNode[2];	// an arc always connects two nodes
+	PathingNode* m_pNodes[2];	// an arc always connects two nodes
 
 public:
 	explicit PathingArc(float weight = PATHING_DEFAULT_ARC_WEIGHT) { m_weight = weight; }
