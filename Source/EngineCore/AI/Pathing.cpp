@@ -191,8 +191,8 @@ void AStar::Destroy(void)
 //
 PathPlan* AStar::operator()(PathingNode* pStartNode, PathingNode* pGoalNode)
 {
-	Nv_ASSERT(pStartNode);
-	Nv_ASSERT(pGoalNode);
+	//Nv_ASSERT(pStartNode);
+	//Nv_ASSERT(pGoalNode);
 
 	// if the start and end nodes are the same, we're close enough to b-line to the goal
 	if (pStartNode == pGoalNode) {
@@ -465,32 +465,80 @@ PathingNode* PathingGraph::FindRandomNode(void)
 
 PathPlan* PathingGraph::FindPath(const Vec3& startPoint, const Vec3& endPoint)
 {
-
+	// Find the closest nodes to the start and end points. There really should be some ray-casting
+	// to ensure that we can actually make it to the closest node, but this is good enough for now.
+	PathingNode* pStart = FindClosestNode(startPoint);
+	PathingNode* pGoal = FindClosestNode(endPoint);
+	return FindPath(pStart, pGoal);
 }
 
 PathPlan* PathingGraph::FindPath(const Vec3& startPoint, PathingNode* pGoalNode)
 {
-
+	PathingNode* pStart = FindClosestNode(startPoint);
+	return FindPath(pStart, pGoalNode);
 }
 
 PathPlan* PathingGraph::FindPath(PathingNode* pStartNode, const Vec3& endPoint)
 {
-
+	PathingNode* pGoal = FindClosestNode(endPoint);
+	return FindPath(pStartNode, pGoal);
 }
 
 PathPlan* PathingGraph::FindPath(PathingNode* pStartNode, PathingNode* pGoalNode)
 {
-
+	// find the best path using an A* search algorithm
+	AStar aStar;
+	return aStar(pStartNode, pGoalNode);
 }
 
 void PathingGraph::BuildTestGraph(void)
 {
+	// this should never occur, but better safe than sorry
+	if (!m_nodes.empty()) {
+		DestroyGraph();
+	}
 
+	// keep from reallocating and copying the array
+	m_nodes.reserve(81);
+
+	// Create a simple grid of nodes. Using these hard-coded values is a bit hacky but it's okay
+	// because this is just a debug function.
+	int index = 0; // this is used to keep track of the node we just inserted so we can link it to adjacent nodes
+	for (float x = -45.0f; x < 45.0f; x += 10.0f)
+	{
+		for (float z = -45.0f; z < 45.0f; z += 10.0f)
+		{
+			// add the new node
+			PathingNode* pNode = new PathingNode(Vec3(x, 0, z));
+			m_nodes.push_back(pNode);
+
+			// link it to the previous node
+			int tempNode = index - 1;
+			if (tempNode >= 0) {
+				LinkNodes(m_nodes[tempNode], pNode);
+			}
+
+			// link it to the node above it
+			tempNode = index - 9; // reusing tempNode
+			if (tempNode >= 0) {
+				LinkNodes(m_nodes[tempNode], pNode);
+			}
+
+			index++;
+		}
+	}
 }
 
 void PathingGraph::LinkNodes(PathingNode* pNodeA, PathingNode* pNodeB)
 {
+	//Nv_ASSERT(pNodeA);
+	//Nv_ASSERT(pNodeB);
 
+	PathingArc* pArc = Nv_NEW PathingArc;
+	pArc->LinkNodes(pNodeA, pNodeB);
+	pNodeA->AddArc(pArc);
+	pNodeB->AddArc(pArc);
+	m_arcs.push_back(pArc);
 }
 
 // --------------------------------------------------------------------
