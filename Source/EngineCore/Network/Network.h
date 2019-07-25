@@ -91,3 +91,90 @@ inline void BinaryPacket::MemCpy(char const* const data, size_t size, int destOf
 	//Nv_ASSERT(size + destOffset <= VGetSize() - sizeof(u_long));
 	memcpy(m_Data + destOffset + sizeof(u_long), data, size);
 }
+
+// ----------------------------------------------------------
+// TextPacket Description		  - not described in the book
+//
+// A packet object that takes a text string.
+//
+// ----------------------------------------------------------
+class TextPacket : public BinaryPacket
+{
+public:
+	TextPacket(char const* const text);
+	virtual char const * const VGetType() const { return g_Type; }
+
+	static const char* g_Type;
+};
+
+// -------------------------------------------------------------------
+// NetSocket Description						- Chapter 19, page 666
+//
+// A base class for a socket connection.
+// -------------------------------------------------------------------
+
+class NetSocket
+{
+	friend class BaseSocketManager;
+	typedef std::list<std::shared_ptr<IPacket>> PacketList;
+
+public:
+	NetSocket();
+	NetSocket(SOCKET new_sock, unsigned int hostIP);
+	virtual ~NetSocket();
+
+	bool Connect(unsigned int ip, unsigned int port, bool foarceCoalesce = 0);
+	void SetBlocking(bool blocking);
+	void Send(std::shared_ptr<IPacket> pkt, bool clearTimeOut = 1);
+
+	virtual int VHasOutput() { return !m_OutList.empty(); }
+	virtual void VHandleOutput();
+	virtual void VHandleInput();
+	virtual void VTimeOut() { m_timeOut = 0; }
+
+	void HandleException() { m_deleteFlag |= 1; }
+	
+	void SetTimeOut(unsigned int ms = 45 * 1000) { m_timeOut = timeGetTime() + ms; }
+
+	int GetIpAddress() { return m_ipaddr; }
+
+protected:
+	SOCKET m_sock;			// the socket to handle
+	int m_id;				// a unique ID given by the socket manager
+
+	// note: if deleteFlag has bit 2 set, exceptions only close the 
+	//  socket and set to INVALID_SOCKET, and do not delete the NetSocket
+	int m_deleteFlag;
+
+	PacketList m_OutList;			// packets to send
+	PacketList m_InList;			// packets just received
+
+	char m_recvBuf[RECV_BUFFER_SIZE];			// receive buffer
+	unsigned int m_recvOfs, m_recvBegin;		// tracking the read head of the buffer
+	bool m_bBinaryProtocol;
+
+	int m_sendOfs;					// tracking the output buffer
+	unsigned int m_timeOut;			// when will the socket time out
+	unsigned int m_ipaddr;			// the ipaddress of the remote connection
+
+	int m_internal;					// is the remote IP internal or external
+	int m_timeCreated;				// when the socket was created
+};
+
+
+
+//
+// class NetListenSocket							- Chapter 19, page 673
+//
+class NetListenSocket : public NetSocket
+{
+public:
+	NetListenSocket() { };
+	NetListenSocket(int portnum);
+
+	void Init(int portnum);
+	void InitScan(int portnum_min, int portnum_max);
+	SOCKET AcceptConnection(unsigned int* pAddr);
+
+	unsigned short port;
+};
