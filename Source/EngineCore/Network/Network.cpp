@@ -468,4 +468,470 @@ void NetListenSocket::InitScan(int portnum_min, int portnum_max)
 		//EXIT_ASSERT
 		exit(1);
 	}
+
+	port = portnum;
+}
+
+//
+// NetListenSocket::AcceptConnection							- Chapter 19, page 675
+//
+SOCKET NetListenSocket::AcceptConnection(unsigned int* pAddr)
+{
+	SOCKET new_sock;
+	struct sockaddr_in sock;
+	int size = sizeof(sock);
+
+	if ((new_sock = accept(m_sock, (struct sockaddr*)&sock, &size)) == INVALID_SOCKET)
+	{
+		return INVALID_SOCKET;
+	}
+
+	if (getpeername(new_sock, (struct sockaddr*)&sock, &size) == SOCKET_ERROR)
+	{
+		closesocket(new_sock);
+		return INVALID_SOCKET;
+	}
+	*pAddr = ntohl(sock.sin_addr.s_addr);
+	return new_sock;
+}
+
+//
+// BaseSocketManager::BaseSocketManager							- Chapter 19, page 677
+//
+BaseSocketManager::BaseSocketManager()
+{
+	m_Inbound = 0;
+	m_Outbound = 0;
+	m_MaxOpenSockets = 0;
+	m_SubnetMask = 0;
+	m_Subnet = 0xffffffff;
+	m_NextSocketId = 0;
+
+	g_pSocketManager = this;
+	ZeroMemory(&m_WsaData, sizeof(WSADATA));
+}
+
+//
+// BaseSocketManager:Init					- Chapter 19, page 677
+//
+bool BaseSocketManager::Init()
+{
+	if (WSAStartup(0x0202, &m_WsaData) == 0)
+	{
+		return true;
+	}
+	else
+	{
+		//Nv_ERROR("WSAStartup failure!");
+		return false;
+	}
+}
+
+//
+// BaseSocketManager::Shutdown						- Chapter 19, page 678
+//
+void BaseSocketManager::Shutdown()
+{
+	// Get rid of all those pesky kids
+	while (!m_SockList.empty())
+	{
+		delete *m_SockList.begin();
+		m_SockList.pop_front();
+	}
+
+	WSACleanup();
+}
+
+//
+// BaseSocketManager:AddSocket					- Chapter 19, page 677
+//
+int BaseSocketManager::AddSocket(NetSocket* socket)
+{
+	socket->m_id = m_NextSocketId;
+	m_SockMap[m_NextSocketId] = socket;
+	++m_NextSocketId;
+
+	m_SockList.push_front(socket);
+	if (m_SockList.size() > m_MaxOpenSockets)
+	{
+		++m_MaxOpenSockets;
+	}
+
+	return socket->m_id;
+}
+
+//
+// BaseSocketManager::RemoveSocket					- not described in the book
+//
+// Removes a sock for the socket list - done once it is not connected anymore
+//
+void BaseSocketManager::RemoveSocket(NetSocket* socket)
+{
+	m_SockList.remove(socket);
+	m_SockMap.erase(socket->m_id);
+	SAFE_DELETE(socket);
+}
+
+//
+// BaseSocketManager::FindSocket					- Chapter 19, page 679
+//
+NetSocket* BaseSocketManager::FindSocket(int sockId)
+{
+	SocketIdMap::iterator i = m_SockMap.find(sockId);
+	if (i == m_SockMap.end())
+	{
+		return NULL;
+	}
+	return i->second;
+}
+
+int BaseSocketManager::GetIpAddress(int sockId)
+{
+	NetSocket* socket = FindSocket(sockId);
+	if (socket)
+	{
+		return socket->GetIpAddress();
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+//
+// BaseSocketManager::Send					- Chapter 19, page 679
+//
+bool BaseSocketManager::Send(int sockId, std::shared_ptr<IPacket> packet)
+{
+	NetSocket* sock = FindSocket(sockId);
+	if (!sock) {
+		return false;
+	}
+	sock->Send(packet);
+	return true;
+}
+
+//
+// BaseSocketManager::DoSelect				- Chapter 19, page 679
+//
+void BaseSocketManager::DoSelect(int pauseMicroSecs, bool handleInput)
+{
+	timeval tv;
+	tv.tv_sec = 0;
+	tv.tv_usec = pauseMicroSecs;		// 100 microseconds is 0.1 milliseconds or .0001 seconds
+
+	fd_set inp_set, out_set, exc_set;
+	int maxdesc;
+
+	FD_ZERO(&inp_set);
+	FD_ZERO(&out_set);
+	FD_ZERO(&exc_set);
+
+	maxdesc = 0;
+
+	// set everything up for the select
+	for (SocketList::iterator i = m_SockList.begin(); i != m_SockList.end(); ++i)
+	{
+		NetSocket* pSock = *i;
+		if ((pSock->m_deleteFlag & 1) || pSock->m_sock == INVALID_SOCKET)
+		{
+			continue;
+		}
+
+		if (handleInput) {
+			FD_SET(pSock->m_sock, &inp_set);
+		}
+
+		FD_SET(pSock->m_sock, &exc_set);
+
+		if (pSock->VHasOutput()) {
+			FD_SET(pSock->m_sock, &out_set);
+		}
+
+		if ((int)pSock->m_sock > maxdesc) {
+			maxdesc = (int)pSock->m_sock;
+		}
+	}
+
+	int selRet = 0;
+
+	// do the select (duration passed in as tv, NULL to block until event)
+	selRet = select(maxdesc + 1, &inp_set, &out_set, &exc_set, &tv);
+	if (selRet == SOCKET_ERROR)
+	{
+		PrintError();
+		return;
+	}
+
+	// handle input, output and exceptions
+
+	if (selRet)
+	{
+		for (SocketList::iterator i = m_SockList.begin(); i != m_SockList.end(); ++i)
+		{
+			NetSocket* pSock = *i;
+
+			if ((pSock->m_deleteFlag & 1) || pSock->m_sock == INVALID_SOCKET)
+			{
+				continue;
+			}
+
+			if (FD_ISSET(pSock->m_sock, &exc_set))
+			{
+				pSock->HandleException();
+			}
+
+			if (!(pSock->m_deleteFlag & 1) && FD_ISSET(pSock->m_sock, &out_set))
+			{
+				pSock->VHandleOutput();
+			}
+
+			if (handleInput
+				&& !(pSock->m_deleteFlag & 1) && FD_ISSET(pSock->m_sock, &inp_set))
+			{
+				pSock->VHandleInput();
+			}
+		}
+	}
+
+	unsigned int timeNow = timeGetTime();
+
+	// handle deleting any sockets
+	SocketList::iterator i = m_SockList.begin();
+	while (i != m_SockList.end())
+	{
+		NetSocket* pSock = *i;
+		if (pSock->m_timeOut)
+		{
+			if (pSock->m_timeOut < timeNow)
+			{
+				pSock->VTimeOut();
+			}
+		}
+
+		if (pSock->m_deleteFlag & 1)
+		{
+			switch (pSock->m_deleteFlag)
+			{
+				case 1:
+					g_pSocketManager->RemoveSocket(pSock);
+					i = m_SockList.begin();
+					break;
+				case 3:
+					pSock->m_deleteFlag = 2;
+					if (pSock->m_sock != INVALID_SOCKET)
+					{
+						closesocket(pSock->m_sock);
+						pSock->m_sock = INVALID_SOCKET;
+					}
+					break;
+			}
+		}
+
+		++i;
+
+	}
+}
+
+//
+// BaseSocketManager::IsInternal				- Chapter 19, page 682
+//
+bool BaseSocketManager::IsInternal(unsigned int ipaddr)
+{
+	if (!m_SubnetMask) {
+		return false;
+	}
+
+	if ((ipaddr & m_SubnetMask) == m_Subnet) {
+		return false;
+	}
+
+	return true;
+}
+
+// 
+//
+//
+unsigned int BaseSocketManager::GetHostByName(const std::string& hostName)
+{
+	// This will retrieve the ip details and put it into pHostEnt structure
+	struct hostent* pHostEnt = gethostbyname(hostName.c_str());
+	struct sockaddr_in tmpSockAddr;	// placeholder for the ip address
+
+	if (pHostEnt == NULL) {
+		//Nv_ASSERT(0 && _T("Error occurred"));
+		return 0;
+	}
+
+	memcpy(&tmpSockAddr.sin_addr, pHostEnt->h_addr, pHostEnt->h_length);
+	
+	return ntohl(tmpSockAddr.sin_addr.s_addr);
+}
+
+//
+//
+//
+const char* BaseSocketManager::GetHostByAddr(unsigned int ip)
+{
+	static char host[256];
+
+	int netip = htonl(ip);
+	struct hostent* lpHostEnt = gethostbyaddr((const char*)&netip, 4, PF_INET);
+
+	if (lpHostEnt)
+	{
+		strcpy_s(host, 256, lpHostEnt->h_name);
+		return host;
+	}
+	return NULL;
+}
+
+void BaseSocketManager::PrintError()
+{
+	int realError = WSAGetLastError();
+	const char* reason;
+
+	switch (realError)
+	{
+		case WSANOTINITIALISED: 
+			reason = "A succesful WSAStartup must occur before using this API."; 
+			break;
+		case WSAEFAULT: 
+			reason = "The Windows Sockets implementation was unable to allcoate needed resources for its internal operations, or the readfds, writefds, exceptfds, or timeval parameters are not part of the user address space."; 
+			break;
+		case WSAENETDOWN:
+			reason = "The network subsystem has failed.";
+			break;
+		case WSAEINVAL:
+			reason = "The timeout value is not valid, or all three descriptor parameters were NULL.";
+			break;
+		case WSAEINTR:
+			reason = "The (blocking) call was canceled via WSACancelBlockingCall.";
+			break;
+		case WSAEINPROGRESS:
+			reason = "A blocking Windows Sockets 1.1 call is in progress, or the service provider is still processing a callback function.";
+			break;
+		case WSAENOTSOCK:
+			reason = "One of the descriptor sets contains an entry which is not a socket.";
+			break;
+		default:
+			reason = "Unknown.";
+	}
+
+	char buffer[256];
+	sprintf(buffer, "SOCKET error: %s", reason);
+	
+	//Nv_LOG("Network", buffer);
+}
+
+
+//
+// ClientSocketManager::Connect			- Chapter 19, page 684
+//
+bool ClientSocketManager::Connect()
+{
+	if (!BaseSocketManager::Init()) {
+		return false;
+	}
+
+	RemoteEventSocket* pSocket = Nv_NEW RemoteEventSocket;
+	
+	if (!pSocket->Connect(GetHostByName(m_HostName), m_Port))
+	{
+		SAFE_DELETE(pSocket);
+		return false;
+	}
+	AddSocket(pSocket);
+	return true;
+}
+
+//
+// GameServerListenSocket::VHandleInput				- Chapter 19, page 685
+//
+void GameServerListenSocket::VHandleInput()
+{
+	unsigned int theipaddr;
+	SOCKET new_sock = AcceptConnection(&theipaddr);
+
+	int value = 1;
+	setsockopt(new_sock, SOL_SOCKET, SO_DONTLINGER, (char*)&value, sizeof(value));
+
+	if (new_sock != INVALID_SOCKET)
+	{
+		RemoteEventSocket* sock = Nv_NEW RemoteEventSocket(new_sock, theipaddr);
+		int sockId = g_pSocketManager->AddSocket(sock);
+		int ipAddress = g_pSocketManager->GetIpAddress(sockId);
+		std::shared_ptr<EvtData_Remote_Client> pEvent(Nv_NEW EvtData_Remote_Client(sockId, ipAddress));
+		IEventManager::Get()->VQueueEvent(pEvent);
+	}
+}
+
+//
+// RemoteEventSocket::VHandleInput					- Chapter 19, page 688
+//
+void RemoteEventSocket::VHandleInput()
+{
+	NetSocket::VHandleInput();
+
+	// traverse the list of m_InList packets and do something useful with them
+	while (!m_InList.empty())
+	{
+		std::shared_ptr<IPacket> packet = *m_InList.begin();
+		m_InList.pop_front();
+		if (!strcmp(packet->VGetType(), BinaryPacket::g_Type))
+		{
+			const char* buf = packet->VGetData();
+			int size = static_cast<int>(packet->VGetSize());
+
+			std::istrstream in(buf + sizeof(u_long), (size - sizeof(u_long)));
+
+			int type;
+			in >> type;
+			switch (type)
+			{
+				case NetMsg_Event:
+
+				case NetMsg_PlayerLoginOk:
+				{
+					int serverSockId, actorId;
+					in >> serverSockId;
+					in >> actorId;
+					in >> g_pApp->m_Options.m_Level;			// [mrmike] - This was the best spot to set the level!
+					std::shared_ptr<EvtData_Network_Player_Actor_Assignment> pEvent(Nv_NEW EvtData_Network_Player_Actor_Assignment(actorId, serverSockId));
+					IEventManager::Get()->VQueueEvent(pEvent);
+					break;
+				}
+
+				default:
+					//Nv_ERROR("Unknown message type.");
+
+			}
+		}
+		else if (!strcmp(packet->VGetType(), TextPacket::g_Type))
+		{
+			//Nv_LOG("Network", packet->VGetData() + sizeof(u_long));
+		}
+	}
+}
+
+//
+// RemoteEventSocket::CreateEvent						- Chapter 19, page 689
+//
+void RemoteEventSocket::CreateEvent(std::istrstream& in)
+{
+	// Note: We can improve the efficiency of this by comparing the hash values instead of strings.
+	// But strings are easier to debug!
+	EventType eventType;
+	in >> eventType;
+
+	IEventDataPtr pEvent(CREATE_EVENT(eventType));
+	if (pEvent)
+	{
+		pEvent->VDeserialize(in);
+		IEventManager::Get()->VQueueEvent(pEvent);
+	}
+	else 
+	{
+		//Nv_ERROR("ERROR Unknown event type from remote: 0x" + ToStr(eventType, 16));
+	}
 }

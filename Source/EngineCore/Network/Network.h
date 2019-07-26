@@ -161,6 +161,80 @@ protected:
 	int m_timeCreated;				// when the socket was created
 };
 
+//
+// class BaseSocketManager							- Chapter 19, page 676
+//
+class BaseSocketManager
+{
+protected:
+	WSADATA m_WsaData;
+
+	typedef std::list<NetSocket*> SocketList;
+	typedef std::map<int, NetSocket*> SocketIdMap;
+
+	SocketList m_SockList;
+	SocketIdMap m_SockMap;
+
+	int m_NextSocketId;
+	unsigned int m_Inbound;
+	unsigned int m_Outbound;
+	unsigned int m_MaxOpenSockets;
+	unsigned int m_SubnetMask;
+	unsigned int m_Subnet;
+
+	NetSocket* FindSocket(int sockId);
+
+public:
+	BaseSocketManager();
+	virtual ~BaseSocketManager() { Shutdown(); }
+
+	void DoSelect(int pauseMicroSecs, bool handleInput = true);
+
+	bool Init();
+	void Shutdown();
+	void PrintError();
+
+	int AddSocket(NetSocket* socket);
+	void RemoveSocket(NetSocket* socket);
+
+	unsigned int GetHostByName(const std::string& hostName);
+	const char* GetHostByAddr(unsigned int ip);
+
+	int GetIpAddress(int sockId);
+
+	void SetSubnet(unsigned int subnet, unsigned int subnetMask)
+	{
+		m_Subnet = subnet;
+		m_SubnetMask = subnetMask;
+	}
+
+	bool IsInternal(unsigned int ipaddr);
+
+	bool Send(int sockId, std::shared_ptr<IPacket> packet);
+
+	void AddToOutbound(int rc) { m_Outbound += rc; }
+	void AddToInbound(int rc) { m_Inbound += rc; }
+};
+
+extern BaseSocketManager* g_pSocketManager;
+
+//
+// class ClientSocketManager					- Chapter 19, page 684
+// 
+class ClientSocketManager : public BaseSocketManager
+{
+	std::string m_HostName;
+	unsigned int m_Port;
+
+public:
+	ClientSocketManager(const std::string &hostName, unsigned int port)
+	{
+		m_HostName = hostName;
+		m_Port = port;
+	}
+
+	bool Connect();
+};
 
 
 //
@@ -177,4 +251,44 @@ public:
 	SOCKET AcceptConnection(unsigned int* pAddr);
 
 	unsigned short port;
+};
+
+
+
+//
+// class GameServerListenSocket						- Chapter 19, page 685
+//
+class GameServerListenSocket : public NetListenSocket
+{
+public:
+	GameServerListenSocket(int portnum) { Init(portnum); }
+
+	virtual void VHandleInput();
+};
+
+//
+// class RemoteEventSocket							- Chapter 19, page 688
+//
+class RemoteEventSocket : public NetSocket
+{
+public:
+	enum
+	{
+		NetMsg_Event,
+		NetMsg_PlayerLoginOk,
+	};
+
+	// server accepting a client
+	RemoteEventSocket(SOCKET new_sock, unsigned int hostIP)
+		: NetSocket(new_sock, hostIP)
+	{
+	}
+
+	// client attach to server
+	RemoteEventSocket() { };
+
+	virtual void VHandleInput();
+
+protected:
+	void CreateEvent(std::istrstream& in);
 };
