@@ -99,7 +99,39 @@ extern bool IsOnlyInstance(LPCTSTR gameTitle)
 	return true;
 }
 
+//
+// GetSaveGameDirectory - Chapter 5, page 146
+//
+const TCHAR* GetSaveGameDirectory(HWND hWnd, const TCHAR* gameAppDirectory)
+{
+	HRESULT hr;
+	static TCHAR m_SaveGameDirectory[MAX_PATH];
+	TCHAR userDataPath[MAX_PATH];
 
+	hr = SHGetSpecialFolderPath(hWnd, userDataPath, CSIDL_APPDATA, true);
+
+	_tcscpy_s(m_SaveGameDirectory, userDataPath);
+	_tcscat_s(m_SaveGameDirectory, _T("\\"));
+	_tcscat_s(m_SaveGameDirectory, gameAppDirectory);
+
+	// Does our directory exist?
+	if (0xffffffff == GetFileAttributes(m_SaveGameDirectory))
+	{
+		if (SHCreateDirectoryEx(hWnd, m_SaveGameDirectory, NULL) != ERROR_SUCCESS)
+		{
+			return false;
+		}
+	}
+
+	_tcscat_s(m_SaveGameDirectory, _T("\\"));
+
+	return m_SaveGameDirectory;
+}
+
+
+//
+// bool CheckForJoystick									- Chapter 9, page 245
+//
 bool CheckForJoystick(HWND hWnd)
 {
 	JOYINFO joyinfo;

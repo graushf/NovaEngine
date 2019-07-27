@@ -61,8 +61,11 @@ public:
 	static bool Init(void);
 	static void Destroy(void);
 
-	// These are exported to Lua (resource loading)
+	// resource loading
 	static bool LoadAndExecuteScriptResource(const char* scriptResource);
+
+	// actors
+	static int CreateActor(const char* actorArchetype, LuaPlus::LuaObject luaPosition, LuaPlus::LuaObject luaYawPitchRoll);
 
 	// event system
 	static unsigned long RegisterEventListener(EventType eventType, LuaPlus::LuaObject callbackFunction);
@@ -70,10 +73,21 @@ public:
 	static bool QueueEvent(EventType eventType, LuaPlus::LuaObject eventData);
 	static bool TriggerEvent(EventType eventType, LuaPlus::LuaObject eventData);
 
-
-
 	// process system
 	static void AttachScriptProcess(LuaPlus::LuaObject scriptProcess);
+
+	// math
+	static float GetYRotationFromVector(LuaPlus::LuaObject vec3);
+	static float WrapPi(float wrapMe);
+	static LuaPlus::LuaObject GetVectorFromRotation(float angleRadians);
+
+	// misc.
+	static void LuaLog(LuaPlus::LuaObject text);
+	static unsigned long GetTickCount(void);
+
+	// physics
+	static void ApplyForce(LuaPlus::LuaObject normalDir, float force, int actorId);
+	static void ApplyTorque(LuaPlus::LuaObject axis, float force, int actorId);
 
 private:
 	static std::shared_ptr<ScriptEvent> BuildEvent(EventType eventType, LuaPlus::LuaObject& eventData);
@@ -230,21 +244,6 @@ void InternalScriptExports::RemoveEventListener(unsigned long listenerId)
 	s_pScriptEventListenerMgr->DestroyListener(pListener);  // the destructor will remove the listener
 }
 
-
-void InternalScriptExports::AttachScriptProcess(LuaPlus::LuaObject scriptProcess)
-{
-	LuaPlus::LuaObject temp = scriptProcess.Lookup("__object");
-	if (!temp.IsNil())
-	{
-		std::shared_ptr<Process> pProcess(static_cast<Process*>(temp.GetLightUserData()));
-		g_pApp->m_pGame->AttachProcess(pProcess);
-	}
-	else
-	{
-		//Nv_ERROR("Couldn't find __object in script process");
-	}
-}
-
 // ----------------------------------------------------------------------------------------------------------
 // Queue's an event from the script. Returns true if the event was sent, false if not.
 // ----------------------------------------------------------------------------------------------------------
@@ -292,6 +291,125 @@ std::shared_ptr<ScriptEvent> InternalScriptExports::BuildEvent(EventType eventTy
 }
 
 
+void InternalScriptExports::AttachScriptProcess(LuaPlus::LuaObject scriptProcess)
+{
+	LuaPlus::LuaObject temp = scriptProcess.Lookup("__object");
+	if (!temp.IsNil())
+	{
+		std::shared_ptr<Process> pProcess(static_cast<Process*>(temp.GetLightUserData()));
+		g_pApp->m_pGame->AttachProcess(pProcess);
+	}
+	else
+	{
+		//Nv_ERROR("Couldn't find __object in script process");
+	}
+}
+
+int InternalScriptExports::CreateActor(const char* actorArchetype, LuaPlus::LuaObject luaPosition, LuaPlus::LuaObject luaYawPitchRoll)
+{
+	if (!luaPosition.IsTable())
+	{
+		//Nv_ERROR("Invalid object passed to CreateActor(); type = " + std::string(luaPosition.TypeName()));
+		return INVALID_ACTOR_ID;
+	}
+
+	if (!luaYawPitchRoll.IsTable())
+	{
+		//Nv_ERROR("Invalid object passed to CreateActor(); type = " + std::string(luaYawPitchRoll.TypeName()));
+		return INVALID_ACTOR_ID;
+	}
+
+	Vec3 pos(luaPosition["x"].GetFloat(), luaPosition["y"].GetFloat(), luaPosition["z"].GetFloat());
+	Vec3 ypr(luaYawPitchRoll["x"].GetFloat(), luaYawPitchRoll["y"].GetFloat(), luaYawPitchRoll["z"].GetFloat());
+
+	Mat4x4 initialTransform;
+	initialTransform.BuildYawPitchRoll(ypr.x, ypr.y, ypr.z);
+	initialTransform.SetPosition(pos);
+
+	TiXmlElement* overloads = NULL;
+	StrongActorPtr pActor = g_pApp->m_pGame->VCreateActor(actorArchetype, overloads, &initialTransform);
+
+	if (pActor)
+	{
+		std::shared_ptr<EvtData_New_Actor> pNewActorEvent(Nv_NEW EvtData_New_Actor(pActor->GetId()));
+		IEventManager::Get()->VQueueEvent(pNewActorEvent);
+		return pActor->GetId();
+	}
+
+	return INVALID_ACTOR_ID;
+}
+
+float InternalScriptExports::WrapPi(float wrapMe)
+{
+	return ::WrapPi(wrapMe);
+}
+
+float InternalScriptExports::GetYRotationFromVector(LuaPlus::LuaObject vec3)
+{
+	if (vec3.IsTable())
+	{
+		Vec3 lookAt(vec3["x"].GetFloat(), vec3["y"].GetFloat(), vec3["z"].GetFloat());
+		return ::GetYRotationFromVector(lookAt);
+	}
+
+	//Nv_ERROR("Invalid object passed to GetYRotationFromVector(); type = " + std::string(vec3.TypeName()));
+	return 0;
+}
+
+
+LuaPlus::LuaObject InternalScriptExports::GetVectorFromRotation(float angleRadians)
+{
+	Vec3 result = ::GetVectorFromYRotation(angleRadians);
+	LuaPlus::LuaObject luaResult;
+
+	luaResult.AssignNewTable(LuaStateManager::Get()->GetLuaState());
+	luaResult.SetNumber("x", result.x);
+	luaResult.SetNumber("y", result.y);
+	luaResult.SetNumber("z", result.z);
+
+	return luaResult;
+}
+
+void InternalScriptExports::LuaLog(LuaPlus::LuaObject text)
+{
+	if (text.IsConvertibleToString()) 
+	{
+		//Nv_LOG("Lua", text.ToString());
+	}
+	else
+	{
+		//Nv_LOG("Lua", "<" + std::string(text.TypeName()) + ">");
+	}
+}
+
+unsigned long InternalScriptExports::GetTickCount(void)
+{
+	return ::GetTickCount();
+}
+
+// ----------------------------------------------------------------------------------------------------------
+// Script exports for the physics system
+// ----------------------------------------------------------------------------------------------------------
+void InternalScriptExports::ApplyForce(LuaPlus::LuaObject normalDirLua, float force, int actorId)
+{
+	if (normalDirLua.IsTable()) {
+		Vec3 normalDir(normalDirLua["x"].GetFloat(), normalDirLua["y"].GetFloat(), normalDirLua["z"].GetFloat());
+		g_pApp->m_pGame->VGetGamePhysics()->VApplyForce(normalDir, force, actorId);
+		return;
+	}
+	//Nv_ERROR("Invalid object passed to ApplyForce(); type = " + std::string(normalDirLua.TypeName()));
+}
+
+void InternalScriptExports::ApplyTorque(LuaPlus::LuaObject axisLua, float force, int actorId)
+{
+	if (axisLua.IsTable())
+	{
+		Vec3 axis(axisLua["x"].GetFloat(), axisLua["y"].GetFloat(), axisLua["z"].GetFloat());
+		g_pApp->m_pGame->VGetGamePhysics()->VApplyTorque(axis, force, actorId);
+		return;
+	}
+	//Nv_ERROR("Invalid object passed to ApplyTorque(); type = " + std::string(axisLua.TypeName()));
+}
 
 void ScriptExports::Register(void)
 {
@@ -302,8 +420,40 @@ void ScriptExports::Register(void)
 
 	// resource loading
 	globals.RegisterDirect("LoadAndExecuteScriptResource", InternalScriptExports::LoadAndExecuteScriptResource);
+
+	// actors
+	globals.RegisterDirect("CreateActor", &InternalScriptExports::CreateActor);
+
+	// event system
+	globals.RegisterDirect("RegisterEventListener", &InternalScriptExports::RegisterEventListener);
+	globals.RegisterDirect("RemoveEventListener", &InternalScriptExports::RemoveEventListener);
+	globals.RegisterDirect("QueueEvent", &InternalScriptExports::QueueEvent);
+	globals.RegisterDirect("TriggerEvent", &InternalScriptExports::TriggerEvent);
+
+	// process system
+	globals.RegisterDirect("AttachProcess", &InternalScriptExports::AttachScriptProcess);
+
+	// math
+	LuaPlus::LuaObject mathTable = globals.GetByName("NvMath");
+	//Nv_ASSERT(mathTable.IsTable());
+	mathTable.RegisterDirect("GetYRotationFromVector", &InternalScriptExports::GetYRotationFromVector);
+	mathTable.RegisterDirect("WrapPi", &InternalScriptExports::WrapPi);
+	mathTable.RegisterDirect("GetVectorFromRotation", &InternalScriptExports::GetVectorFromRotation);
+
+	// misc.
+	globals.RegisterDirect("Log", &InternalScriptExports::LuaLog);
+	globals.RegisterDirect("GetTickCount", &InternalScriptExports::GetTickCount);
+
+	// Physics
+	globals.RegisterDirect("ApplyForce", &InternalScriptExports::ApplyForce);
+	globals.RegisterDirect("ApplyTorque", &InternalScriptExports::ApplyTorque);
 }
 
+
+// ------------------------------------------------------------------------------------------------------------------------
+// This function unregisters all the ScriptExports functions and gives any underlaying systems a chance to destroy
+// themselves. It is called in the Application destructor.
+// ------------------------------------------------------------------------------------------------------------------------
 void ScriptExports::Unregister(void)
 {
 	InternalScriptExports::Destroy();

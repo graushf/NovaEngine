@@ -187,17 +187,16 @@ void BaseScriptComponent::RegisterScriptFunctions(void)
 	metaTableObj.SetObject("__index", metaTableObj);
 
 	// transform component functions
-	metaTableObj.RegisterObjectDirect("GetActorId", (BaseScriptComponent*)0, &BaseScriptComponent::GetActorId);
-	metaTableObj.RegisterObjectDirect("GetPos", (BaseScriptComponent*)0, &BaseScriptComponent::GetPos);
-	metaTableObj.RegisterObjectDirect("SetPos", (BaseScriptComponent*)0, &BaseScriptComponent::SetPos);
-	metaTableObj.RegisterObjectDirect("GetLookAt", (BaseScriptComponent*)0, &BaseScriptComponent::GetLookAt);
-	metaTableObj.RegisterObjectDirect("GetYOrientationRadians", (BaseScriptComponent*)0, &BaseScriptComponent::GetYOrientationRadians);
-	metaTableObj.RegisterObjectDirect("RotateY", (BaseScriptComponent*)0, &BaseScriptComponent::RotateY);
-	metaTableObj.RegisterObjectDirect("Stop", (BaseScriptComponent*)0, &BaseScriptComponent::Stop);
+	metaTableObj.RegisterObjectDirect("GetActorId",					(BaseScriptComponent*)0, &BaseScriptComponent::GetActorId);
+	metaTableObj.RegisterObjectDirect("GetPos",						(BaseScriptComponent*)0, &BaseScriptComponent::GetPos);
+	metaTableObj.RegisterObjectDirect("SetPos",						(BaseScriptComponent*)0, &BaseScriptComponent::SetPos);
+	metaTableObj.RegisterObjectDirect("GetLookAt",					(BaseScriptComponent*)0, &BaseScriptComponent::GetLookAt);
+	metaTableObj.RegisterObjectDirect("GetYOrientationRadians",		(BaseScriptComponent*)0, &BaseScriptComponent::GetYOrientationRadians);
+	metaTableObj.RegisterObjectDirect("RotateY",					(BaseScriptComponent*)0, &BaseScriptComponent::RotateY);
+	metaTableObj.RegisterObjectDirect("Stop",						(BaseScriptComponent*)0, &BaseScriptComponent::Stop);
 
-	metaTableObj.RegisterObjectDirect("SetPosition", (BaseScriptComponent*)0, &BaseScriptComponent::SetPosition);
+	metaTableObj.RegisterObjectDirect("SetPosition",				(BaseScriptComponent*)0, &BaseScriptComponent::SetPosition);
 }
-
 
 void BaseScriptComponent::UnregisterScriptFunctions(void)
 {

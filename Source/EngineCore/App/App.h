@@ -32,9 +32,11 @@ public:
 
 protected:
 	std::map<std::wstring, std::wstring> m_textResource;
+	std::map<std::wstring, UINT> m_hotkeys;
 
 	int m_HasModalDialog;					// determines if a modal dialog is up
 	int PumpUntilMessage(UINT msgEnd, WPARAM* pWParam, LPARAM* pLParam);
+	int EatSpecificMessages(UINT msgType, LPARAM lParam, WPARAM wParam);
 	void FlashWhileMinimized();
 
 public:

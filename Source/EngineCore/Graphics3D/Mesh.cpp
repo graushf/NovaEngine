@@ -11,7 +11,7 @@
 #include "D3DRenderer.h"
 #include "Lights.h"
 #include "Mesh.h"
-//#include "Raycast.h"
+#include "Raycast.h"
 #include "SceneNodes.h"
 
 
@@ -142,7 +142,7 @@ HRESULT D3DShaderMeshNode11::VPick(Scene* pScene, RayCast* pRayCast)
 	std::shared_ptr<ResHandle> pResourceHandle = g_pApp->m_ResCache->GetHandle(&resource);
 	std::shared_ptr<D3DSdkMeshResourceExtraData11> extra = static_pointer_cast<D3DSdkMeshResourceExtraData11>(pResourceHandle->GetExtra());
 
-	HRESULT hr = pRayCast->VPick(pScene, m_Props.ActorId(), &extra->m_Mesh11);
+	HRESULT hr = pRayCast->Pick(pScene, m_Props.ActorId(), &extra->m_Mesh11);
 	pScene->PopMatrix();
 
 	return hr;
