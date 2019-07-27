@@ -13,7 +13,11 @@
 
 // {8D7EB248-BC69-4D9F-B294-6DC53D748CED}
 
+const EventType EvtData_Environment_Loaded::sk_EventType(0xe98793a);
 const EventType EvtData_Destroy_Actor::sk_EventType(0x8d7eb248);
+
+const EventType EvtData_Remote_Client::sk_EventType(0x432c3e48);
+const EventType EvtData_Network_Player_Actor_Assignment::sk_EventType(0x91915f6d);
 
 const EventType EvtData_PlaySound::sk_EventType(0xace8a1c1);
 

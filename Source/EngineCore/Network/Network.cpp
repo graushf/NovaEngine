@@ -935,3 +935,89 @@ void RemoteEventSocket::CreateEvent(std::istrstream& in)
 		//Nv_ERROR("ERROR Unknown event type from remote: 0x" + ToStr(eventType, 16));
 	}
 }
+
+//
+// NetworkEventForwarder::ForwardEvent					- Chapter 19, page 690
+//
+void NetworkEventForwarder::ForwardEvent(IEventDataPtr pEventData)
+{
+	std::ostrstream out;
+
+	out << static_cast<int>(RemoteEventSocket::NetMsg_Event) << " ";
+	out << pEventData->VGetEventType() << " ";
+	pEventData->VSerialize(out);
+	out << "\r\n";
+
+	std::shared_ptr<BinaryPacket> eventMsg(Nv_NEW BinaryPacket(out.rdbuf()->str(), (u_long)out.pcount()));
+
+	g_pSocketManager->Send(m_SockId, eventMsg);
+}
+
+//
+// NetworkGameView::NetworkGameView					- Chapter 19, page 691
+//
+NetworkGameView::NetworkGameView()
+{
+	m_SockId = INVALID_SOCKET_ID;
+	m_ActorId = INVALID_ACTOR_ID;
+	IEventManager::Get()->VAddListener(fastdelegate::MakeDelegate(this, &NetworkGameView::NewActorDelegate), EvtData_New_Actor::sk_EventType);
+}
+
+//
+// NetworkGameView::AttachRemotePlayer				- Chapter 19, page 692
+//
+void NetworkGameView::AttachRemotePlayer(int sockID)
+{
+	m_SockId = sockID;
+	// this is the first thing that happens when the
+	// network view is attached. The socket id is sent,
+	// which is how each client can be uniquely identified from other
+	// clients attached to the server.
+
+	std::ostrstream out;
+
+	out << static_cast<int>(RemoteEventSocket::NetMsg_PlayerLoginOk) << " ";
+	out << m_SockId << " ";
+	out << m_ActorId << " ";
+	out << g_pApp->m_Options.m_Level << " ";
+	out << "\r\n";
+
+	std::shared_ptr<BinaryPacket> gvidMsg(Nv_NEW BinaryPacket(out.rdbuf()->str(), (u_long)out.pcount()));
+	g_pSocketManager->Send(m_SockId, gvidMsg);
+}
+
+//
+// NetworkGameView::VOnAttach						- Chapter X, page 619
+//
+void NetworkGameView::VOnAttach(GameViewId viewId, ActorId aid)
+{
+	m_ViewId = viewId;
+	m_ActorId = aid;
+}
+
+
+void NetworkGameView::VOnUpdate(unsigned long deltaMs)
+{
+	if (m_ActorId != INVALID_ACTOR_ID)
+	{
+		IEventManager::Get()->VRemoveListener(fastdelegate::MakeDelegate(this, &NetworkGameView::NewActorDelegate), EvtData_New_Actor::sk_EventType);
+	}
+};
+
+void NetworkGameView::NewActorDelegate(IEventDataPtr pEventData)
+{
+	std::shared_ptr<EvtData_New_Actor> pCastEventData = static_pointer_cast<EvtData_New_Actor>(pEventData);
+	ActorId actorId = pCastEventData->GetActorId();
+	StrongActorPtr pActor = MakeStrongPtr(g_pApp->m_pGame->VGetActor(actorId));
+
+	// FUTURE WORK: This could be in a script.
+	if (pActor && pActor->GetType() == "Teapot")
+	{
+		if (pCastEventData->GetViewId() == m_ViewId)
+		{
+			m_ActorId = actorId;
+			std::shared_ptr<EvtData_Network_Player_Actor_Assignment> pEvent(Nv_NEW EvtData_Network_Player_Actor_Assignment(m_ActorId, m_SockId));
+			IEventManager::Get()->VQueueEvent(pEvent);
+		}
+	}
+}

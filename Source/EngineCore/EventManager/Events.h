@@ -316,14 +316,85 @@ public:
 // --------------------------------------------------------------------------------------------------
 // EvtData_Remote_Environment_Loaded - 
 // --------------------------------------------------------------------------------------------------
+class EvtData_Environment_Loaded : public BaseEventData
+{
+public:
+	static const EventType sk_EventType;
+
+	EvtData_Environment_Loaded(void) { }
+	virtual const EventType& VGetEventType(void) const { return sk_EventType; }
+	virtual IEventDataPtr VCopy(void) const
+	{
+		return IEventDataPtr(Nv_NEW EvtData_Environment_Loaded());
+	}
+	virtual const char* GetName(void) const { return "EvtData_Environment_Loaded"; }
+};
 
 // --------------------------------------------------------------------------------------------------
 // EvtData_Request_Start_Game - 
 // --------------------------------------------------------------------------------------------------
 
 // --------------------------------------------------------------------------------------------------
-// EvtData_Remote_Client - 
+// EvtData_Remote_Client											- Chapter 19, page 687
+//
+// Sent whenever a new client attaches to a game logic acting as a server
 // --------------------------------------------------------------------------------------------------
+class EvtData_Remote_Client : public BaseEventData
+{
+	int m_socketId;
+	int m_ipAddress;
+
+public:
+	static const EventType sk_EventType;
+
+	EvtData_Remote_Client(void)
+	{
+		m_socketId = 0;
+		m_ipAddress = 0;
+	}
+
+	EvtData_Remote_Client(const int socketid, const int ipaddress)
+		: m_socketId(socketid), m_ipAddress(ipaddress)
+	{
+	}
+
+	virtual const EventType& VGetEventType(void) const
+	{
+		return sk_EventType;
+	}
+
+	virtual IEventDataPtr VCopy() const
+	{
+		return IEventDataPtr(Nv_NEW EvtData_Remote_Client(m_socketId, m_ipAddress));
+	}
+
+	virtual const char* GetName(void) const
+	{
+		return "EvtData_Remote_Client";
+	}
+
+	virtual void VSerialize(std::ostrstream& out) const
+	{
+		out << m_socketId << " ";
+		out << m_ipAddress;
+	}
+
+	virtual void VDeserialize(std::istrstream& in)
+	{
+		in >> m_socketId;
+		in >> m_ipAddress;
+	}
+
+	int GetSocketId(void) const
+	{
+		return m_socketId;
+	}
+
+	int GetIpAddress(void) const
+	{
+		return m_ipAddress;
+	}
+};
 
 // --------------------------------------------------------------------------------------------------
 // EvtData_Update_Tick - sent by the game logic each game tick
@@ -333,6 +404,62 @@ public:
 // EvtData_Network_Player_Actor_Assignment - sent by the server to the clients when a network view
 //												is assigned a player number.
 // --------------------------------------------------------------------------------------------------
+class EvtData_Network_Player_Actor_Assignment : public BaseEventData
+{
+	ActorId m_ActorId;
+	int m_SocketId;
+
+public:
+	static const EventType sk_EventType;
+
+	EvtData_Network_Player_Actor_Assignment()
+	{
+		m_ActorId = INVALID_ACTOR_ID;
+		m_SocketId = -1;
+	}
+
+	explicit EvtData_Network_Player_Actor_Assignment(const ActorId actorId, const int socketId)
+		: m_ActorId(actorId), m_SocketId(socketId)
+	{
+	}
+
+	virtual const EventType& VGetEventType(void) const
+	{
+		return sk_EventType;
+	}
+
+	virtual IEventDataPtr VCopy() const
+	{
+		return IEventDataPtr(Nv_NEW EvtData_Network_Player_Actor_Assignment(m_ActorId, m_SocketId));
+	}
+
+	virtual const char* GetName(void) const
+	{
+		return "EvtData_Network_Player_Actor_Assignment";
+	}
+
+	virtual void VSerialize(std::ostrstream& out) const
+	{
+		out << m_ActorId << " ";
+		out << m_SocketId;
+	}
+
+	virtual void VDeserialize(std::istrstream& in)
+	{
+		in >> m_ActorId;
+		in >> m_SocketId;
+	}
+
+	ActorId GetActorId(void) const
+	{
+		return m_ActorId;
+	}
+
+	ActorId GetSocketId(void) const
+	{
+		return m_SocketId;
+	}
+};
 
 // --------------------------------------------------------------------------------------------------
 // EvtData_Decompress_Request - sent to a multithreaded game event listener to decompress something

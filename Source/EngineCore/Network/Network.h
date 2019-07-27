@@ -292,3 +292,58 @@ public:
 protected:
 	void CreateEvent(std::istrstream& in);
 };
+
+//
+// class NetworkEventForwarder							- Chapter 19, page 690
+//
+// The only thing a network game view does is
+// act as an intermediary between the server and the 'real' remote view
+// it listens to thes same messages as a game view
+// and sends them along TCP/IP
+//
+class NetworkEventForwarder
+{
+public:
+	NetworkEventForwarder(int sockId) { m_SockId = sockId; }
+
+	// Delegate that forwards events through the network. The game layer must register objects of this class for
+	// the events it wants. See TeapotWarsApp::VCreateGameAndView() and TeapotWarsLogic::RemoteClientDelegate()
+	// for examples of this happening.
+	void ForwardEvent(IEventDataPtr pEventData);
+
+protected:
+	int m_SockId;
+};
+
+
+
+//
+// class NetworkGameView					- Chapter 19, page 691
+//
+class NetworkGameView : public IGameView
+{
+public:
+	// IGameView Implementation - everything is stubbed out.
+	virtual HRESULT VOnRestore() { return S_OK; }
+	virtual void VOnRender(double fTime, float fElapsedTime) { }
+	virtual HRESULT VOnLostDevice() { return S_OK; }
+	virtual GameViewType VGetType() { return GameView_Remote; }
+	virtual GameViewId VGetId() const { return m_ViewId; }
+	virtual void VOnAttach(GameViewId vid, ActorId aid);
+	virtual LRESULT CALLBACK VOnMsgProc(AppMsg msg) { return 0; }
+	virtual void VOnUpdate(unsigned long deltaMs);
+
+	void NewActorDelegate(IEventDataPtr pEventData);
+
+	void SetPlayerActorId(ActorId actorId) { m_ActorId = actorId; }
+	void AttachRemotePlayer(int sockID);
+
+	int HasRemotePlayerAttached() { return m_SockId != INVALID_SOCKET_ID; }
+
+	NetworkGameView();
+
+protected:
+	GameViewId m_ViewId;
+	ActorId m_ActorId;
+	int m_SockId;
+};

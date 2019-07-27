@@ -1,14 +1,45 @@
+//========================================================================
+// App.cpp 
+//========================================================================
+
 #include "Common/CommonStd.h"
 
 #include "Initialization/Initialization.h"
 #include "App/BaseAppLogic.h"
 #include "UserInterface/HumanView.h"
+#include "EventManager/EventManagerImpl.h"
+#include "Network/Network.h"
+
+// All event type headers
+#include "Physics/PhysicsEventListener.h"
+#include "EventManager/Events.h"
+
+#define MAX_LOADSTRING 100
 
 App *g_App = nullptr;
 
 App::App()
 {
 	g_pApp = this;
+	m_pGame = NULL;
+
+	m_rcDesktop.bottom = m_rcDesktop.left = m_rcDesktop.right = m_rcDesktop.top = 0;
+	m_screenSize = Point(0, 0);
+	m_iColorDepth = 32;
+
+	m_bIsRunning = false;
+	m_bIsEditorRunning = false;
+
+	m_pEventManager = nullptr;
+	m_ResCache = nullptr;
+
+
+	m_pNetworkEventForwarder = nullptr;
+	m_pBaseSocketManager = nullptr;
+
+	m_bQuitRequested = false;
+	m_bQuitting = false;
+	m_HasModalDialog = 0;
 }
 
 HWND App::GetHwnd()
@@ -554,13 +585,13 @@ LRESULT App::OnSysCommand(WPARAM wParam, LPARAM lParam)
 LRESULT App::OnClose()
 {
 	// release all the game systems in reverse order from which they were created
-	//SAFE_DELETE(m_pGame);
+	SAFE_DELETE(m_pGame);
 
 	DestroyWindow(GetHwnd());
 
 	//VDestroyNetworkEventForwarder();
 
-	//SAFE_DELETE(m_pBaseSocketManager);
+	SAFE_DELETE(m_pBaseSocketManager);
 
 	//SAFE_DELETE(m_pEventManager);
 
@@ -759,12 +790,12 @@ void CALLBACK App::OnUpdateGame(double fTime, float fElapsedTime, void *pUserCon
 	{
 		/*
 		IEventManager::Get()->VUpdate(20);	// allow event queue to process for up to 20 ms
+		*/
 
 		if (g_pApp->m_pBaseSocketManager)
 		{
 			g_pApp->m_pBaseSocketManager->DoSelect(0);	// pause 0 microseconds
 		}
-		*/
 		
 		g_pApp->m_pGame->VOnUpdate(float(fTime), fElapsedTime);
 	}
@@ -870,4 +901,45 @@ void CALLBACK App::OnD3D11FrameRender(ID3D11Device* pd3dDevice, ID3D11DeviceCont
 
 	g_pApp->m_pGame->VRenderDiagnostics();
 	
+}
+
+bool App::AttachAsClient()
+{
+	ClientSocketManager* pClient = Nv_NEW ClientSocketManager(g_pApp->m_Options.m_gameHost, g_pApp->m_Options.m_listenPort);
+	if (!pClient->Connect())
+	{
+		return false;
+	}
+	g_pApp->m_pBaseSocketManager = pClient;
+	VCreateNetworkEventForwarder();
+
+	return true;
+}
+
+void App::VCreateNetworkEventForwarder(void)
+{
+	if (m_pNetworkEventForwarder != NULL)
+	{
+		//Nv_ERROR("Overwriting network event forwarder in TeapotWarsApp!!");
+		SAFE_DELETE(m_pNetworkEventForwarder);
+	}
+
+	m_pNetworkEventForwarder = Nv_NEW NetworkEventForwarder(0);
+
+	IEventManager* pGlobalEventManager = IEventManager::Get();
+	pGlobalEventManager->VAddListener(fastdelegate::MakeDelegate(m_pNetworkEventForwarder, &NetworkEventForwarder::ForwardEvent), EvtData_Request_New_Actor::sk_EventType);
+	pGlobalEventManager->VAddListener(fastdelegate::MakeDelegate(m_pNetworkEventForwarder, &NetworkEventForwarder::ForwardEvent), EvtData_Environment_Loaded::sk_EventType);
+	pGlobalEventManager->VAddListener(fastdelegate::MakeDelegate(m_pNetworkEventForwarder, &NetworkEventForwarder::ForwardEvent), EvtData_PhysCollision::sk_EventType);
+}
+
+void App::VDestroyNetworkEventForwarder(void)
+{
+	if (m_pNetworkEventForwarder)
+	{
+		IEventManager* pGlobalEventManager = IEventManager::Get();
+		pGlobalEventManager->VRemoveListener(fastdelegate::MakeDelegate(m_pNetworkEventForwarder, &NetworkEventForwarder::ForwardEvent), EvtData_Request_New_Actor::sk_EventType);
+		pGlobalEventManager->VRemoveListener(fastdelegate::MakeDelegate(m_pNetworkEventForwarder, &NetworkEventForwarder::ForwardEvent), EvtData_Environment_Loaded::sk_EventType);
+		pGlobalEventManager->VRemoveListener(fastdelegate::MakeDelegate(m_pNetworkEventForwarder, &NetworkEventForwarder::ForwardEvent), EvtData_PhysCollision::sk_EventType);
+		SAFE_DELETE(m_pNetworkEventForwarder);
+	}
 }
