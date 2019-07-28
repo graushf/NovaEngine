@@ -154,6 +154,7 @@ bool EventManager::VUpdate(unsigned long maxMillis)
 	unsigned long maxMs = ((maxMillis == IEventManager::kINFINITE) ? (IEventManager::kINFINITE) : (currMs + maxMillis));
 
 	// This section added to handle events from other threads. Check out Chapter 20.
+	// -------------------------------------------------------------------------------------------------
 	IEventDataPtr pRealtimeEvent;
 	while (m_realtimeEventQueue.try_pop(pRealtimeEvent))
 	{
@@ -168,6 +169,7 @@ bool EventManager::VUpdate(unsigned long maxMillis)
 			}
 		}
 	}
+	// -------------------------------------------------------------------------------------------------
 
 	// swap active queues and clear the new queue after the swap
 	int queueToProcess = m_activeQueue;

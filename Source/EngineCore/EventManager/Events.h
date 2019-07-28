@@ -399,6 +399,39 @@ public:
 // --------------------------------------------------------------------------------------------------
 // EvtData_Update_Tick - sent by the game logic each game tick
 // --------------------------------------------------------------------------------------------------
+class EvtData_Update_Tick : public BaseEventData
+{
+	int m_DeltaMilliseconds;
+
+public:
+	static const EventType sk_EventType;
+
+	explicit EvtData_Update_Tick(const int deltaMilliseconds)
+		: m_DeltaMilliseconds(deltaMilliseconds)
+	{
+	}
+
+	virtual const EventType& VGetEventType(void) const
+	{
+		return sk_EventType;
+	}
+
+	virtual IEventDataPtr VCopy() const
+	{
+		return IEventDataPtr(Nv_NEW EvtData_Update_Tick(m_DeltaMilliseconds));
+	}
+
+	virtual void VSerialize(std::ostrstream& out)
+	{
+		//Nv_ERROR("You should not be serializing update ticks!");
+	}
+
+	virtual const char* GetName(void) const
+	{
+		return "EvtData_Update_Tick";
+	}
+};
+
 
 // --------------------------------------------------------------------------------------------------
 // EvtData_Network_Player_Actor_Assignment - sent by the server to the clients when a network view
@@ -465,10 +498,93 @@ public:
 // EvtData_Decompress_Request - sent to a multithreaded game event listener to decompress something
 //								in the resource file.								
 // --------------------------------------------------------------------------------------------------
+class EvtData_Decompress_Request : public BaseEventData
+{
+	std::wstring m_zipFileName;
+	std::string m_fileName;
+
+public:
+	static const EventType sk_EventType;
+
+	explicit EvtData_Decompress_Request(std::wstring zipFileName, std::string filename)
+		: m_zipFileName(zipFileName),
+		m_fileName(filename)
+	{
+	}
+
+	virtual const EventType& VGetEventType(void) const
+	{
+		return sk_EventType;
+	}
+
+	virtual IEventDataPtr VCopy() const
+	{
+		return IEventDataPtr(Nv_NEW EvtData_Decompress_Request(m_zipFileName, m_fileName));
+	}
+
+	virtual void VSerialize(std::ostrstream& out)
+	{
+		//Nv_ERROR("You should not be serializing decompression requests!");
+	}
+
+	const std::wstring& GetZipFilename(void) const
+	{
+		return m_zipFileName;
+	}
+
+	const std::string& GetFilename(void) const
+	{
+		return m_fileName;
+	}
+
+	virtual const char* GetName(void) const
+	{
+		return "EvtData_Decompress_Request";
+	}
+};
 
 // --------------------------------------------------------------------------------------------------
 // EvtData_Decompression_Progress - sent by the decompression thread to report progress.
 // --------------------------------------------------------------------------------------------------
+class EvtData_Decompression_Progress : public BaseEventData
+{
+	int m_progress;
+	std::wstring m_zipFileName;
+	std::string m_fileName;
+	void* m_buffer;
+
+public:
+	static const EventType sk_EventType;
+
+	EvtData_Decompression_Progress(int progress, std::wstring zipFileName, std::string filename, void* buffer)
+		: m_progress(progress),
+		m_zipFileName(zipFileName),
+		m_fileName(filename),
+		m_buffer(buffer)
+	{
+	}
+
+	virtual const EventType& VGetEventType(void) const
+	{
+		return sk_EventType;
+	}
+
+	virtual IEventDataPtr VCopy() const
+	{
+		return IEventDataPtr(Nv_NEW EvtData_Decompression_Progress(m_progress, m_zipFileName, m_fileName, m_buffer));
+	}
+
+	virtual void VSerialize(std::ostrstream& out)
+	{
+		//Nv_ERROR("You should not be serializing decompression progress events!");
+	}
+
+	virtual const char* GetName(void) const
+	{
+		return "EvtData_Decompression_Progress";
+	}
+};
+
 
 // --------------------------------------------------------------------------------------------------
 // class EvtData_Request_New_Actor

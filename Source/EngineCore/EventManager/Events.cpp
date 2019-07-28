@@ -19,7 +19,12 @@ const EventType EvtData_Destroy_Actor::sk_EventType(0x8d7eb248);
 const EventType EvtData_Remote_Client::sk_EventType(0x432c3e48);
 const EventType EvtData_Network_Player_Actor_Assignment::sk_EventType(0x91915f6d);
 
+const EventType EvtData_Update_Tick::sk_EventType(0xdc2d9359);
+
 const EventType EvtData_PlaySound::sk_EventType(0xace8a1c1);
+
+const EventType EvtData_Decompress_Request::sk_EventType(0xfa861fc1);
+const EventType EvtData_Decompression_Progress::sk_EventType(0x343ea7f2);
 
 bool EvtData_PlaySound::VBuildEventFromScript(void)
 {
